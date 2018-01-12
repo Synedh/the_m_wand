@@ -54,7 +54,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using Microsoft.Ink;
+
 using UnityEngine;
 namespace Recognizer.NDollar
 {
@@ -386,44 +386,31 @@ namespace Recognizer.NDollar
 
 		public bool LoadGesture(string filename)
 		{
+            TextAsset txt = (TextAsset)Resources.Load(filename, typeof(TextAsset));
+            string content = txt.text;
             
+           
 			bool success = true;
 			XmlTextReader reader = null;
-            try
-            {
-                reader = new XmlTextReader(filename);
-                reader.WhitespaceHandling = WhitespaceHandling.None;
-                reader.MoveToContent();
 
-                Multistroke p = ReadGesture(reader); // Lisa 1/2/2008
+            reader = new XmlTextReader(new System.IO.StringReader(content));
+            //reader = new XmlTextReader(filename);
+            reader.WhitespaceHandling = WhitespaceHandling.None;
+            reader.MoveToContent();
 
-                // remove any with the same name and add the prototype gesture
-                if (_gestures.ContainsKey(p.Name))
-                    _gestures.Remove(p.Name);
+            Multistroke p = ReadGesture(reader); // Lisa 1/2/2008
 
-                // _gestures now contains Multistrokes, not just Gestures
-                // Lisa 12/21/2007
-                _gestures.Add(p.Name, p);
-            }
-            catch (XmlException xex)
-            {
-                MonoBehaviour.print(xex.Message);
-                MonoBehaviour.print(xex.StackTrace);
-                MonoBehaviour.print("");
-                  success = false;
-            }
-            catch (Exception ex)
-            {
-                MonoBehaviour.print(ex.Message);
-                MonoBehaviour.print(ex.StackTrace);
-                MonoBehaviour.print("");
-                 success = false;
-            }
-			finally
-			{
-				if (reader != null)
-					reader.Close();
-			}
+            // remove any with the same name and add the prototype gesture
+            if (_gestures.ContainsKey(p.Name))
+                _gestures.Remove(p.Name);
+
+            // _gestures now contains Multistrokes, not just Gestures
+            // Lisa 12/21/2007
+            _gestures.Add(p.Name, p);
+           
+			if (reader != null)
+				reader.Close();
+			
 			return success;
 		}
 
@@ -640,476 +627,692 @@ namespace Recognizer.NDollar
             return categoriesByUser; // list;
         }*/
 
-        /// <summary>
-        /// Tests an entire batch of files. See comments atop MainForm.TestBatch_Click().
-        /// 
-        /// This was adapted from the original TestBatch() method used by $1 to do multistroke testing.
-        /// (Lisa 1/5/2008)
-        /// </summary>
-        /// <param name="categories">A hashtable keyed by user of gesture categories 
-        /// that each contain lists of prototypes (examples) within that gesture category.</param>
-        /// <param name="dir">The directory into which to write the output files.</param>
-        /// <returns>True if successful; false otherwise.</returns>
-        /*public bool TestBatch(SamplesCollection categoriesByUser, string dir)
-        {
-            if (NDollarParameters.Instance.TestMethod == NDollarParameters.PossibleTestMethods.CROSSVAL)
+            /// <summary>
+            /// Tests an entire batch of files. See comments atop MainForm.TestBatch_Click().
+            /// 
+            /// This was adapted from the original TestBatch() method used by $1 to do multistroke testing.
+            /// (Lisa 1/5/2008)
+            /// </summary>
+            /// <param name="categories">A hashtable keyed by user of gesture categories 
+            /// that each contain lists of prototypes (examples) within that gesture category.</param>
+            /// <param name="dir">The directory into which to write the output files.</param>
+            /// <returns>True if successful; false otherwise.</returns>
+            /*public bool TestBatch(SamplesCollection categoriesByUser, string dir)
             {
-                return TestBatch_CrossValidate(categoriesByUser, dir);
-            }
-            else if (NDollarParameters.Instance.TestMethod == NDollarParameters.PossibleTestMethods.RANDOM100)
-            {
-                return TestBatch_100Random(categoriesByUser, dir);
-            }
-            else if (NDollarParameters.Instance.TestMethod == NDollarParameters.PossibleTestMethods.USERINDEP)
-            {
-                return TestBatch_UserIndependent_100Random(categoriesByUser, dir);
-            }
-            else {
-                return false;
-            }
-        }*/
-
-        /*public bool TestBatch_100Random(SamplesCollection categoriesByUser, string dir)
-        {
-            Console.Write("Testing batch (one tick per user)");
-            bool success = true;
-            StreamWriter mainWriter = null;
-            StreamWriter recWriter = null;
-            try
-            {
-                //
-                // set up a main results file and detailed recognition results file
-                //
-                int start = Environment.TickCount;
-                string mainFile = String.Format("{0}\\ndollar_main_{1}.csv", dir, start);
-                string recFile = String.Format("{0}\\ndollar_data_{1}.csv", dir, start);
-
-                mainWriter = new StreamWriter(mainFile, false);//, Encoding.UTF8);
-                mainWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
-                mainWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
-                    (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
-                    NDollarParameters.Instance.RotationInvariant,
-                    _RotationBound,
-                    _1DThreshold,
-                    NDollarParameters.Instance.DoStartAngleComparison,
-                    NDollarParameters.Instance.StartAngleIndex,
-                    Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
-                    NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
-                    NDollarParameters.Instance.TestFor1D,
-                    NDollarParameters.Instance.UseUniformScaling);
-                mainWriter.WriteLine("Recognizer,Subject,Speed,NumTraining,GestureType,RecognitionRate");
-
-                recWriter = new StreamWriter(recFile, false);//, Encoding.UTF8);
-                recWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
-                //recWriter.WriteLine("Testing:,within-user,Rotation invariance:,{0},Rotation bound:,{1},1D Threshold:,{2},Do start angle comparison:,{3},Start angle index:,{4},Start angle threshold:,{5},Do match only same number of strokes:,{6},Test for 1D gestures:,{7},UseUniformScaling:,{8}\n",
-                recWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
-                    (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
-                    NDollarParameters.Instance.RotationInvariant,
-                    _RotationBound,
-                    _1DThreshold,
-                    NDollarParameters.Instance.DoStartAngleComparison,
-                    NDollarParameters.Instance.StartAngleIndex,
-                    Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
-                    NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
-                    NDollarParameters.Instance.TestFor1D,
-                    NDollarParameters.Instance.UseUniformScaling);
-                recWriter.WriteLine("Subject,Speed,Correct?,NumTrain,Tested,Character,ActualComparisons,TotalComparisons,Is1D,1stCorrect,Pts,Ms,NumStrokes,RecoDuration,Angle,:,(NBestNames),[NBestScores]");
-
-                // PER-USER-TESTING:
-                // for each user
-                //      for i = 1 to max number of training templates per symbol
-                //          choose i samples randomly
-                //          load those templates
-                //          test on 1 remaining sample per symbol, randomly chosen
-                //      repeat 100 times
-
-                // new outermost loop: does the whole thing once for each user
-                // Lisa, 5/12/2008
-                foreach (KeyValuePair<string, Dictionary<string, Category>> user in categoriesByUser)
+                if (NDollarParameters.Instance.TestMethod == NDollarParameters.PossibleTestMethods.CROSSVAL)
                 {
-                    Console.Write(".");
-                    string speed = "unknown"; // TODO: get this from the new object later
-
-                    //
-                    // determine the maximum number of gesture categories and the 
-                    // minimum number of examples per category for this specific user
-                    //
-                    int minNumExamples = categoriesByUser.GetMinNumExamplesForUser(user.Key);
-                    double totalTests = (minNumExamples - 1) * NumRandomTests;
-
-                    //
-                    // next loop: trains on N=1..9, tests on 10-N (for e.g., numExamples = 10)
-                    //
-                    for (int n = 1; n <= minNumExamples - 1; n++)
-                    {
-                        // storage for the final avg results for each category for this N
-                        Hashtable results = new Hashtable();
-
-                        //
-                        // run a number of tests at this particular N number of training examples
-                        //
-                        for (int r = 0; r < NumRandomTests; r++)
-                        {
-                            _gestures.Clear(); // clear any (old) loaded prototypes
-
-                            // load (train on) N randomly selected gestures in each category
-                            // do this for this user only
-                            foreach (KeyValuePair<string, Category> cat in user.Value)
-                            {
-                                Category c = (Category)cat.Value;  // the category to load N examples for
-                                // choose over the whole range of examples for this user/symbol pair, Lisa 1/5/2008
-                                int[] chosen = Utils.Random(0, c.NumExamples - 1, n); // select N unique indices
-                                for (int j = 0; j < chosen.Length; j++)
-                                {
-                                    Multistroke p = c[chosen[j]]; // get the prototype from this category at chosen[j], Lisa 1/5/2008
-                                    _gestures.Add(p.Name, p); // load the randomly selected test gestures into the recognizer
-                                }
-                            }
-                        
-                            //
-                            // testing loop on all unloaded gestures in each category. creates a recognition
-                            // rate (%) by averaging the binary outcomes (correct, incorrect) for each test.
-                            //
-                            // do this for this user only
-                            foreach (KeyValuePair<string, Category> cat in user.Value)
-                            {
-                                // pick a random unloaded gesture in this category for testing
-                                // instead of dumbly picking, first find out what indices aren't
-                                // loaded, and then randomly pick from those.
-                                Category c = (Category)cat.Value;
-                                int[] notLoaded = new int[c.NumExamples - n];
-                                for (int j = 0, k = 0; j < c.NumExamples; j++)
-                                {
-                                    Multistroke g = c[j]; // Lisa 1/5/2008
-                                    if (!_gestures.ContainsKey(g.Name))
-                                        notLoaded[k++] = j; // jth gesture in c is not loaded
-                                }
-                                int chosen = Utils.Random(0, notLoaded.Length - 1); // index
-                                Multistroke ms = c[notLoaded[chosen]]; // gesture to test
-                                Gesture p = ms.OriginalGesture; // we only test on the original Gesture in the Multistroke, Lisa 1/5/2008
-                                Debug.Assert(!_gestures.ContainsKey(p.Name));
-
-                                // do the recognition!
-                                // record time before reco
-                                int recoStart = Environment.TickCount;
-                                Console.WriteLine("file we are about to recognize: " + p.Name);
-                                NBestList result = null;
-                                if (NDollarParameters.Instance.RecognizerName == NDollarParameters.PossibleRecognizers.NDOLLAR)
-                                    result = this.Recognize(p.RawPoints, ms.NumStrokes);
-                                else if (NDollarParameters.Instance.RecognizerName == NDollarParameters.PossibleRecognizers.TABLETPC)
-                                    result = this.RecognizeInk(p.RawPoints, ms.NumStrokes);
-                                else throw new Exception("Bad Recognizer Name in config.xml");
-                                // record time after reco
-                                int recoEnd = Environment.TickCount;
-                                int recoDuration = recoEnd - recoStart; // in milliseconds
-                                string category = Category.ParseName(result.Name);
-                                int correct = (c.Name == category) ? 1 : 0;
-
-                                speed = ms.Speed;
-                                recWriter.WriteLine("{0},{1},{2},{3},'{4},'{5},{6},{7},{8},{9},{10},{11},{12},{13},{14:F1}{15},:,({16}),[{17}]",
-                                    ms.User,                            // 0 Subject
-                                    ms.Speed,                           // 1 Speed
-                                    correct,                            // 2 Correct?
-                                    n,                                  // 3 NumTrain 
-                                    p.Name,                             // 4 Tested 
-                                    Category.ParseName(p.Name),         // 5 Character
-                                    result.getActualComparisons(),      // 6 ActualComparisons
-                                    result.getTotalComparisons(),       // 7 TotalComparisons
-                                    p.Is1D,                             // 8 Is1D
-                                    FirstCorrect(p.Name, result.Names), // 9 1stCorrect
-                                    p.RawPoints.Count,                  // 10 Pts
-                                    p.Duration,                         // 11 Ms 
-                                    ms.NumStrokes,                      // 12 number of strokes
-                                    recoDuration,                       // 13 recognition duration (millis)
-                                    Math.Round(result.Angle, 1), (char)176, // 14/15 Angle tweaking :
-                                    result.NamesString,                 // 16 (NBestNames)
-                                    result.ScoresString);               // 17 [NBestScores]
-
-                                // c is a Category object, unique to user/category pair
-                                // use the category NAME to store the results
-                                // Lisa 1/6/2008
-                                if (results.ContainsKey(cat.Key))
-                                {
-                                    double temp = (double)results[cat.Key] + correct;
-                                    results[cat.Key] = temp;
-                                }
-                                else
-                                {
-                                    results.Add(cat.Key, (double)correct);
-                                }
-                            }
-                       
-                            // provide feedback as to how many tests have been performed thus far.
-                            double testsSoFar = ((n - 1) * NumRandomTests) + r;
-                            if (ProgressChangedEvent != null)
-                                ProgressChangedEvent(this, new ProgressEventArgs(testsSoFar / totalTests)); // callback
-                        }
-
-                        //
-                        // now create the final results for this user and this N and write them to a file
-                        //
-                        foreach (KeyValuePair<string, Category> cat in user.Value)
-                        {
-                            double temp = (double)results[cat.Key] / ((double)NumRandomTests * 1); // normalize by the number of tests at this N, Lisa 1/5/2008
-                            results[cat.Key] = temp;
-                            // Subject Recognizer Speed NumTraining GestureType RecognitionRate
-                            mainWriter.WriteLine("ndollar,{0},{1},{2},{3},{4:F3}", user.Key, speed, n, cat.Key, Math.Round((double)results[cat.Key], 3));
-                        }
-                    }
+                    return TestBatch_CrossValidate(categoriesByUser, dir);
                 }
-                // time-stamp the end of the processing when it's allll done
-                int end = Environment.TickCount;
-                mainWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
-                recWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
-                Console.WriteLine();
-                Console.WriteLine("Done testing batch.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.Write(ex.StackTrace);
-                Console.WriteLine();
-                success = false;
-            }
-            finally
-            {
-                if (mainWriter != null)
-                    mainWriter.Close();
-                if (recWriter != null)
-                    recWriter.Close();
-            }
-            return success;
-        }
-
-        private NBestList RecognizeInk(List<PointR> points, int numStrokes) {
-            RecognizerContext recognizerCtxt = new RecognizerContext();
-            recognizerCtxt.Strokes = null;
-            recognizerCtxt.WordList = new WordList();
-
-            // Note: there should be no strokes in the Strokes property of the RecognizerContext
-            // when setting the WordList property
-            recognizerCtxt.WordList = NDollarParameters.Instance.TabletRecognizerWordList; // recoWordList;
-            recognizerCtxt.Factoid = Microsoft.Ink.Factoid.WordList;
-            recognizerCtxt.RecognitionFlags = RecognitionModes.WordMode | RecognitionModes.Coerce;
-             
-            Ink myInk = new Ink();
-            Point[] pts = new Point[points.Count];
-
-            int c = 0;
-            foreach (PointR p in points) {
-                pts[c] = new Point((int)(p.X), (int)(p.Y));
-                c++;
-            }
-            Stroke stroke = myInk.CreateStroke(pts);
-            
-            recognizerCtxt.Strokes = myInk.CreateStrokes();
-            recognizerCtxt.Strokes.Add(stroke);
-            RecognitionStatus recoStatus = new RecognitionStatus();
-            Microsoft.Ink.RecognitionResult recoResult = recognizerCtxt.Recognize(out recoStatus);
-            string id = GetMappedIDFromCharacter(recoResult.TopString);
-            Console.WriteLine("***** Tablet PC recognition result: " + recoResult.TopString + "\t Symbol: " + id);
-            recognizerCtxt.Strokes.Clear();
-
-            // make NBextList and return it
-            NBestList nbest = new NBestList();
-            nbest.AddResult(id, 0, 0, 0); // name, score, distance, angle
-            //nbest.SortDescending(); // sort so that nbest[0] is best result
-            //nbest.setTotalComparisons(totalComparisons);
-            //nbest.setActualComparisons(actualComparisons);
-            recognizerCtxt.Dispose();
-            myInk.Dispose();
-            return nbest;
-        }
-
-        private string GetMappedIDFromCharacter(string character)
-        {
-            switch (character) {
-                case "o": return "circle"; 
-                case "O": return "circle"; 
-                case "+": return "plus";
-                case "-": return "line";
-                default: return character;
-            }
-        }
-
-        private int FirstCorrect(string name, string[] names)
-        {
-            string category = Category.ParseName(name);
-            for (int i = 0; i < names.Length; i++)
-            {
-                string c = Category.ParseName(names[i]);
-                if (category == c)
+                else if (NDollarParameters.Instance.TestMethod == NDollarParameters.PossibleTestMethods.RANDOM100)
                 {
-                    return i + 1;
+                    return TestBatch_100Random(categoriesByUser, dir);
                 }
-            }
-            return -1;
-        }
-
-        // Cross-Validation Test Batch. Assumes 5 folds.
-        public bool TestBatch_CrossValidate(SamplesCollection categoriesByUser, string dir)
-        {
-            Console.Write("Testing batch (one tick per user)");
-            bool success = true;
-            StreamWriter mainWriter = null;
-            StreamWriter recWriter = null;
-            try
-            {
-                //
-                // set up a main results file and detailed recognition results file
-                //
-                int start = Environment.TickCount;
-                string mainFile = String.Format("{0}\\ndollar_main_{1}.csv", dir, start);
-                string recFile = String.Format("{0}\\ndollar_data_{1}.csv", dir, start);
-
-                mainWriter = new StreamWriter(mainFile, false);//, Encoding.UTF8);
-                mainWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
-                mainWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
-                    (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
-                    NDollarParameters.Instance.RotationInvariant,
-                    _RotationBound,
-                    _1DThreshold,
-                    NDollarParameters.Instance.DoStartAngleComparison,
-                    NDollarParameters.Instance.StartAngleIndex,
-                    Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
-                    NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
-                    NDollarParameters.Instance.TestFor1D,
-                    NDollarParameters.Instance.UseUniformScaling);
-                mainWriter.WriteLine("Recognizer,Subject,Speed,Fold,NumTraining,GestureType,RecognitionRate");
-
-                recWriter = new StreamWriter(recFile, false);//, Encoding.UTF8);
-                recWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
-                //recWriter.WriteLine("Testing:,within-user,Rotation invariance:,{0},Rotation bound:,{1},1D Threshold:,{2},Do start angle comparison:,{3},Start angle index:,{4},Start angle threshold:,{5},Do match only same number of strokes:,{6},Test for 1D gestures:,{7},UseUniformScaling:,{8}\n",
-                recWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
-                    (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
-                    NDollarParameters.Instance.RotationInvariant,
-                    _RotationBound,
-                    _1DThreshold,
-                    NDollarParameters.Instance.DoStartAngleComparison,
-                    NDollarParameters.Instance.StartAngleIndex,
-                    Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
-                    NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
-                    NDollarParameters.Instance.TestFor1D,
-                    NDollarParameters.Instance.UseUniformScaling);
-                recWriter.WriteLine("Subject,Speed,Fold,Correct?,NumTrain,Tested,Character,ActualComparisons,TotalComparisons,Is1D,1stCorrect,Pts,Ms,NumStrokes,RecoDuration,Angle,:,(NBestNames),[NBestScores]");
-
-                // Cross-Validation Procedure:
-                // for 1 to n folds (divide data into folds)
-                //   for each category c
-                //     choose n / c.numExamples (preserving equal numbers of samples per symbol per user in each fold)
-                //     add all to fold f
-                // for each fold f in folds
-                //   train $N with iterative numbers of training examples per symbol randomly chosen from all folds != f
-                //   test with all samples in fold f
-                //   write out test results for each test to recWriter (add column for fold)
-                // write out cumulative results for all tests to mainWriter
-
-                // for now do this within-user:
-                foreach (KeyValuePair<string, Dictionary<string, Category>> user in categoriesByUser)
+                else if (NDollarParameters.Instance.TestMethod == NDollarParameters.PossibleTestMethods.USERINDEP)
                 {
-                    Console.Write(".");
-                    string speed = "unknown"; // TODO: get this from the new object later
+                    return TestBatch_UserIndependent_100Random(categoriesByUser, dir);
+                }
+                else {
+                    return false;
+                }
+            }*/
 
-                    int numFolds = 5;
-                    List<SamplesCollection> allFolds = new List<SamplesCollection>(numFolds);
-                    //List<List<Multistroke>> allFolds = new List<List<Multistroke>>(numFolds);
+            /*public bool TestBatch_100Random(SamplesCollection categoriesByUser, string dir)
+            {
+                Console.Write("Testing batch (one tick per user)");
+                bool success = true;
+                StreamWriter mainWriter = null;
+                StreamWriter recWriter = null;
+                try
+                {
+                    //
+                    // set up a main results file and detailed recognition results file
+                    //
+                    int start = Environment.TickCount;
+                    string mainFile = String.Format("{0}\\ndollar_main_{1}.csv", dir, start);
+                    string recFile = String.Format("{0}\\ndollar_data_{1}.csv", dir, start);
 
-                    // division of data into folds
-                    // divide the user's samples by 5, evenly from each symbol (category)
-                    foreach (KeyValuePair<string, Category> cat in user.Value)
+                    mainWriter = new StreamWriter(mainFile, false);//, Encoding.UTF8);
+                    mainWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
+                    mainWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
+                        (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
+                        NDollarParameters.Instance.RotationInvariant,
+                        _RotationBound,
+                        _1DThreshold,
+                        NDollarParameters.Instance.DoStartAngleComparison,
+                        NDollarParameters.Instance.StartAngleIndex,
+                        Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
+                        NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
+                        NDollarParameters.Instance.TestFor1D,
+                        NDollarParameters.Instance.UseUniformScaling);
+                    mainWriter.WriteLine("Recognizer,Subject,Speed,NumTraining,GestureType,RecognitionRate");
+
+                    recWriter = new StreamWriter(recFile, false);//, Encoding.UTF8);
+                    recWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
+                    //recWriter.WriteLine("Testing:,within-user,Rotation invariance:,{0},Rotation bound:,{1},1D Threshold:,{2},Do start angle comparison:,{3},Start angle index:,{4},Start angle threshold:,{5},Do match only same number of strokes:,{6},Test for 1D gestures:,{7},UseUniformScaling:,{8}\n",
+                    recWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
+                        (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
+                        NDollarParameters.Instance.RotationInvariant,
+                        _RotationBound,
+                        _1DThreshold,
+                        NDollarParameters.Instance.DoStartAngleComparison,
+                        NDollarParameters.Instance.StartAngleIndex,
+                        Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
+                        NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
+                        NDollarParameters.Instance.TestFor1D,
+                        NDollarParameters.Instance.UseUniformScaling);
+                    recWriter.WriteLine("Subject,Speed,Correct?,NumTrain,Tested,Character,ActualComparisons,TotalComparisons,Is1D,1stCorrect,Pts,Ms,NumStrokes,RecoDuration,Angle,:,(NBestNames),[NBestScores]");
+
+                    // PER-USER-TESTING:
+                    // for each user
+                    //      for i = 1 to max number of training templates per symbol
+                    //          choose i samples randomly
+                    //          load those templates
+                    //          test on 1 remaining sample per symbol, randomly chosen
+                    //      repeat 100 times
+
+                    // new outermost loop: does the whole thing once for each user
+                    // Lisa, 5/12/2008
+                    foreach (KeyValuePair<string, Dictionary<string, Category>> user in categoriesByUser)
                     {
-                        Category c = (Category)cat.Value;
-                        List<int> usedIndices = new List<int>(); //int[c.NumExamples - 1];
-                        for (int f = 0; f < numFolds; f++)
-                        {
-                            allFolds.Add(new SamplesCollection());
-
-                            // choose over the whole range of not chosen examples for this user/symbol pair
-                            int n = c.NumExamples / numFolds;
-                            for (int i = 0; i < n; i++)
-                            {
-                                int chosen = Utils.Random(0, c.NumExamples - 1); // select a number between 0 and c.NumExamples
-                                while (usedIndices.Contains(chosen))
-                                {
-                                    chosen = Utils.Random(0, c.NumExamples - 1); // select a number between 0 and c.NumExamples
-                                }
-                                Multistroke p = c[chosen]; // get the prototype from this category at chosen-th index
-                                allFolds[f].AddExample(p); // add this example to the f fold
-                                usedIndices.Add(chosen);
-                            }
-                        }
-                    }  
-
-                    // training / testing
-                    for (int f = 0; f < numFolds; f++)
-                    {
-                        // train iteratively on all data in folds minus f
-                        int minNumExamples = allFolds[f].GetMinNumExamplesForUser(user.Key) * (numFolds - 1);
-                        double totalTests = minNumExamples * allFolds[f].GetTotalNumExamples() * numFolds;
+                        Console.Write(".");
+                        string speed = "unknown"; // TODO: get this from the new object later
 
                         //
-                        // next loop: trains on all remaining data in other folds
+                        // determine the maximum number of gesture categories and the 
+                        // minimum number of examples per category for this specific user
                         //
-                        for (int n = 1; n <= minNumExamples; n++)
+                        int minNumExamples = categoriesByUser.GetMinNumExamplesForUser(user.Key);
+                        double totalTests = (minNumExamples - 1) * NumRandomTests;
+
+                        //
+                        // next loop: trains on N=1..9, tests on 10-N (for e.g., numExamples = 10)
+                        //
+                        for (int n = 1; n <= minNumExamples - 1; n++)
                         {
                             // storage for the final avg results for each category for this N
                             Hashtable results = new Hashtable();
-                            _gestures.Clear(); // clear any (old) loaded prototypes
 
-                            // load (train on) N randomly selected gestures in each category
-                            // do this for this user only
-                            // make a temporary list of all possible training examples in folds minus f
-                            SamplesCollection trainingPool = new SamplesCollection();
-                            for (int p = 0; p < allFolds.Count; p++)
+                            //
+                            // run a number of tests at this particular N number of training examples
+                            //
+                            for (int r = 0; r < NumRandomTests; r++)
                             {
-                                if (p != f)
-                                {
-                                    foreach (KeyValuePair<string, Dictionary<string, Category>> u1 in allFolds[p])
-                                    {
-                                        foreach (KeyValuePair<string, Category> cat in u1.Value)
-                                        {
-                                            Category c = (Category)cat.Value;  // the category to load N examples for
-                                            for (int q = 0; q < c.NumExamples; q++)
-                                            {
-                                                trainingPool.AddExample(c[q]);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                                _gestures.Clear(); // clear any (old) loaded prototypes
 
-                            // get n random examples of each category
-                            foreach (KeyValuePair<string, Dictionary<string, Category>> u1 in trainingPool)
-                            {
-                                foreach (KeyValuePair<string, Category> cat in u1.Value)
+                                // load (train on) N randomly selected gestures in each category
+                                // do this for this user only
+                                foreach (KeyValuePair<string, Category> cat in user.Value)
                                 {
                                     Category c = (Category)cat.Value;  // the category to load N examples for
                                     // choose over the whole range of examples for this user/symbol pair, Lisa 1/5/2008
                                     int[] chosen = Utils.Random(0, c.NumExamples - 1, n); // select N unique indices
                                     for (int j = 0; j < chosen.Length; j++)
                                     {
-                                        Multistroke ms = c[chosen[j]]; // get the prototype from this category at chosen[j], Lisa 1/5/2008
-                                        _gestures.Add(ms.Name, ms); // load the randomly selected test gestures into the recognizer
+                                        Multistroke p = c[chosen[j]]; // get the prototype from this category at chosen[j], Lisa 1/5/2008
+                                        _gestures.Add(p.Name, p); // load the randomly selected test gestures into the recognizer
                                     }
                                 }
-                            }
-                            
-                            // testing loop: for all samples in allFolds[f]
-                            int numTests = 0;
-                            foreach (KeyValuePair<string, Dictionary<string, Category>> u1 in allFolds[f])
-                            {
-                                foreach (KeyValuePair<string, Category> cat in u1.Value)
-                                {
-                                    Category c = (Category)cat.Value;  // the category to load N examples for
-                                    for (int q = 0; q < c.NumExamples; q++)
-                                    {
-                                        Multistroke ms = c[q];
-                                        Gesture p = ms.OriginalGesture; // we only test on the original Gesture in the Multistroke, Lisa 1/5/2008
-                                        Debug.Assert(!_gestures.ContainsKey(p.Name));
 
+                                //
+                                // testing loop on all unloaded gestures in each category. creates a recognition
+                                // rate (%) by averaging the binary outcomes (correct, incorrect) for each test.
+                                //
+                                // do this for this user only
+                                foreach (KeyValuePair<string, Category> cat in user.Value)
+                                {
+                                    // pick a random unloaded gesture in this category for testing
+                                    // instead of dumbly picking, first find out what indices aren't
+                                    // loaded, and then randomly pick from those.
+                                    Category c = (Category)cat.Value;
+                                    int[] notLoaded = new int[c.NumExamples - n];
+                                    for (int j = 0, k = 0; j < c.NumExamples; j++)
+                                    {
+                                        Multistroke g = c[j]; // Lisa 1/5/2008
+                                        if (!_gestures.ContainsKey(g.Name))
+                                            notLoaded[k++] = j; // jth gesture in c is not loaded
+                                    }
+                                    int chosen = Utils.Random(0, notLoaded.Length - 1); // index
+                                    Multistroke ms = c[notLoaded[chosen]]; // gesture to test
+                                    Gesture p = ms.OriginalGesture; // we only test on the original Gesture in the Multistroke, Lisa 1/5/2008
+                                    Debug.Assert(!_gestures.ContainsKey(p.Name));
+
+                                    // do the recognition!
+                                    // record time before reco
+                                    int recoStart = Environment.TickCount;
+                                    Console.WriteLine("file we are about to recognize: " + p.Name);
+                                    NBestList result = null;
+                                    if (NDollarParameters.Instance.RecognizerName == NDollarParameters.PossibleRecognizers.NDOLLAR)
+                                        result = this.Recognize(p.RawPoints, ms.NumStrokes);
+                                    else if (NDollarParameters.Instance.RecognizerName == NDollarParameters.PossibleRecognizers.TABLETPC)
+                                        result = this.RecognizeInk(p.RawPoints, ms.NumStrokes);
+                                    else throw new Exception("Bad Recognizer Name in config.xml");
+                                    // record time after reco
+                                    int recoEnd = Environment.TickCount;
+                                    int recoDuration = recoEnd - recoStart; // in milliseconds
+                                    string category = Category.ParseName(result.Name);
+                                    int correct = (c.Name == category) ? 1 : 0;
+
+                                    speed = ms.Speed;
+                                    recWriter.WriteLine("{0},{1},{2},{3},'{4},'{5},{6},{7},{8},{9},{10},{11},{12},{13},{14:F1}{15},:,({16}),[{17}]",
+                                        ms.User,                            // 0 Subject
+                                        ms.Speed,                           // 1 Speed
+                                        correct,                            // 2 Correct?
+                                        n,                                  // 3 NumTrain 
+                                        p.Name,                             // 4 Tested 
+                                        Category.ParseName(p.Name),         // 5 Character
+                                        result.getActualComparisons(),      // 6 ActualComparisons
+                                        result.getTotalComparisons(),       // 7 TotalComparisons
+                                        p.Is1D,                             // 8 Is1D
+                                        FirstCorrect(p.Name, result.Names), // 9 1stCorrect
+                                        p.RawPoints.Count,                  // 10 Pts
+                                        p.Duration,                         // 11 Ms 
+                                        ms.NumStrokes,                      // 12 number of strokes
+                                        recoDuration,                       // 13 recognition duration (millis)
+                                        Math.Round(result.Angle, 1), (char)176, // 14/15 Angle tweaking :
+                                        result.NamesString,                 // 16 (NBestNames)
+                                        result.ScoresString);               // 17 [NBestScores]
+
+                                    // c is a Category object, unique to user/category pair
+                                    // use the category NAME to store the results
+                                    // Lisa 1/6/2008
+                                    if (results.ContainsKey(cat.Key))
+                                    {
+                                        double temp = (double)results[cat.Key] + correct;
+                                        results[cat.Key] = temp;
+                                    }
+                                    else
+                                    {
+                                        results.Add(cat.Key, (double)correct);
+                                    }
+                                }
+
+                                // provide feedback as to how many tests have been performed thus far.
+                                double testsSoFar = ((n - 1) * NumRandomTests) + r;
+                                if (ProgressChangedEvent != null)
+                                    ProgressChangedEvent(this, new ProgressEventArgs(testsSoFar / totalTests)); // callback
+                            }
+
+                            //
+                            // now create the final results for this user and this N and write them to a file
+                            //
+                            foreach (KeyValuePair<string, Category> cat in user.Value)
+                            {
+                                double temp = (double)results[cat.Key] / ((double)NumRandomTests * 1); // normalize by the number of tests at this N, Lisa 1/5/2008
+                                results[cat.Key] = temp;
+                                // Subject Recognizer Speed NumTraining GestureType RecognitionRate
+                                mainWriter.WriteLine("ndollar,{0},{1},{2},{3},{4:F3}", user.Key, speed, n, cat.Key, Math.Round((double)results[cat.Key], 3));
+                            }
+                        }
+                    }
+                    // time-stamp the end of the processing when it's allll done
+                    int end = Environment.TickCount;
+                    mainWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
+                    recWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
+                    Console.WriteLine();
+                    Console.WriteLine("Done testing batch.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.Write(ex.StackTrace);
+                    Console.WriteLine();
+                    success = false;
+                }
+                finally
+                {
+                    if (mainWriter != null)
+                        mainWriter.Close();
+                    if (recWriter != null)
+                        recWriter.Close();
+                }
+                return success;
+            }
+
+            private NBestList RecognizeInk(List<PointR> points, int numStrokes) {
+                RecognizerContext recognizerCtxt = new RecognizerContext();
+                recognizerCtxt.Strokes = null;
+                recognizerCtxt.WordList = new WordList();
+
+                // Note: there should be no strokes in the Strokes property of the RecognizerContext
+                // when setting the WordList property
+                recognizerCtxt.WordList = NDollarParameters.Instance.TabletRecognizerWordList; // recoWordList;
+                recognizerCtxt.Factoid = Microsoft.Ink.Factoid.WordList;
+                recognizerCtxt.RecognitionFlags = RecognitionModes.WordMode | RecognitionModes.Coerce;
+
+                Ink myInk = new Ink();
+                Point[] pts = new Point[points.Count];
+
+                int c = 0;
+                foreach (PointR p in points) {
+                    pts[c] = new Point((int)(p.X), (int)(p.Y));
+                    c++;
+                }
+                Stroke stroke = myInk.CreateStroke(pts);
+
+                recognizerCtxt.Strokes = myInk.CreateStrokes();
+                recognizerCtxt.Strokes.Add(stroke);
+                RecognitionStatus recoStatus = new RecognitionStatus();
+                Microsoft.Ink.RecognitionResult recoResult = recognizerCtxt.Recognize(out recoStatus);
+                string id = GetMappedIDFromCharacter(recoResult.TopString);
+                Console.WriteLine("***** Tablet PC recognition result: " + recoResult.TopString + "\t Symbol: " + id);
+                recognizerCtxt.Strokes.Clear();
+
+                // make NBextList and return it
+                NBestList nbest = new NBestList();
+                nbest.AddResult(id, 0, 0, 0); // name, score, distance, angle
+                //nbest.SortDescending(); // sort so that nbest[0] is best result
+                //nbest.setTotalComparisons(totalComparisons);
+                //nbest.setActualComparisons(actualComparisons);
+                recognizerCtxt.Dispose();
+                myInk.Dispose();
+                return nbest;
+            }
+
+            private string GetMappedIDFromCharacter(string character)
+            {
+                switch (character) {
+                    case "o": return "circle"; 
+                    case "O": return "circle"; 
+                    case "+": return "plus";
+                    case "-": return "line";
+                    default: return character;
+                }
+            }
+
+            private int FirstCorrect(string name, string[] names)
+            {
+                string category = Category.ParseName(name);
+                for (int i = 0; i < names.Length; i++)
+                {
+                    string c = Category.ParseName(names[i]);
+                    if (category == c)
+                    {
+                        return i + 1;
+                    }
+                }
+                return -1;
+            }
+
+            // Cross-Validation Test Batch. Assumes 5 folds.
+            public bool TestBatch_CrossValidate(SamplesCollection categoriesByUser, string dir)
+            {
+                Console.Write("Testing batch (one tick per user)");
+                bool success = true;
+                StreamWriter mainWriter = null;
+                StreamWriter recWriter = null;
+                try
+                {
+                    //
+                    // set up a main results file and detailed recognition results file
+                    //
+                    int start = Environment.TickCount;
+                    string mainFile = String.Format("{0}\\ndollar_main_{1}.csv", dir, start);
+                    string recFile = String.Format("{0}\\ndollar_data_{1}.csv", dir, start);
+
+                    mainWriter = new StreamWriter(mainFile, false);//, Encoding.UTF8);
+                    mainWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
+                    mainWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
+                        (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
+                        NDollarParameters.Instance.RotationInvariant,
+                        _RotationBound,
+                        _1DThreshold,
+                        NDollarParameters.Instance.DoStartAngleComparison,
+                        NDollarParameters.Instance.StartAngleIndex,
+                        Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
+                        NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
+                        NDollarParameters.Instance.TestFor1D,
+                        NDollarParameters.Instance.UseUniformScaling);
+                    mainWriter.WriteLine("Recognizer,Subject,Speed,Fold,NumTraining,GestureType,RecognitionRate");
+
+                    recWriter = new StreamWriter(recFile, false);//, Encoding.UTF8);
+                    recWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
+                    //recWriter.WriteLine("Testing:,within-user,Rotation invariance:,{0},Rotation bound:,{1},1D Threshold:,{2},Do start angle comparison:,{3},Start angle index:,{4},Start angle threshold:,{5},Do match only same number of strokes:,{6},Test for 1D gestures:,{7},UseUniformScaling:,{8}\n",
+                    recWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
+                        (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
+                        NDollarParameters.Instance.RotationInvariant,
+                        _RotationBound,
+                        _1DThreshold,
+                        NDollarParameters.Instance.DoStartAngleComparison,
+                        NDollarParameters.Instance.StartAngleIndex,
+                        Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
+                        NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
+                        NDollarParameters.Instance.TestFor1D,
+                        NDollarParameters.Instance.UseUniformScaling);
+                    recWriter.WriteLine("Subject,Speed,Fold,Correct?,NumTrain,Tested,Character,ActualComparisons,TotalComparisons,Is1D,1stCorrect,Pts,Ms,NumStrokes,RecoDuration,Angle,:,(NBestNames),[NBestScores]");
+
+                    // Cross-Validation Procedure:
+                    // for 1 to n folds (divide data into folds)
+                    //   for each category c
+                    //     choose n / c.numExamples (preserving equal numbers of samples per symbol per user in each fold)
+                    //     add all to fold f
+                    // for each fold f in folds
+                    //   train $N with iterative numbers of training examples per symbol randomly chosen from all folds != f
+                    //   test with all samples in fold f
+                    //   write out test results for each test to recWriter (add column for fold)
+                    // write out cumulative results for all tests to mainWriter
+
+                    // for now do this within-user:
+                    foreach (KeyValuePair<string, Dictionary<string, Category>> user in categoriesByUser)
+                    {
+                        Console.Write(".");
+                        string speed = "unknown"; // TODO: get this from the new object later
+
+                        int numFolds = 5;
+                        List<SamplesCollection> allFolds = new List<SamplesCollection>(numFolds);
+                        //List<List<Multistroke>> allFolds = new List<List<Multistroke>>(numFolds);
+
+                        // division of data into folds
+                        // divide the user's samples by 5, evenly from each symbol (category)
+                        foreach (KeyValuePair<string, Category> cat in user.Value)
+                        {
+                            Category c = (Category)cat.Value;
+                            List<int> usedIndices = new List<int>(); //int[c.NumExamples - 1];
+                            for (int f = 0; f < numFolds; f++)
+                            {
+                                allFolds.Add(new SamplesCollection());
+
+                                // choose over the whole range of not chosen examples for this user/symbol pair
+                                int n = c.NumExamples / numFolds;
+                                for (int i = 0; i < n; i++)
+                                {
+                                    int chosen = Utils.Random(0, c.NumExamples - 1); // select a number between 0 and c.NumExamples
+                                    while (usedIndices.Contains(chosen))
+                                    {
+                                        chosen = Utils.Random(0, c.NumExamples - 1); // select a number between 0 and c.NumExamples
+                                    }
+                                    Multistroke p = c[chosen]; // get the prototype from this category at chosen-th index
+                                    allFolds[f].AddExample(p); // add this example to the f fold
+                                    usedIndices.Add(chosen);
+                                }
+                            }
+                        }  
+
+                        // training / testing
+                        for (int f = 0; f < numFolds; f++)
+                        {
+                            // train iteratively on all data in folds minus f
+                            int minNumExamples = allFolds[f].GetMinNumExamplesForUser(user.Key) * (numFolds - 1);
+                            double totalTests = minNumExamples * allFolds[f].GetTotalNumExamples() * numFolds;
+
+                            //
+                            // next loop: trains on all remaining data in other folds
+                            //
+                            for (int n = 1; n <= minNumExamples; n++)
+                            {
+                                // storage for the final avg results for each category for this N
+                                Hashtable results = new Hashtable();
+                                _gestures.Clear(); // clear any (old) loaded prototypes
+
+                                // load (train on) N randomly selected gestures in each category
+                                // do this for this user only
+                                // make a temporary list of all possible training examples in folds minus f
+                                SamplesCollection trainingPool = new SamplesCollection();
+                                for (int p = 0; p < allFolds.Count; p++)
+                                {
+                                    if (p != f)
+                                    {
+                                        foreach (KeyValuePair<string, Dictionary<string, Category>> u1 in allFolds[p])
+                                        {
+                                            foreach (KeyValuePair<string, Category> cat in u1.Value)
+                                            {
+                                                Category c = (Category)cat.Value;  // the category to load N examples for
+                                                for (int q = 0; q < c.NumExamples; q++)
+                                                {
+                                                    trainingPool.AddExample(c[q]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // get n random examples of each category
+                                foreach (KeyValuePair<string, Dictionary<string, Category>> u1 in trainingPool)
+                                {
+                                    foreach (KeyValuePair<string, Category> cat in u1.Value)
+                                    {
+                                        Category c = (Category)cat.Value;  // the category to load N examples for
+                                        // choose over the whole range of examples for this user/symbol pair, Lisa 1/5/2008
+                                        int[] chosen = Utils.Random(0, c.NumExamples - 1, n); // select N unique indices
+                                        for (int j = 0; j < chosen.Length; j++)
+                                        {
+                                            Multistroke ms = c[chosen[j]]; // get the prototype from this category at chosen[j], Lisa 1/5/2008
+                                            _gestures.Add(ms.Name, ms); // load the randomly selected test gestures into the recognizer
+                                        }
+                                    }
+                                }
+
+                                // testing loop: for all samples in allFolds[f]
+                                int numTests = 0;
+                                foreach (KeyValuePair<string, Dictionary<string, Category>> u1 in allFolds[f])
+                                {
+                                    foreach (KeyValuePair<string, Category> cat in u1.Value)
+                                    {
+                                        Category c = (Category)cat.Value;  // the category to load N examples for
+                                        for (int q = 0; q < c.NumExamples; q++)
+                                        {
+                                            Multistroke ms = c[q];
+                                            Gesture p = ms.OriginalGesture; // we only test on the original Gesture in the Multistroke, Lisa 1/5/2008
+                                            Debug.Assert(!_gestures.ContainsKey(p.Name));
+
+                                            // do the recognition!
+                                            // record time before reco
+                                            int recoStart = Environment.TickCount;
+                                            NBestList result = null;
+                                            if (NDollarParameters.Instance.RecognizerName == NDollarParameters.PossibleRecognizers.NDOLLAR)
+                                                result = this.Recognize(p.RawPoints, ms.NumStrokes);
+                                            else if (NDollarParameters.Instance.RecognizerName == NDollarParameters.PossibleRecognizers.TABLETPC)
+                                                result = this.RecognizeInk(p.RawPoints, ms.NumStrokes);
+                                            else throw new Exception("Bad Recognizer Name in config.xml");
+                                            // record time after reco
+                                            int recoEnd = Environment.TickCount;
+                                            int recoDuration = recoEnd - recoStart; // in milliseconds
+                                            string category = Category.ParseName(result.Name);
+                                            int correct = (Category.ParseName(p.Name) == category) ? 1 : 0;
+
+                                            speed = ms.Speed;
+                                            recWriter.WriteLine("{0},{1},{2},{3},{4},'{5},'{6},{7},{8},{9},{10},{11},{12},{13},{14},{15:F1}{16},:,({17}),[{18}]",
+                                                ms.User,                            // 0 Subject
+                                                ms.Speed,                           // 1 Speed
+                                                f,                                  // 2 Fold
+                                                correct,                            // 3 Correct?
+                                                n,                                  // 4 NumTrain 
+                                                p.Name,                             // 5 Tested 
+                                                Category.ParseName(p.Name),         // 6 Character
+                                                result.getActualComparisons(),      // 7 ActualComparisons
+                                                result.getTotalComparisons(),       // 8 TotalComparisons
+                                                p.Is1D,                             // 9 Is1D
+                                                FirstCorrect(p.Name, result.Names), // 10 1stCorrect
+                                                p.RawPoints.Count,                  // 11 Pts
+                                                p.Duration,                         // 12 Ms 
+                                                ms.NumStrokes,                      // 13 number of strokes
+                                                recoDuration,                       // 14 recognition duration (millis)
+                                                Math.Round(result.Angle, 1), (char)176, // 15/16 Angle tweaking :
+                                                result.NamesString,                 // 17 (NBestNames)
+                                                result.ScoresString);               // 18 [NBestScores]
+
+                                            // c is a Category object, unique to user/category pair
+                                            // use the category NAME to store the results
+                                            // Lisa 1/6/2008
+                                            if (results.ContainsKey(Category.ParseName(p.Name)))
+                                            {
+                                                double temp = (double)results[Category.ParseName(p.Name)] + (correct / c.NumExamples); // keep the normalized version around from the beginning
+                                                results[Category.ParseName(p.Name)] = temp;
+                                            }
+                                            else
+                                            {
+                                                results.Add(Category.ParseName(p.Name), (double)correct);
+                                            }
+
+                                            // provide feedback as to how many tests have been performed thus far.                            
+                                            numTests++;
+                                            double testsSoFar = (f * minNumExamples * allFolds[f].GetTotalNumExamples()) + ((n - 1) * allFolds[f].GetTotalNumExamples()) + numTests;
+                                            if (ProgressChangedEvent != null)
+                                                ProgressChangedEvent(this, new ProgressEventArgs(testsSoFar / totalTests)); // callback
+                                        }
+                                    }
+                                }
+
+                                //
+                                // now create the final results for this user and this N and write them to a file
+                                //
+                                foreach (KeyValuePair<string, Category> cat in user.Value)
+                                {
+                                    // Subject Recognizer Speed NumTraining GestureType RecognitionRate
+                                    mainWriter.WriteLine("ndollar,{0},{1},{2},{3},{4},{5:F3}", user.Key, speed, f, n, cat.Key, Math.Round((double)results[cat.Key], 3));
+                                }
+                            }
+                        }
+                    }
+                    // time-stamp the end of the processing when it's allll done
+                    int end = Environment.TickCount;
+                    mainWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
+                    recWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
+                    Console.WriteLine();
+                    Console.WriteLine("Done testing batch.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.Write(ex.StackTrace);
+                    Console.WriteLine();
+                    success = false;
+                }
+                finally
+                {
+                    if (mainWriter != null)
+                        mainWriter.Close();
+                    if (recWriter != null)
+                        recWriter.Close();
+                }
+                return success;
+            }
+
+            public bool TestBatch_UserIndependent_100Random(SamplesCollection categoriesByUser, string dir)
+            {
+                Console.Write("Testing batch (one tick per user)");
+                bool success = true;
+                StreamWriter mainWriter = null;
+                StreamWriter recWriter = null;
+                try
+                {
+                    //
+                    // set up a main results file and detailed recognition results file
+                    //
+                    int start = Environment.TickCount;
+                    string mainFile = String.Format("{0}\\ndollar_main_{1}.csv", dir, start);
+                    string recFile = String.Format("{0}\\ndollar_data_{1}.csv", dir, start);
+
+                    mainWriter = new StreamWriter(mainFile, false);//, Encoding.UTF8);
+                    mainWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
+                    mainWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
+                        (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
+                        NDollarParameters.Instance.RotationInvariant,
+                        _RotationBound,
+                        _1DThreshold,
+                        NDollarParameters.Instance.DoStartAngleComparison,
+                        NDollarParameters.Instance.StartAngleIndex,
+                        Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
+                        NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
+                        NDollarParameters.Instance.TestFor1D,
+                        NDollarParameters.Instance.UseUniformScaling);
+                    mainWriter.WriteLine("Recognizer,NumTrainingUsers,Speed,NumTrainingSamples,GestureType,RecognitionRate");
+
+                    recWriter = new StreamWriter(recFile, false);//, Encoding.UTF8);
+                    recWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
+                    //recWriter.WriteLine("Testing:,within-user,Rotation invariance:,{0},Rotation bound:,{1},1D Threshold:,{2},Do start angle comparison:,{3},Start angle index:,{4},Start angle threshold:,{5},Do match only same number of strokes:,{6},Test for 1D gestures:,{7},UseUniformScaling:,{8}\n",
+                    recWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
+                        (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
+                        NDollarParameters.Instance.RotationInvariant,
+                        _RotationBound,
+                        _1DThreshold,
+                        NDollarParameters.Instance.DoStartAngleComparison,
+                        NDollarParameters.Instance.StartAngleIndex,
+                        Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
+                        NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
+                        NDollarParameters.Instance.TestFor1D,
+                        NDollarParameters.Instance.UseUniformScaling);
+                    recWriter.WriteLine("Subject,Speed,NumTrainingUsers,Correct?,NumTrainingSamples,Tested,Character,ActualComparisons,TotalComparisons,Is1D,1stCorrect,Pts,Ms,NumStrokes,RecoDuration,Angle,:,(NBestNames),[NBestScores]");
+
+                    // procedure for user-independent testing
+                    // copies from Radu's $P procedure and adapted for $N SamplesCollection representation
+                    // Vary NT from 1..9 (NUM_PARTICIPANTS)
+                    //   - Repeat the following 100 times: (REPETITIONS)
+                    //     - Random select NT participants for training
+                    //     - Random select 1 participant different from NT for testing
+                    //     - Vary T from 1..9 (numberOfTrainingSamples)
+                    //       - Repeat the following 100 times: (REPETITIONS)
+                    //         - Build training set (random select T samples from each NT)
+                    //         - Build testing set (random select 1 sample from testing participant)
+                    //         - Compute recognition rate for each metric
+
+                    int NUM_PARTICIPANTS = categoriesByUser.GetUsersList().Count;
+                    int REPETITIONS = 10;
+
+                    for (int numParticipantsUsedForTraining = 1; numParticipantsUsedForTraining <= NUM_PARTICIPANTS - 1; numParticipantsUsedForTraining++)
+                    {
+                        Console.Write(".");
+                        string speed = "unknown"; // TODO: get this from the new object later
+
+                        //
+                        // determine the maximum number of gesture categories and the 
+                        // minimum number of examples per category for this specific user
+                        //
+                        double totalTestsThisRoundNT = (numberOfTrainingSamples[numberOfTrainingSamples.Length - 1] - 1) * REPETITIONS;
+
+                        // repeat selection of participants for training REPETITIONS times
+                        for (int repetitionSelection = 0; repetitionSelection < REPETITIONS; repetitionSelection++)
+                        {
+                            // random select training participants and 1 testing participant
+                            List<int> trainingParticipants = new List<int>();
+                            int testingParticipant = -1;
+                            SelectParticipantsForTrainingAndTesting(NUM_PARTICIPANTS, numParticipantsUsedForTraining, ref trainingParticipants, ref testingParticipant);
+
+                            // test on different sizes for the training set
+                            foreach (int T in numberOfTrainingSamples) // TODO: make this general for datasets without equal #s of samples and do all 1..T
+                            {
+                                // storage for the final avg results for each category for this NT, T
+                                Hashtable results = new Hashtable();
+
+                                // repeat classification REPETITIONS times
+                                for (int repetitionClassification = 0; repetitionClassification < REPETITIONS; repetitionClassification++)
+                                {
+                                    _gestures.Clear(); // clear any (old) loaded prototypes
+
+                                    // build training and testing sets
+                                    List<string> allUsers = categoriesByUser.GetUsersList();
+                                    // select T samples per category (symbol) for each user in the training set and load them
+                                    foreach (int indexParticipant in trainingParticipants)
+                                    {
+                                        foreach (KeyValuePair<string, Category> cat in categoriesByUser[allUsers[indexParticipant]])
+                                        {
+                                            Category c = (Category)cat.Value;  // the category to load N examples for
+                                            // choose over the whole range of examples for this user/symbol pair, Lisa 1/5/2008
+                                            int[] chosen = Utils.Random(0, c.NumExamples - 1, T); // select N unique indices
+                                            for (int j = 0; j < chosen.Length; j++)
+                                            {
+                                                Multistroke p = c[chosen[j]]; // get the prototype from this category at chosen[j], Lisa 1/5/2008
+                                                _gestures.Add(p.Name, p); // load the randomly selected test gestures into the recognizer
+                                            }
+                                        }
+                                    }
+                                    // training set is now made and loaded
+
+                                    // select 1 sample per category (symbol) for the user in the testing set
+                                    foreach (KeyValuePair<string, Category> cat in categoriesByUser[allUsers[testingParticipant]])
+                                    {
+                                        //Console.WriteLine("c = " + cat.Value.Name);
+                                        Category c = (Category)cat.Value;  // the category to load N examples for
+                                        // choose over the whole range of examples for this user/symbol pair, Lisa 1/5/2008
+                                        int chosen = Utils.Random(0, c.NumExamples - 1); // select 1 unique indices to test
+                                        Multistroke ms = c[chosen]; // gesture to test
+                                        Gesture p = ms.OriginalGesture; // we only test on the original Gesture in the Multistroke, Lisa 1/5/2008
+                                        //Debug.Assert(!_gestures.ContainsKey(p.Name)); // TODO: re-add assert but add username to name of gesture to keep them unique
+
+                                        // test this gesture and write the output
                                         // do the recognition!
                                         // record time before reco
                                         int recoStart = Environment.TickCount;
+                                        //Console.WriteLine("file we are about to recognize: " + p.Name);
                                         NBestList result = null;
                                         if (NDollarParameters.Instance.RecognizerName == NDollarParameters.PossibleRecognizers.NDOLLAR)
                                             result = this.Recognize(p.RawPoints, ms.NumStrokes);
@@ -1120,15 +1323,15 @@ namespace Recognizer.NDollar
                                         int recoEnd = Environment.TickCount;
                                         int recoDuration = recoEnd - recoStart; // in milliseconds
                                         string category = Category.ParseName(result.Name);
-                                        int correct = (Category.ParseName(p.Name) == category) ? 1 : 0;
+                                        int correct = (c.Name == category) ? 1 : 0;
 
                                         speed = ms.Speed;
                                         recWriter.WriteLine("{0},{1},{2},{3},{4},'{5},'{6},{7},{8},{9},{10},{11},{12},{13},{14},{15:F1}{16},:,({17}),[{18}]",
                                             ms.User,                            // 0 Subject
                                             ms.Speed,                           // 1 Speed
-                                            f,                                  // 2 Fold
+                                            numParticipantsUsedForTraining,     // 2 NumTrainingUsers
                                             correct,                            // 3 Correct?
-                                            n,                                  // 4 NumTrain 
+                                            T,                                  // 4 NumTrainingSamples
                                             p.Name,                             // 5 Tested 
                                             Category.ParseName(p.Name),         // 6 Character
                                             result.getActualComparisons(),      // 7 ActualComparisons
@@ -1146,388 +1349,172 @@ namespace Recognizer.NDollar
                                         // c is a Category object, unique to user/category pair
                                         // use the category NAME to store the results
                                         // Lisa 1/6/2008
-                                        if (results.ContainsKey(Category.ParseName(p.Name)))
+                                        if (results.ContainsKey(cat.Key))
                                         {
-                                            double temp = (double)results[Category.ParseName(p.Name)] + (correct / c.NumExamples); // keep the normalized version around from the beginning
-                                            results[Category.ParseName(p.Name)] = temp;
+                                            double temp = (double)results[cat.Key] + correct;
+                                            results[cat.Key] = temp;
                                         }
                                         else
                                         {
-                                            results.Add(Category.ParseName(p.Name), (double)correct);
+                                            results.Add(cat.Key, (double)correct);
                                         }
 
-                                        // provide feedback as to how many tests have been performed thus far.                            
-                                        numTests++;
-                                        double testsSoFar = (f * minNumExamples * allFolds[f].GetTotalNumExamples()) + ((n - 1) * allFolds[f].GetTotalNumExamples()) + numTests;
-                                        if (ProgressChangedEvent != null)
-                                            ProgressChangedEvent(this, new ProgressEventArgs(testsSoFar / totalTests)); // callback
                                     }
-                                }
-                            }
+                                    // testing set has now been recognized
 
-                            //
-                            // now create the final results for this user and this N and write them to a file
-                            //
-                            foreach (KeyValuePair<string, Category> cat in user.Value)
-                            {
-                                // Subject Recognizer Speed NumTraining GestureType RecognitionRate
-                                mainWriter.WriteLine("ndollar,{0},{1},{2},{3},{4},{5:F3}", user.Key, speed, f, n, cat.Key, Math.Round((double)results[cat.Key], 3));
+                                    // provide feedback as to how many tests have been performed thus far.
+                                    double testsSoFar = ((T - 1) * REPETITIONS) + repetitionClassification;
+                                    if (ProgressChangedEvent != null)
+                                        ProgressChangedEvent(this, new ProgressEventArgs(testsSoFar / totalTestsThisRoundNT)); // callback
+
+                                }
+                                //
+                                // now create the final results for this NT and this N and write them to a file
+                                //
+                                List<string> tmp = categoriesByUser.GetCategoryNames();
+                                foreach (string cat in categoriesByUser.GetCategoryNames())
+                                {
+                                    double temp = (double)results[cat] / ((double)REPETITIONS * 1); // normalize by the number of tests at this N, Lisa 1/5/2008
+                                    results[cat] = temp;
+                                    // Subject Recognizer Speed NumTraining GestureType RecognitionRate
+                                    mainWriter.WriteLine("ndollar,{0},{1},{2},{3},{4:F3}", numParticipantsUsedForTraining, speed, T, cat, Math.Round((double)results[cat], 3));
+                                }
                             }
                         }
                     }
+
+                    // time-stamp the end of the processing when it's allll done
+                    int end = Environment.TickCount;
+                    mainWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
+                    recWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
+                    Console.WriteLine();
+                    Console.WriteLine("Done testing batch.");
                 }
-                // time-stamp the end of the processing when it's allll done
-                int end = Environment.TickCount;
-                mainWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
-                recWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
-                Console.WriteLine();
-                Console.WriteLine("Done testing batch.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.Write(ex.StackTrace);
-                Console.WriteLine();
-                success = false;
-            }
-            finally
-            {
-                if (mainWriter != null)
-                    mainWriter.Close();
-                if (recWriter != null)
-                    recWriter.Close();
-            }
-            return success;
-        }
-
-        public bool TestBatch_UserIndependent_100Random(SamplesCollection categoriesByUser, string dir)
-        {
-            Console.Write("Testing batch (one tick per user)");
-            bool success = true;
-            StreamWriter mainWriter = null;
-            StreamWriter recWriter = null;
-            try
-            {
-                //
-                // set up a main results file and detailed recognition results file
-                //
-                int start = Environment.TickCount;
-                string mainFile = String.Format("{0}\\ndollar_main_{1}.csv", dir, start);
-                string recFile = String.Format("{0}\\ndollar_data_{1}.csv", dir, start);
-
-                mainWriter = new StreamWriter(mainFile, false);//, Encoding.UTF8);
-                mainWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
-                mainWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
-                    (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
-                    NDollarParameters.Instance.RotationInvariant,
-                    _RotationBound,
-                    _1DThreshold,
-                    NDollarParameters.Instance.DoStartAngleComparison,
-                    NDollarParameters.Instance.StartAngleIndex,
-                    Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
-                    NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
-                    NDollarParameters.Instance.TestFor1D,
-                    NDollarParameters.Instance.UseUniformScaling);
-                mainWriter.WriteLine("Recognizer,NumTrainingUsers,Speed,NumTrainingSamples,GestureType,RecognitionRate");
-
-                recWriter = new StreamWriter(recFile, false);//, Encoding.UTF8);
-                recWriter.WriteLine("Recognizer:,{0}, StartTime(ms):,{1}\n", NDollarParameters.Instance.RecognizerName, start);
-                //recWriter.WriteLine("Testing:,within-user,Rotation invariance:,{0},Rotation bound:,{1},1D Threshold:,{2},Do start angle comparison:,{3},Start angle index:,{4},Start angle threshold:,{5},Do match only same number of strokes:,{6},Test for 1D gestures:,{7},UseUniformScaling:,{8}\n",
-                recWriter.WriteLine("Testing:,within-user,Matching method:,{0},Rotation invariance:,{1},Rotation bound:,{2},1D Threshold:,{3},Do start angle comparison:,{4},Start angle index:,{5},Start angle threshold:,{6},Do match only same number of strokes:,{7},Test for 1D gestures:,{8},UseUniformScaling:,{9}\n",
-                    (NDollarParameters.Instance.SearchMethod == NDollarParameters.PossibleSearchMethods.GSS) ? "GSS" : "Protractor",
-                    NDollarParameters.Instance.RotationInvariant,
-                    _RotationBound,
-                    _1DThreshold,
-                    NDollarParameters.Instance.DoStartAngleComparison,
-                    NDollarParameters.Instance.StartAngleIndex,
-                    Utils.Rad2Deg(NDollarParameters.Instance.StartAngleThreshold),
-                    NDollarParameters.Instance.MatchOnlyIfSameNumberOfStrokes,
-                    NDollarParameters.Instance.TestFor1D,
-                    NDollarParameters.Instance.UseUniformScaling);
-                recWriter.WriteLine("Subject,Speed,NumTrainingUsers,Correct?,NumTrainingSamples,Tested,Character,ActualComparisons,TotalComparisons,Is1D,1stCorrect,Pts,Ms,NumStrokes,RecoDuration,Angle,:,(NBestNames),[NBestScores]");
-
-                // procedure for user-independent testing
-                // copies from Radu's $P procedure and adapted for $N SamplesCollection representation
-                // Vary NT from 1..9 (NUM_PARTICIPANTS)
-                //   - Repeat the following 100 times: (REPETITIONS)
-                //     - Random select NT participants for training
-                //     - Random select 1 participant different from NT for testing
-                //     - Vary T from 1..9 (numberOfTrainingSamples)
-                //       - Repeat the following 100 times: (REPETITIONS)
-                //         - Build training set (random select T samples from each NT)
-                //         - Build testing set (random select 1 sample from testing participant)
-                //         - Compute recognition rate for each metric
-
-                int NUM_PARTICIPANTS = categoriesByUser.GetUsersList().Count;
-                int REPETITIONS = 10;
-
-                for (int numParticipantsUsedForTraining = 1; numParticipantsUsedForTraining <= NUM_PARTICIPANTS - 1; numParticipantsUsedForTraining++)
+                catch (Exception ex)
                 {
-                    Console.Write(".");
-                    string speed = "unknown"; // TODO: get this from the new object later
-
-                    //
-                    // determine the maximum number of gesture categories and the 
-                    // minimum number of examples per category for this specific user
-                    //
-                    double totalTestsThisRoundNT = (numberOfTrainingSamples[numberOfTrainingSamples.Length - 1] - 1) * REPETITIONS;
-
-                    // repeat selection of participants for training REPETITIONS times
-                    for (int repetitionSelection = 0; repetitionSelection < REPETITIONS; repetitionSelection++)
-                    {
-                        // random select training participants and 1 testing participant
-                        List<int> trainingParticipants = new List<int>();
-                        int testingParticipant = -1;
-                        SelectParticipantsForTrainingAndTesting(NUM_PARTICIPANTS, numParticipantsUsedForTraining, ref trainingParticipants, ref testingParticipant);
-
-                        // test on different sizes for the training set
-                        foreach (int T in numberOfTrainingSamples) // TODO: make this general for datasets without equal #s of samples and do all 1..T
-                        {
-                            // storage for the final avg results for each category for this NT, T
-                            Hashtable results = new Hashtable();
-
-                            // repeat classification REPETITIONS times
-                            for (int repetitionClassification = 0; repetitionClassification < REPETITIONS; repetitionClassification++)
-                            {
-                                _gestures.Clear(); // clear any (old) loaded prototypes
-
-                                // build training and testing sets
-                                List<string> allUsers = categoriesByUser.GetUsersList();
-                                // select T samples per category (symbol) for each user in the training set and load them
-                                foreach (int indexParticipant in trainingParticipants)
-                                {
-                                    foreach (KeyValuePair<string, Category> cat in categoriesByUser[allUsers[indexParticipant]])
-                                    {
-                                        Category c = (Category)cat.Value;  // the category to load N examples for
-                                        // choose over the whole range of examples for this user/symbol pair, Lisa 1/5/2008
-                                        int[] chosen = Utils.Random(0, c.NumExamples - 1, T); // select N unique indices
-                                        for (int j = 0; j < chosen.Length; j++)
-                                        {
-                                            Multistroke p = c[chosen[j]]; // get the prototype from this category at chosen[j], Lisa 1/5/2008
-                                            _gestures.Add(p.Name, p); // load the randomly selected test gestures into the recognizer
-                                        }
-                                    }
-                                }
-                                // training set is now made and loaded
-
-                                // select 1 sample per category (symbol) for the user in the testing set
-                                foreach (KeyValuePair<string, Category> cat in categoriesByUser[allUsers[testingParticipant]])
-                                {
-                                    //Console.WriteLine("c = " + cat.Value.Name);
-                                    Category c = (Category)cat.Value;  // the category to load N examples for
-                                    // choose over the whole range of examples for this user/symbol pair, Lisa 1/5/2008
-                                    int chosen = Utils.Random(0, c.NumExamples - 1); // select 1 unique indices to test
-                                    Multistroke ms = c[chosen]; // gesture to test
-                                    Gesture p = ms.OriginalGesture; // we only test on the original Gesture in the Multistroke, Lisa 1/5/2008
-                                    //Debug.Assert(!_gestures.ContainsKey(p.Name)); // TODO: re-add assert but add username to name of gesture to keep them unique
-
-                                    // test this gesture and write the output
-                                    // do the recognition!
-                                    // record time before reco
-                                    int recoStart = Environment.TickCount;
-                                    //Console.WriteLine("file we are about to recognize: " + p.Name);
-                                    NBestList result = null;
-                                    if (NDollarParameters.Instance.RecognizerName == NDollarParameters.PossibleRecognizers.NDOLLAR)
-                                        result = this.Recognize(p.RawPoints, ms.NumStrokes);
-                                    else if (NDollarParameters.Instance.RecognizerName == NDollarParameters.PossibleRecognizers.TABLETPC)
-                                        result = this.RecognizeInk(p.RawPoints, ms.NumStrokes);
-                                    else throw new Exception("Bad Recognizer Name in config.xml");
-                                    // record time after reco
-                                    int recoEnd = Environment.TickCount;
-                                    int recoDuration = recoEnd - recoStart; // in milliseconds
-                                    string category = Category.ParseName(result.Name);
-                                    int correct = (c.Name == category) ? 1 : 0;
-
-                                    speed = ms.Speed;
-                                    recWriter.WriteLine("{0},{1},{2},{3},{4},'{5},'{6},{7},{8},{9},{10},{11},{12},{13},{14},{15:F1}{16},:,({17}),[{18}]",
-                                        ms.User,                            // 0 Subject
-                                        ms.Speed,                           // 1 Speed
-                                        numParticipantsUsedForTraining,     // 2 NumTrainingUsers
-                                        correct,                            // 3 Correct?
-                                        T,                                  // 4 NumTrainingSamples
-                                        p.Name,                             // 5 Tested 
-                                        Category.ParseName(p.Name),         // 6 Character
-                                        result.getActualComparisons(),      // 7 ActualComparisons
-                                        result.getTotalComparisons(),       // 8 TotalComparisons
-                                        p.Is1D,                             // 9 Is1D
-                                        FirstCorrect(p.Name, result.Names), // 10 1stCorrect
-                                        p.RawPoints.Count,                  // 11 Pts
-                                        p.Duration,                         // 12 Ms 
-                                        ms.NumStrokes,                      // 13 number of strokes
-                                        recoDuration,                       // 14 recognition duration (millis)
-                                        Math.Round(result.Angle, 1), (char)176, // 15/16 Angle tweaking :
-                                        result.NamesString,                 // 17 (NBestNames)
-                                        result.ScoresString);               // 18 [NBestScores]
-
-                                    // c is a Category object, unique to user/category pair
-                                    // use the category NAME to store the results
-                                    // Lisa 1/6/2008
-                                    if (results.ContainsKey(cat.Key))
-                                    {
-                                        double temp = (double)results[cat.Key] + correct;
-                                        results[cat.Key] = temp;
-                                    }
-                                    else
-                                    {
-                                        results.Add(cat.Key, (double)correct);
-                                    }
-
-                                }
-                                // testing set has now been recognized
-
-                                // provide feedback as to how many tests have been performed thus far.
-                                double testsSoFar = ((T - 1) * REPETITIONS) + repetitionClassification;
-                                if (ProgressChangedEvent != null)
-                                    ProgressChangedEvent(this, new ProgressEventArgs(testsSoFar / totalTestsThisRoundNT)); // callback
-
-                            }
-                            //
-                            // now create the final results for this NT and this N and write them to a file
-                            //
-                            List<string> tmp = categoriesByUser.GetCategoryNames();
-                            foreach (string cat in categoriesByUser.GetCategoryNames())
-                            {
-                                double temp = (double)results[cat] / ((double)REPETITIONS * 1); // normalize by the number of tests at this N, Lisa 1/5/2008
-                                results[cat] = temp;
-                                // Subject Recognizer Speed NumTraining GestureType RecognitionRate
-                                mainWriter.WriteLine("ndollar,{0},{1},{2},{3},{4:F3}", numParticipantsUsedForTraining, speed, T, cat, Math.Round((double)results[cat], 3));
-                            }
-                        }
-                    }
+                    Console.WriteLine(ex.Message);
+                    Console.Write(ex.StackTrace);
+                    Console.WriteLine();
+                    Console.ReadLine();
+                    success = false;
                 }
-
-                // time-stamp the end of the processing when it's allll done
-                int end = Environment.TickCount;
-                mainWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
-                recWriter.WriteLine("\nEndTime(ms):,{0}, Minutes:,{1:F2}", end, Math.Round((end - start) / 60000.0, 2));
-                Console.WriteLine();
-                Console.WriteLine("Done testing batch.");
+                finally
+                {
+                    if (mainWriter != null)
+                        mainWriter.Close();
+                    if (recWriter != null)
+                        recWriter.Close();
+                }
+                return success;
             }
-            catch (Exception ex)
+
+            /// <summary>
+            /// Splits all the participants (allParticipants) into training and testing such that
+            /// T participants will be used for training and one participant for testing
+            /// </summary>
+            private void SelectParticipantsForTrainingAndTesting(int numParticipants, int T, ref List<int> trainingParticipants, ref int testingParticipant)
             {
-                Console.WriteLine(ex.Message);
-                Console.Write(ex.StackTrace);
-                Console.WriteLine();
-                Console.ReadLine();
-                success = false;
+                // random select participants for training
+                int[] indexes = Utils.Random(0, numParticipants - 1, T + 1); // does same thing as Radu's SelectRandomIntegers?
+                trainingParticipants = new List<int>();
+                for (int i = 0; i < indexes.Length - 1; i++)
+                    trainingParticipants.Add(indexes[i]);
+
+                // random select one participant for testing
+                testingParticipant = indexes[indexes.Length - 1];
             }
-            finally
+
+            #endregion
+
+            #region Rotation Graph
+
+            public bool CreateRotationGraph(string file1, string file2, string dir, bool similar)
             {
-                if (mainWriter != null)
-                    mainWriter.Close();
-                if (recWriter != null)
-                    recWriter.Close();
-            }
-            return success;
-        }
-
-        /// <summary>
-        /// Splits all the participants (allParticipants) into training and testing such that
-        /// T participants will be used for training and one participant for testing
-        /// </summary>
-        private void SelectParticipantsForTrainingAndTesting(int numParticipants, int T, ref List<int> trainingParticipants, ref int testingParticipant)
-        {
-            // random select participants for training
-            int[] indexes = Utils.Random(0, numParticipants - 1, T + 1); // does same thing as Radu's SelectRandomIntegers?
-            trainingParticipants = new List<int>();
-            for (int i = 0; i < indexes.Length - 1; i++)
-                trainingParticipants.Add(indexes[i]);
-
-            // random select one participant for testing
-            testingParticipant = indexes[indexes.Length - 1];
-        }
-
-        #endregion
-
-        #region Rotation Graph
-
-        public bool CreateRotationGraph(string file1, string file2, string dir, bool similar)
-        {
-            bool success = true;
-            StreamWriter writer = null;
-            XmlTextReader reader = null;
-            try
-            {
-                // read gesture file #1
-                reader = new XmlTextReader(file1);
-                reader.WhitespaceHandling = WhitespaceHandling.None;
-                reader.MoveToContent();
-                Multistroke g1 = ReadGesture(reader); // Lisa 1/2/2008
-                reader.Close();
-
-                // read gesture file #2
-                reader = new XmlTextReader(file2);
-                reader.WhitespaceHandling = WhitespaceHandling.None;
-                reader.MoveToContent();
-                Multistroke g2 = ReadGesture(reader); // Lisa 1/2/2008
-
-                // create output file for results
-                string outfile = String.Format("{0}\\{1}({2}, {3})_{4}.txt", dir, similar ? "o" : "x", g1.Name, g2.Name, Environment.TickCount);
-                writer = new StreamWriter(outfile, false, Encoding.UTF8);
-                writer.WriteLine("Rotated: {0} --> {1}. {2}, {3}\n", g1.Name, g2.Name, DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString());
-
-                // do the full 360 degree rotations
-                double[] full = FullSearch(g1.OriginalGesture.Points, g2.OriginalGesture.Points, writer); // Lisa 1/2/2008
-
-                // use bidirectional hill climbing to do it again
-                double init = Utils.PathDistance(g1.OriginalGesture.Points, g2.OriginalGesture.Points); // initial distance  // Lisa 1/2/2008
-                double[] pos = HillClimbSearch(g1.OriginalGesture.Points, g2.OriginalGesture.Points, init, 1d); // Lisa 1/2/2008
-                double[] neg = HillClimbSearch(g1.OriginalGesture.Points, g2.OriginalGesture.Points, init, -1d); // Lisa 1/2/2008
-                double[] best = new double[3];
-                best = (neg[0] < pos[0]) ? neg : pos; // min distance
-                writer.WriteLine("\nHill Climb Search ({0} rotations)\n{1:F2}{2}\t{3:F3} px", pos[2] + neg[2] + 1, Math.Round(best[1], 2), (char) 176, Math.Round(best[0], 3)); // calls, angle, distance
-
-                // use golden section search to do it yet again
-                double[] gold = GoldenSectionSearch(
-                    g1.OriginalGesture.Points,              // to rotate   // Lisa 1/2/2008
-                    g2.OriginalGesture.Points,              // to match    // Lisa 1/2/2008
-                    Utils.Deg2Rad(-_RotationBound),   // lbound   // Lisa 1/2/2008
-                    Utils.Deg2Rad(+_RotationBound),   // ubound   // Lisa 1/2/2008
-                    Utils.Deg2Rad(2.0));    // threshold
-                writer.WriteLine("\nGolden Section Search ({0} rotations)\n{1:F2}{2}\t{3:F3} px", gold[2], Math.Round(gold[1], 2), (char) 176, Math.Round(gold[0], 3)); // calls, angle, distance
-
-                // for pasting into Excel
-                writer.WriteLine("\n{0} {1} {2:F2} {3:F2} {4:F3} {5:F3} {6} {7:F2} {8:F2} {9:F3} {10} {11:F2} {12:F2} {13:F3} {14}",
-                    g1.Name,                    // rotated
-                    g2.Name,                    // into
-                    Math.Abs(Math.Round(full[1], 2)), // |angle|
-                    Math.Round(full[1], 2),     // Full Search angle
-                    Math.Round(full[0], 3),     // Full Search distance
-                    Math.Round(init, 3),        // Initial distance w/o any search
-                    full[2],                    // Full Search iterations
-                    Math.Abs(Math.Round(best[1], 2)), // |angle|
-                    Math.Round(best[1], 2),     // Bidirectional Hill Climb Search angle
-                    Math.Round(best[0], 3),     // Bidirectional Hill Climb Search distance
-                    pos[2] + neg[2] + 1,        // Bidirectional Hill Climb Search iterations
-                    Math.Abs(Math.Round(gold[1], 2)), // |angle|
-                    Math.Round(gold[1], 2),     // Golden Section Search angle
-                    Math.Round(gold[0], 3),     // Golden Section Search distance
-                    gold[2]);                   // Golden Section Search iterations
-            }
-            catch (XmlException xml)
-            {
-                Console.WriteLine(xml.Message);
-                Console.Write(xml.StackTrace);
-                Console.WriteLine();
-                success = false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.Write(ex.StackTrace);
-                Console.WriteLine();
-                success = false;
-            }
-            finally
-            {
-                if (reader != null)
+                bool success = true;
+                StreamWriter writer = null;
+                XmlTextReader reader = null;
+                try
+                {
+                    // read gesture file #1
+                    reader = new XmlTextReader(file1);
+                    reader.WhitespaceHandling = WhitespaceHandling.None;
+                    reader.MoveToContent();
+                    Multistroke g1 = ReadGesture(reader); // Lisa 1/2/2008
                     reader.Close();
-                if (writer != null)
-                    writer.Close();
+
+                    // read gesture file #2
+                    reader = new XmlTextReader(file2);
+                    reader.WhitespaceHandling = WhitespaceHandling.None;
+                    reader.MoveToContent();
+                    Multistroke g2 = ReadGesture(reader); // Lisa 1/2/2008
+
+                    // create output file for results
+                    string outfile = String.Format("{0}\\{1}({2}, {3})_{4}.txt", dir, similar ? "o" : "x", g1.Name, g2.Name, Environment.TickCount);
+                    writer = new StreamWriter(outfile, false, Encoding.UTF8);
+                    writer.WriteLine("Rotated: {0} --> {1}. {2}, {3}\n", g1.Name, g2.Name, DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString());
+
+                    // do the full 360 degree rotations
+                    double[] full = FullSearch(g1.OriginalGesture.Points, g2.OriginalGesture.Points, writer); // Lisa 1/2/2008
+
+                    // use bidirectional hill climbing to do it again
+                    double init = Utils.PathDistance(g1.OriginalGesture.Points, g2.OriginalGesture.Points); // initial distance  // Lisa 1/2/2008
+                    double[] pos = HillClimbSearch(g1.OriginalGesture.Points, g2.OriginalGesture.Points, init, 1d); // Lisa 1/2/2008
+                    double[] neg = HillClimbSearch(g1.OriginalGesture.Points, g2.OriginalGesture.Points, init, -1d); // Lisa 1/2/2008
+                    double[] best = new double[3];
+                    best = (neg[0] < pos[0]) ? neg : pos; // min distance
+                    writer.WriteLine("\nHill Climb Search ({0} rotations)\n{1:F2}{2}\t{3:F3} px", pos[2] + neg[2] + 1, Math.Round(best[1], 2), (char) 176, Math.Round(best[0], 3)); // calls, angle, distance
+
+                    // use golden section search to do it yet again
+                    double[] gold = GoldenSectionSearch(
+                        g1.OriginalGesture.Points,              // to rotate   // Lisa 1/2/2008
+                        g2.OriginalGesture.Points,              // to match    // Lisa 1/2/2008
+                        Utils.Deg2Rad(-_RotationBound),   // lbound   // Lisa 1/2/2008
+                        Utils.Deg2Rad(+_RotationBound),   // ubound   // Lisa 1/2/2008
+                        Utils.Deg2Rad(2.0));    // threshold
+                    writer.WriteLine("\nGolden Section Search ({0} rotations)\n{1:F2}{2}\t{3:F3} px", gold[2], Math.Round(gold[1], 2), (char) 176, Math.Round(gold[0], 3)); // calls, angle, distance
+
+                    // for pasting into Excel
+                    writer.WriteLine("\n{0} {1} {2:F2} {3:F2} {4:F3} {5:F3} {6} {7:F2} {8:F2} {9:F3} {10} {11:F2} {12:F2} {13:F3} {14}",
+                        g1.Name,                    // rotated
+                        g2.Name,                    // into
+                        Math.Abs(Math.Round(full[1], 2)), // |angle|
+                        Math.Round(full[1], 2),     // Full Search angle
+                        Math.Round(full[0], 3),     // Full Search distance
+                        Math.Round(init, 3),        // Initial distance w/o any search
+                        full[2],                    // Full Search iterations
+                        Math.Abs(Math.Round(best[1], 2)), // |angle|
+                        Math.Round(best[1], 2),     // Bidirectional Hill Climb Search angle
+                        Math.Round(best[0], 3),     // Bidirectional Hill Climb Search distance
+                        pos[2] + neg[2] + 1,        // Bidirectional Hill Climb Search iterations
+                        Math.Abs(Math.Round(gold[1], 2)), // |angle|
+                        Math.Round(gold[1], 2),     // Golden Section Search angle
+                        Math.Round(gold[0], 3),     // Golden Section Search distance
+                        gold[2]);                   // Golden Section Search iterations
+                }
+                catch (XmlException xml)
+                {
+                    Console.WriteLine(xml.Message);
+                    Console.Write(xml.StackTrace);
+                    Console.WriteLine();
+                    success = false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.Write(ex.StackTrace);
+                    Console.WriteLine();
+                    success = false;
+                }
+                finally
+                {
+                    if (reader != null)
+                        reader.Close();
+                    if (writer != null)
+                        writer.Close();
+                }
+                return success;
             }
-            return success;
+            */
+            #endregion
         }
-        */
-        #endregion
     }
-}

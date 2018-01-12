@@ -55,7 +55,7 @@ using System;
 using System.Xml;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.Ink;
+
 
 namespace Recognizer.NDollar
 {
@@ -80,7 +80,7 @@ namespace Recognizer.NDollar
         public int StartAngleIndex = 8; // options: 4, 8
         public double StartAngleThreshold = Utils.Deg2Rad(30.0); // options: 30, 45, 60
         public int NumResamplePoints = 64; // options: 16, 64, 96
-        public WordList TabletRecognizerWordList = null;
+
 
         public PossibleSearchMethods SearchMethod = PossibleSearchMethods.GSS;
         public enum PossibleSearchMethods {Protractor, GSS};
@@ -192,11 +192,6 @@ namespace Recognizer.NDollar
                 NumResamplePoints = XmlConvert.ToInt32(reader.GetAttribute("NumResamplePoints"));
                 Console.Write(".");
                 String[] wordlist_tmp = reader.GetAttribute("TabletRecognizerWordList").Split(',');
-                TabletRecognizerWordList = new WordList();
-                for (int i = 0; i < wordlist_tmp.Length; i++)
-                {
-                    TabletRecognizerWordList.Add(wordlist_tmp[i]);
-                }
                 Console.Write(".");
                 Console.Write("]");
             }

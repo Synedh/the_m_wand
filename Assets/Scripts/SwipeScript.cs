@@ -14,27 +14,38 @@ public class SwipeScript : MonoBehaviour {
     Text shapeText;
     String[] fileNames =
     {
-        "./Assets/racine.xml",
-        "./Assets/integrale.xml",
-        "./Assets/square.xml"
+        "racine",
+        "integrale",
+        "square"
     };
 
 
 	// Use this for initialization
 	void Start () {
-		//Load gesture in files
-        
-        for (int i = 0; i <  fileNames.Length; i++)
+        //Load gesture in files
+
+       
+        shapeText = GameObject.Find("ShapeText").GetComponent<Text>();
+        int j = 0;
+        for (int i = 0; i < fileNames.Length; i++)
         {
             string name = fileNames[i];
-            //print(name);
-            if (_rec.LoadGesture(name))
+            try
             {
-                print(name + " ok");
+                if (_rec.LoadGesture(name))
+                {
+                    j++;
+                }
+            }
+            catch(Exception e)
+            {
+                shapeText.text = e.Message + e.StackTrace;
+                   
             }
         }
-        shapeText = GameObject.Find("ShapeText").GetComponent<Text>(); ;
-           
+            
+            //shapeText.text = j.ToString();
+        
         
     
     }
@@ -80,6 +91,9 @@ public class SwipeScript : MonoBehaviour {
         if (_isDown)
         {
             print("FingerMove");
+
+            //shapeText.text = "FingerMove";
+
             _points.Add(new PointR(x, y));
            
         }
@@ -122,12 +136,16 @@ public class SwipeScript : MonoBehaviour {
 
     private void Recognize()
     {
+        
         if (_points.Count >= 5) // require 5 points for a valid gesture
         {
-            print("Points >5");
+           // shapeText.text = "Points > 5";
+
+
             if (_rec.NumGestures > 0) // not recording, so testing
             {
                 print("numGestures >0");
+               // shapeText.text = "numGestures >0";
                 // combine the strokes into one unistroke, Lisa 8/8/2009
                 List<PointR> points = new List<PointR>();
                 foreach (List<PointR> pts in _strokes)
@@ -138,6 +156,7 @@ public class SwipeScript : MonoBehaviour {
                 if (result.Score == -1)
                 {
                     print("Not found");
+                    //shapeText.text = "Not found";
                 }
                 else
                 {
