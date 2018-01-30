@@ -16,7 +16,10 @@ public class SwipeScript : MonoBehaviour {
     {
         "racine",
         "integrale",
-        "square"
+        "square",
+		"exponentielle",
+		"logarithme",
+		"lineraireNegative"
     };
 
 
@@ -120,7 +123,8 @@ public class SwipeScript : MonoBehaviour {
 
             // revised to save to an ArrayList of Strokes too, Lisa 8/8/2009
             _strokes.Add(new List<PointR>(_points)); // need to copy so they don't get cleared
-            if (isRecording)
+			//_rec.SaveGesture("lastRecord.xml", _strokes);
+			if (isRecording)
                 // resample, scale, translate to origin
                 _rec.SaveGesture("lastRecord.xml", _strokes);  // strokes, not points; Lisa 8/8/2009 
             else
