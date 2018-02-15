@@ -13,6 +13,7 @@ public class SwipeScript : MonoBehaviour {
     public bool isRecording = true;
     private spellManager SpellManager;
     Text shapeText;
+	TrailRenderer trail;
     String[] fileNames =
     {
         "racine",
@@ -29,7 +30,8 @@ public class SwipeScript : MonoBehaviour {
 	void Start () {
         //Load gesture in files
 
-       
+	    trail = GetComponent<TrailRenderer> ();
+	//	
         shapeText = GameObject.Find("ShapeText").GetComponent<Text>();
         int j = 0;
         for (int i = 0; i < fileNames.Length; i++)
@@ -84,6 +86,8 @@ public class SwipeScript : MonoBehaviour {
 
     private void FingerDown(double x, double y)
     {
+		trail.enabled = true;
+		trail.Clear ();
         print("FingerDown");
         _isDown = true;
         _points.Clear();
@@ -109,8 +113,11 @@ public class SwipeScript : MonoBehaviour {
     // Lisa 12/22/2007
     private void FingerUp(double x, double y)
     {
+		
         if (_isDown)
         {
+			trail.enabled = false;
+
             print("FingerUp");
             _isDown = false;
 
@@ -143,7 +150,7 @@ public class SwipeScript : MonoBehaviour {
     private void Recognize()
     {
         
-        if (_points.Count >= 5) // require 5 points for a valid gesture
+        if (_points.Count >= 20) // require 5 points for a valid gesture
         {
            // shapeText.text = "Points > 5";
 
