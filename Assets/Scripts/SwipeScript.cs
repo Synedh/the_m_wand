@@ -11,6 +11,7 @@ public class SwipeScript : MonoBehaviour {
     private List<List<PointR>> _strokes = new List<List<PointR>>(); 
     bool _isDown = false; // for testing on coputer
     public bool isRecording = true;
+    private spellManager SpellManager;
     Text shapeText;
     String[] fileNames =
     {
@@ -165,14 +166,16 @@ public class SwipeScript : MonoBehaviour {
                 }
                 else
                 {
-                    String toto = String.Format("{0}: {1} ({2}px, {3}{4})\n[{5} out of {6} comparisons made]",
+                    String res = String.Format("{0}: {1} ({2}px, {3}{4})\n[{5} out of {6} comparisons made]",
                     result.Name,
                     Math.Round(result.Score, 2),
                     Math.Round(result.Distance, 2),
                     Math.Round(result.Angle, 2), (char)176,
                     result.getActualComparisons(),
                     result.getTotalComparisons());
-                    shapeText.text = toto;
+                    shapeText.text = String.Format("{0}", result.Name);
+                    spellManager.Instance.addSpell(result.Name);
+
                 }
             }
         }

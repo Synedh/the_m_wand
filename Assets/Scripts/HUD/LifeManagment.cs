@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 
-public class HUD : MonoBehaviour {
+public class LifeManagment : MonoBehaviour {
 
     public Sprite[] HearstSprite;
 

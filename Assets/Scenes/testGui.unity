@@ -300,6 +300,20 @@ Prefab:
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 212000010369355496, guid: 3d345ae4a95a6204ea522c5d245edcd2,
+        type: 2}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212000010369355496, guid: 3d345ae4a95a6204ea522c5d245edcd2,
+        type: 2}
+      propertyPath: m_FlipY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000012699837780, guid: 3d345ae4a95a6204ea522c5d245edcd2, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3d345ae4a95a6204ea522c5d245edcd2, type: 2}
   m_IsPrefabParent: 0

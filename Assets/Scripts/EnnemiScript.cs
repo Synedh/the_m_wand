@@ -22,6 +22,10 @@ public class EnnemiScript : MonoBehaviour {
         {
             attackMode = 1;
         }
+        else
+        {
+            Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
+        }
     }
 
     // Update is called once per frame
