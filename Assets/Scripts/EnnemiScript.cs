@@ -27,7 +27,8 @@ public class EnnemiScript : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate () {
         if (attackMode == 0)
-            this.transform.Translate(Vector2.left * Time.deltaTime * speed);
+            // Déplace l'entité vers le joueur
+            this.transform.position = Vector2.MoveTowards(this.transform.position, chara.transform.position, Time.deltaTime * speed);
         else
         {
             lastAttack += Time.deltaTime;
