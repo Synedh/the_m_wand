@@ -65,6 +65,9 @@ public class spellManager : MonoBehaviour {
             case "integrale":
                 addSpellSprite(IntegralSprite);
                 break;
+            case "inverse":
+                addSpellSprite(IntegralSprite);
+                break;
             default:
                 break;
         }
