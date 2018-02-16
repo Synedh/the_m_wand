@@ -88,7 +88,7 @@ public class SwipeScript : MonoBehaviour {
     {
 		trail.enabled = true;
 		trail.Clear ();
-        print("FingerDown");
+       
         _isDown = true;
         _points.Clear();
         // only clear strokes if we clicked recognize, Lisa 8/8/2009
@@ -99,7 +99,7 @@ public class SwipeScript : MonoBehaviour {
     {
         if (_isDown)
         {
-            print("FingerMove");
+            
 
             //shapeText.text = "FingerMove";
 
@@ -118,7 +118,7 @@ public class SwipeScript : MonoBehaviour {
         {
 			trail.enabled = false;
 
-            print("FingerUp");
+            
             _isDown = false;
 
             // moved the recognize handling code to the Recognize_Click() method
@@ -157,7 +157,7 @@ public class SwipeScript : MonoBehaviour {
 
             if (_rec.NumGestures > 0) // not recording, so testing
             {
-                print("numGestures >0");
+                
                // shapeText.text = "numGestures >0";
                 // combine the strokes into one unistroke, Lisa 8/8/2009
                 List<PointR> points = new List<PointR>();
@@ -168,7 +168,7 @@ public class SwipeScript : MonoBehaviour {
                 NBestList result = _rec.Recognize(points, _strokes.Count); // where all the action is!!
                 if (result.Score == -1)
                 {
-                    print("Not found");
+                   
                     //shapeText.text = "Not found";
                 }
                 else

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +12,11 @@ public class SpawnEnnemiesScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        Assets.Scripts.Fonctions.Tree.createTree();
+        Assets.Scripts.Fonctions.Tree.displayTree();
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
         enemy = GameObject.FindGameObjectWithTag("Enemy");
+        
         InvokeRepeating("Spawn", spawnTime, spawnTime);
 	}
 	

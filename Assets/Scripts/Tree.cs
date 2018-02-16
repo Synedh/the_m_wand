@@ -10,9 +10,9 @@ namespace Assets.Scripts.Fonctions
     {
         static Node root;
         static Dictionary<String, String> dict = new Dictionary<String, String>(){
-            { "racine","{0}^2" },
+            { "racine","({0})^2" },
             { "square","root[2]{{{0}}}" },
-            { "inverse","1/{0}" }
+            { "inverse","1/({0})" }
 
 
         };
@@ -22,7 +22,8 @@ namespace Assets.Scripts.Fonctions
         public static void createTree()
         {
             Node n = new Node();
-            n.value = "x";n.children = new List<Node>();
+            n.value = "x";
+            n.children = new List<Node>();
             root = n;
             n.operatorToParent = "";
             recursiveCreateTree(n, 1);
@@ -35,14 +36,37 @@ namespace Assets.Scripts.Fonctions
             foreach (KeyValuePair<String, String> operatorDisplay in dict)
             {
                 
+                //si cette fonction annule la fonction d'avant, ne pas sauvegarder cette equation
                 if (parent.operatorToParent.Equals("racine") && operatorDisplay.Key.Equals("square") || parent.operatorToParent.Equals("square") && operatorDisplay.Key.Equals("racine"))
                     continue;
-                if (parent.operatorToParent.Equals("inverse") && operatorDisplay.Key.Equals("inverse"))
+                else if (parent.operatorToParent.Equals("inverse") && operatorDisplay.Key.Equals("inverse"))
                     continue;
+
                 Node n3 = new Node();
                 n3.value = String.Format(operatorDisplay.Value, parent.value);
                 n3.operatorToParent = operatorDisplay.Key;
                 n3.parent = parent;
+
+                //la racine de l'inverse = l'inverse de la racine
+                if (parent.operatorToParent.Equals("inverse") && operatorDisplay.Key.Equals("square"))
+                {
+                    String racine = String.Format(dict["square"], parent.parent.value);
+                    n3.valueSimplified = String.Format(dict["inverse"], racine);
+                    Debug.Log("Simplified racine(1/x))"+n3.valueSimplified);
+                }
+                //la racine du carré = l'inverse du carré
+                else if (parent.operatorToParent.Equals("inverse") && operatorDisplay.Key.Equals("racine"))
+                {
+                    String square = String.Format(dict["racine"], parent.parent.value);
+                    n3.valueSimplified = String.Format(dict["inverse"], square);
+                    Debug.Log("Simplified square(1/x))" + n3.valueSimplified);
+                }
+                else
+                    n3.valueSimplified = n3.value;
+
+
+
+               
                 parent.children.Add(n3);
                 listNodeForRandom.Add(n3);
                 if (depth < 2)
@@ -74,7 +98,7 @@ namespace Assets.Scripts.Fonctions
                     //
                 }
             }
-            Debug.Log("Value child: " + n.value + " Operator to parent-> " + n.operatorToParent);
+            Debug.Log("Value child: " + n.value + " Value simplified: " + n.valueSimplified  + " Operator to parent-> " + n.operatorToParent);
 
         }
 
@@ -85,6 +109,21 @@ namespace Assets.Scripts.Fonctions
                 System.Random r = new System.Random();
                 int index = r.Next() % listNodeForRandom.Count();
                 return listNodeForRandom[index];
+            }
+            return null;
+        }
+
+        public static Node tryExecuteFunction (String value, String function)
+        {
+            foreach(Node n in listNodeForRandom)
+            {
+                if (n.valueSimplified.Equals(value))
+                {
+                    if(n.operatorToParent.Equals(function))
+                    {
+                        return n.parent;
+                    }
+                }
             }
             return null;
         }
