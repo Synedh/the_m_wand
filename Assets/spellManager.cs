@@ -67,21 +67,13 @@ public class spellManager : MonoBehaviour {
             case "integrale":
                 addSpellSprite(IntegralSprite);
                 break;
-<<<<<<< HEAD
 			case "inverse":
 			addSpellSprite(InverseSprite);
 			break;
-		case "derive":
+			case "derivee":
 			addSpellSprite(DeriveSprite);
 			break;
-=======
-            case "inverse":
-                addSpellSprite(IntegralSprite);
-                break;
->>>>>>> e927c19b26b16f2148b65d34af03ba4e22f826c1
-            default:
-                break;
-        }
+       }
     }
 
     public void onSpellClick(Image spell){
@@ -107,6 +99,12 @@ public class spellManager : MonoBehaviour {
 
         else if (spell.sprite.Equals(IntegralSprite))
             currentSpell = "integrale";   
-
+	
+		else if (spell.sprite.Equals(InverseSprite))
+			currentSpell = "inverse";   
+	
+		else if (spell.sprite.Equals(DeriveSprite))
+			currentSpell = "derivee";   
+		
     }
 }
