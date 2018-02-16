@@ -14,6 +14,7 @@ public class SwipeScript : MonoBehaviour {
     private spellManager SpellManager;
     Text shapeText;
 	TrailRenderer trail;
+    bool waitForInverseSecondPart = false;
     String[] fileNames =
     {
         "racine",
@@ -22,7 +23,11 @@ public class SwipeScript : MonoBehaviour {
 		"exponentielle",
 		"logarithme",
 		"lineaireNegative",
-		"lineairePositive"
+		"lineairePositive",
+        "inverse_first_part",
+        "inverse_second_part",
+        "inverse",
+        "derivee"
     };
 
 
@@ -88,7 +93,7 @@ public class SwipeScript : MonoBehaviour {
     {
 		trail.enabled = true;
 		trail.Clear ();
-        print("FingerDown");
+       
         _isDown = true;
         _points.Clear();
         // only clear strokes if we clicked recognize, Lisa 8/8/2009
@@ -99,7 +104,7 @@ public class SwipeScript : MonoBehaviour {
     {
         if (_isDown)
         {
-            print("FingerMove");
+            
 
             //shapeText.text = "FingerMove";
 
@@ -118,7 +123,7 @@ public class SwipeScript : MonoBehaviour {
         {
 			trail.enabled = false;
 
-            print("FingerUp");
+            
             _isDown = false;
 
             // moved the recognize handling code to the Recognize_Click() method
@@ -157,7 +162,7 @@ public class SwipeScript : MonoBehaviour {
 
             if (_rec.NumGestures > 0) // not recording, so testing
             {
-                print("numGestures >0");
+                
                // shapeText.text = "numGestures >0";
                 // combine the strokes into one unistroke, Lisa 8/8/2009
                 List<PointR> points = new List<PointR>();
@@ -168,20 +173,45 @@ public class SwipeScript : MonoBehaviour {
                 NBestList result = _rec.Recognize(points, _strokes.Count); // where all the action is!!
                 if (result.Score == -1)
                 {
-                    print("Not found");
-                    //shapeText.text = "Not found";
+
+                    Debug.Log("Not found");
                 }
                 else
                 {
-                    String res = String.Format("{0}: {1} ({2}px, {3}{4})\n[{5} out of {6} comparisons made]",
-                    result.Name,
-                    Math.Round(result.Score, 2),
-                    Math.Round(result.Distance, 2),
-                    Math.Round(result.Angle, 2), (char)176,
-                    result.getActualComparisons(),
-                    result.getTotalComparisons());
-                    shapeText.text = String.Format("{0}", result.Name);
-                    spellManager.Instance.addSpell(result.Name);
+                    if (result.Name.Equals("inverseFirstPart"))
+                    {
+                        Debug.Log("first part");
+                        waitForInverseSecondPart = true;
+                    }
+                    else
+                    {
+                        String name = result.Name;
+                        Debug.Log("found:"+ result.Name);
+                        if (result.Name.Equals("inverseSecondPart"))
+                        {
+                            Debug.Log("second part");
+                            
+                            if (waitForInverseSecondPart)
+                            {
+                                name = "inverse";
+                                waitForInverseSecondPart = false;
+                            }
+                            else
+                            {
+                                //error recognizing shape
+                                return;
+                            }
+                        }
+                        String res = String.Format("{0}: {1} ({2}px, {3}{4})\n[{5} out of {6} comparisons made]",
+                        name,
+                        Math.Round(result.Score, 2),
+                        Math.Round(result.Distance, 2),
+                        Math.Round(result.Angle, 2), (char)176,
+                        result.getActualComparisons(),
+                        result.getTotalComparisons());
+                        shapeText.text = String.Format("{0}", name);
+                        spellManager.Instance.addSpell(name);
+                    }
 
                 }
             }

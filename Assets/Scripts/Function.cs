@@ -10,7 +10,7 @@ namespace Assets.Scripts.Fonctions
         // Use this for initialization
         void Start()
         {
-            Tree.createTree();
+            
             node = Tree.getRandomNodeForEnnemy();
         }
 
