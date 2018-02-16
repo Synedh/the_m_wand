@@ -25,7 +25,9 @@ public class SwipeScript : MonoBehaviour {
 		"lineaireNegative",
 		"lineairePositive",
         "inverse_first_part",
-        "inverse_second_part"
+        "inverse_second_part",
+        "inverse",
+        "derivee"
     };
 
 
