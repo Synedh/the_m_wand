@@ -17,6 +17,8 @@ public class spellManager : MonoBehaviour {
     public Sprite ExponentialSprite;
     public Sprite LogSprite;
     public Sprite IntegralSprite;
+	public Sprite InverseSprite;
+	public Sprite DeriveSprite;
 
     public static spellManager Instance;
 
@@ -64,6 +66,12 @@ public class spellManager : MonoBehaviour {
             case "integrale":
                 addSpellSprite(IntegralSprite);
                 break;
+			case "inverse":
+			addSpellSprite(InverseSprite);
+			break;
+		case "derive":
+			addSpellSprite(DeriveSprite);
+			break;
             default:
                 break;
         }
