@@ -21,6 +21,7 @@ public class spellManager : MonoBehaviour {
     public static spellManager Instance;
 
     private Flash flash;
+    public string currentSpell = null;
 
     // Use this for initialization
     void Start () {
@@ -71,6 +72,27 @@ public class spellManager : MonoBehaviour {
 
     public void onSpellClick(Image spell){
         // flash.Instance.flash = true;
-        spell.sprite = EmptySprite;
+        //spell.sprite = EmptySprite;
+        if(spell.sprite.Equals(LinearPosSprite))
+                currentSpell = "lineairePositive";
+
+        else if (spell.sprite.Equals(LinearNegSprite))
+            currentSpell = "lineaireNegative";
+
+        else if (spell.sprite.Equals(SquareSprite))
+            currentSpell = "square";
+
+        else if (spell.sprite.Equals(RootSprite))
+            currentSpell = "racine";
+
+        else if (spell.sprite.Equals(ExponentialSprite))
+            currentSpell = "exponentielle";
+
+        else if (spell.sprite.Equals(LogSprite))
+            currentSpell = "logarithme";
+
+        else if (spell.sprite.Equals(IntegralSprite))
+            currentSpell = "integrale";   
+
     }
 }

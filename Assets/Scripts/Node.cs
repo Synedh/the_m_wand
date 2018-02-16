@@ -8,6 +8,7 @@ namespace Assets.Scripts.Fonctions
     class Node
     {
         public String value;
+        public String valueSimplified;
         public String operatorToParent;
         public Node parent;
         public List<Node> children;

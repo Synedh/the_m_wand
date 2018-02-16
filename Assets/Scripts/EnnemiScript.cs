@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Fonctions;
+using UnityEngine.UI;
 
 public class EnnemiScript : MonoBehaviour {
 
@@ -9,13 +11,21 @@ public class EnnemiScript : MonoBehaviour {
     public float lastAttack;
     private int attackMode = 0;
     private Character chara;
-
+    Node n;
+    Text t;
 
     // Use this for initialization
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
+        n = Assets.Scripts.Fonctions.Tree.getRandomNodeForEnnemy();
+        t = GetComponentInChildren<Text>();// <Text>();
+        updateText();
     }
-
+    private void updateText()
+    {
+        
+        t.text = n.value;
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
@@ -24,7 +34,8 @@ public class EnnemiScript : MonoBehaviour {
         }
         else
         {
-            Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
+           
+            //Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
         }
     }
 
@@ -38,11 +49,43 @@ public class EnnemiScript : MonoBehaviour {
             lastAttack += Time.deltaTime;
             if (lastAttack > attackSpeed)
             {
-                chara.CurrentLife -= 1;
+                if (chara.CurrentLife > 1)
+                {
+                    chara.CurrentLife -= 1;
+                }
+                else
+                {
+                    //game Over
+                    
+                }
+               
                 lastAttack = 0;
+                
             }
             
         }
 	
 	}
+    void OnMouseDown()
+    {
+        // this object was clicked - do something
+        Debug.Log("click on ennemy");
+        if (spellManager.Instance.currentSpell != null)
+        {
+            Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(n.valueSimplified, spellManager.Instance.currentSpell);
+            if (newNode != null)
+            {
+                if (newNode.value.Equals("x"))
+                    newNode.value = "killed";
+
+                Debug.Log("Bien joué");
+                n = newNode;
+                updateText();
+            }
+            else
+            {
+                Debug.Log("Non");
+            }
+        }
+    }
 }
