@@ -22,7 +22,9 @@ public class SwipeScript : MonoBehaviour {
 		"exponentielle",
 		"logarithme",
 		"lineaireNegative",
-		"lineairePositive"
+		"lineairePositive",
+        "inverse",
+        "derivee"
     };
 
 
