@@ -2,6 +2,7 @@
 using System.Collections;
 using Assets.Scripts.Fonctions;
 using UnityEngine.UI;
+using Assets;
 
 public class EnnemiScript : MonoBehaviour {
 
@@ -34,7 +35,7 @@ public class EnnemiScript : MonoBehaviour {
         }
         else
         {
-           
+            Debug.Log(collision.gameObject.name);
             //Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
         }
     }
@@ -70,6 +71,8 @@ public class EnnemiScript : MonoBehaviour {
     {
         // this object was clicked - do something
         Debug.Log("click on ennemy");
+        FireballScript fireball = spellManager.Instance.currentSpellParticle.GetComponent<FireballScript>();
+        fireball.launchOnEnnemy(this.gameObject);
         if (spellManager.Instance.currentSpell != null)
         {
             Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(n.valueSimplified, spellManager.Instance.currentSpell);

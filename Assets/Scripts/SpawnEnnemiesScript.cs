@@ -15,7 +15,7 @@ public class SpawnEnnemiesScript : MonoBehaviour {
         Assets.Scripts.Fonctions.Tree.createTree();
         Assets.Scripts.Fonctions.Tree.displayTree();
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
-        enemy = GameObject.FindGameObjectWithTag("Enemy");
+        //enemy = GameObject.FindGameObjectWithTag("Enemy");
         
         InvokeRepeating("Spawn", spawnTime, spawnTime);
 	}
@@ -28,6 +28,7 @@ public class SpawnEnnemiesScript : MonoBehaviour {
         }
 
         Transform spawnPoint = spanPoints[Random.Range(0, spanPoints.Length)];
-        Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
-	}
+        //Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
+        GameObject currentBurst = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Characters/Ennemi"), spawnPoint.position, spawnPoint.rotation);
+    }
 }

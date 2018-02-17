@@ -1,11 +1,22 @@
 fileFormatVersion: 2
 guid: 97c3566d08706b045a47dd5d80ce0309
-timeCreated: 1518688274
+timeCreated: 1518786304
 licenseType: Free
 MonoImporter:
-  externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - EmptySprite: {instanceID: 0}
+  - LinearPosSprite: {instanceID: 0}
+  - LinearNegSprite: {instanceID: 0}
+  - SquareSprite: {instanceID: 0}
+  - RootSprite: {instanceID: 0}
+  - ExponentialSprite: {instanceID: 0}
+  - LogSprite: {instanceID: 0}
+  - IntegralSprite: {instanceID: 0}
+  - InverseSprite: {instanceID: 0}
+  - DeriveSprite: {instanceID: 0}
+  - fireBallObject: {fileID: 1805298961166664, guid: 58043f25a107dfb4a85f96b9374e9be4,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

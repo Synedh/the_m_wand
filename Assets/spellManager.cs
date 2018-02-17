@@ -21,12 +21,14 @@ public class spellManager : MonoBehaviour {
 	public Sprite DeriveSprite;
 
     public static spellManager Instance;
-
     private Flash flash;
+    public GameObject fireBallObject;
     public string currentSpell = null;
-
+    private GameObject spwanPoint;
+    public GameObject currentSpellParticle;
     // Use this for initialization
     void Start () {
+        spwanPoint = GameObject.Find("SpawnParticlePoint");
         FirstSpell = GameObject.FindGameObjectWithTag("FirstSpell").GetComponent<Image>();
         SecondSpell = GameObject.FindGameObjectWithTag("SecondSpell").GetComponent<Image>();
         ThirdSpell = GameObject.FindGameObjectWithTag("ThirdSpell").GetComponent<Image>();
@@ -79,7 +81,11 @@ public class spellManager : MonoBehaviour {
     public void onSpellClick(Image spell){
         // flash.Instance.flash = true;
         //spell.sprite = EmptySprite;
-        if(spell.sprite.Equals(LinearPosSprite))
+        //var NewGameObject = GameObject.Instantiate(fireBallObject);
+        Debug.Log(spwanPoint.transform.position);
+        currentSpellParticle  = (GameObject ) GameObject.Instantiate(Resources.Load("Prefabs/Particles/Fireball"), spwanPoint.transform.position , Quaternion.identity);
+
+        if (spell.sprite.Equals(LinearPosSprite))
                 currentSpell = "lineairePositive";
 
         else if (spell.sprite.Equals(LinearNegSprite))
