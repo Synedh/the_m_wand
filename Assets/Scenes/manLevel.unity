@@ -1255,6 +1255,67 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2078472889
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4042401176157846, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -6.1400003
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042401176157846, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042401176157846, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 6.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042401176157846, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042401176157846, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042401176157846, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042401176157846, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042401176157846, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1203478255600446, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198623338121571452, guid: a2c5664db0eda424b8c764b5bbee5348,
+        type: 2}
+      propertyPath: CollisionModule.type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198623338121571452, guid: a2c5664db0eda424b8c764b5bbee5348,
+        type: 2}
+      propertyPath: CollisionModule.collisionMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198623338121571452, guid: a2c5664db0eda424b8c764b5bbee5348,
+        type: 2}
+      propertyPath: CollisionModule.radiusScale
+      value: 10
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: a2c5664db0eda424b8c764b5bbee5348, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &2108718951
 GameObject:
   m_ObjectHideFlags: 0

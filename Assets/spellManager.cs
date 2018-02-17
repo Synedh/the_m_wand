@@ -83,19 +83,25 @@ public class spellManager : MonoBehaviour {
         //spell.sprite = EmptySprite;
         //var NewGameObject = GameObject.Instantiate(fireBallObject);
         Debug.Log(spwanPoint.transform.position);
-        currentSpellParticle  = (GameObject ) GameObject.Instantiate(Resources.Load("Prefabs/Particles/Fireball"), spwanPoint.transform.position , Quaternion.identity);
+
 
         if (spell.sprite.Equals(LinearPosSprite))
-                currentSpell = "lineairePositive";
+            currentSpell = "lineairePositive";
 
         else if (spell.sprite.Equals(LinearNegSprite))
             currentSpell = "lineaireNegative";
 
         else if (spell.sprite.Equals(SquareSprite))
+        {
+            currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Fireball"), spwanPoint.transform.position, Quaternion.identity);
             currentSpell = "square";
+        }
 
         else if (spell.sprite.Equals(RootSprite))
+        {
+            currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Thunder"), spwanPoint.transform.position, Quaternion.identity);
             currentSpell = "racine";
+        }
 
         else if (spell.sprite.Equals(ExponentialSprite))
             currentSpell = "exponentielle";
@@ -104,13 +110,13 @@ public class spellManager : MonoBehaviour {
             currentSpell = "logarithme";
 
         else if (spell.sprite.Equals(IntegralSprite))
-            currentSpell = "integrale";   
-	
-		else if (spell.sprite.Equals(InverseSprite))
-			currentSpell = "inverse";   
-	
-		else if (spell.sprite.Equals(DeriveSprite))
-			currentSpell = "derivee";   
+            currentSpell = "integrale";
+
+        else if (spell.sprite.Equals(InverseSprite))
+            currentSpell = "inverse";
+
+        else if (spell.sprite.Equals(DeriveSprite))
+            currentSpell = "derivee";   
 		
     }
 }

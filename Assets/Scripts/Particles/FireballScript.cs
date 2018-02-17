@@ -32,8 +32,8 @@ namespace Assets
             if (GameObject.ReferenceEquals(other, target))
             {
                 Debug.Log("Target reached");
-                var burst = transform.Find("Burst");
-                burst.gameObject.SetActive(true);
+                //var burst = transform.Find("Burst");
+               // burst.gameObject.SetActive(true);
                 GameObject currentBurst = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Burst"), this.transform.position, Quaternion.identity);
                 Destroy(this.gameObject);
                 Destroy(target);

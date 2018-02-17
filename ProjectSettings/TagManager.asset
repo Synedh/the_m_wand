@@ -42,6 +42,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Thunder
+    uniqueID: 1420116383
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
