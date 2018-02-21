@@ -50,22 +50,10 @@ public class EnnemiScript : MonoBehaviour {
             lastAttack += Time.deltaTime;
             if (lastAttack > attackSpeed)
             {
-                if (chara.CurrentLife > 1)
-                {
-                    chara.CurrentLife -= 1;
-                }
-                else
-                {
-                    //game Over
-                    
-                }
-               
+                chara.getHit();
                 lastAttack = 0;
-                
             }
-            
         }
-	
 	}
     void OnMouseDown()
     {
