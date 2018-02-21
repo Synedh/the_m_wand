@@ -8,7 +8,7 @@ public class Heart : MonoBehaviour {
     public Sprite heart_full;
     public Sprite heart_empty;
     public int currentState = 1;
-    private int shakeVal = -1;
+    private float shakeVal = -1;
     private Vector2 savedPos;
 
     //TODO function shatter and tremble
@@ -27,7 +27,7 @@ public class Heart : MonoBehaviour {
     public void shake()
     {
         savedPos = transform.position;
-        shakeVal = 10;
+        shakeVal = 1    ;
         currentState = 2;
     }
 
@@ -43,13 +43,12 @@ public class Heart : MonoBehaviour {
             case 1: this.GetComponent<Image>().sprite = heart_full; break;
             case 2:
                 transform.position = savedPos;
-                transform.position = savedPos + Random.insideUnitCircle * shakeVal * Time.deltaTime;
-                shakeVal--;
+                transform.position = savedPos + Random.insideUnitCircle * shakeVal/10;
+                shakeVal-= Time.deltaTime*3;
                 break;
         }
-        if (shakeVal == 0)
+        if (shakeVal <= 0 && currentState == 2)
         {
-            shakeVal = -1;
             currentState = 1;
             transform.position = savedPos;
         }
