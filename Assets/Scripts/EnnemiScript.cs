@@ -74,8 +74,10 @@ public class EnnemiScript : MonoBehaviour {
             Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(n.valueSimplified, spellManager.Instance.currentSpell);
             if (newNode != null)
             {
-                if (newNode.value.Equals("x"))
-                    newNode.value = "killed";
+				if (newNode.value.Equals ("x")) {
+					newNode.value = "killed";
+					Destroy (this.gameObject);
+				}
 
                 Debug.Log("Bien joué");
                 n = newNode;

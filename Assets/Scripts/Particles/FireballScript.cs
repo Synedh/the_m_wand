@@ -36,7 +36,7 @@ namespace Assets
                // burst.gameObject.SetActive(true);
                 GameObject currentBurst = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Burst"), this.transform.position, Quaternion.identity);
                 Destroy(this.gameObject);
-                Destroy(target);
+                //Destroy(target);
                
                
                
