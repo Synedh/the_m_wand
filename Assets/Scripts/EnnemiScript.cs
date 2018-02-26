@@ -14,18 +14,26 @@ public class EnnemiScript : MonoBehaviour {
     private Character chara;
     Node n;
     Text t;
+	GameObject TEXDrawObject;
+	TEXDraw TEXDrawComponent;
 
     // Use this for initialization
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
         n = Assets.Scripts.Fonctions.Tree.getRandomNodeForEnnemy();
-        t = GetComponentInChildren<Text>();// <Text>();
+        //t = GetComponentInChildren<Text>();// <Text>();
+
+		//test
+		//TEXDrawObject = this.transform.Find("TEXDraw").gameObject;
+		//TEXDrawObject = GameObject.Find("TEXDraw");
+		TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
+		//!test
         updateText();
     }
     private void updateText()
     {
-        
-        t.text = n.value;
+		TEXDrawComponent.text = n.value;
+        //t.text = n.value;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

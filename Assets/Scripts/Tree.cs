@@ -11,8 +11,8 @@ namespace Assets.Scripts.Fonctions
         static Node root;
         static Dictionary<String, String> dict = new Dictionary<String, String>(){
             { "racine","({0})^2" },
-            { "square","root[2]{{{0}}}" },
-            { "inverse","1/({0})" }
+            { "square","\\root[2]{{{0}}}" },
+			{ "inverse","\\frac{{1}}{{{0}}}" }
 
 
         };
