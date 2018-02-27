@@ -191,7 +191,7 @@ namespace Recognizer.NDollar
                 Console.Write(".");
                 NumResamplePoints = XmlConvert.ToInt32(reader.GetAttribute("NumResamplePoints"));
                 Console.Write(".");
-                String[] wordlist_tmp = reader.GetAttribute("TabletRecognizerWordList").Split(',');
+                //String[] wordlist_tmp = reader.GetAttribute("TabletRecognizerWordList").Split(',');
                 Console.Write(".");
                 Console.Write("]");
             }

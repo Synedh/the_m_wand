@@ -408,7 +408,6 @@ namespace Recognizer.NDollar
         public static List<PointR> ScaleBy(List<PointR> points, SizeR sz)
         {
             List<PointR> newPoints = new List<PointR>(points.Count);
-            RectangleR r = FindBox(points);
             for (int i = 0; i < points.Count; i++)
             {
                 PointR p = (PointR) points[i];

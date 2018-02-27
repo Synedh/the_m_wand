@@ -28,7 +28,6 @@ public class SpawnEnnemiesScript : MonoBehaviour {
         }
 
         Transform spawnPoint = spanPoints[Random.Range(0, spanPoints.Length)];
-        //Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
-        GameObject currentBurst = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Characters/Ennemi"), spawnPoint.position, spawnPoint.rotation);
+        Instantiate(Resources.Load("Prefabs/Characters/Ennemi"), spawnPoint.position, spawnPoint.rotation);
     }
 }

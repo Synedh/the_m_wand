@@ -174,22 +174,22 @@ public class SwipeScript : MonoBehaviour {
                 if (result.Score == -1)
                 {
 
-                    Debug.Log("Not found");
+                    // Debug.Log("Not found");
                 }
                 else
                 {
                     if (result.Name.Equals("inverseFirstPart"))
                     {
-                        Debug.Log("first part");
+                        // Debug.Log("first part");
                         waitForInverseSecondPart = true;
                     }
                     else
                     {
                         String name = result.Name;
-                        Debug.Log("found:"+ result.Name);
+                        //Debug.Log("found:"+ result.Name);
                         if (result.Name.Equals("inverseSecondPart"))
                         {
-                            Debug.Log("second part");
+                            // Debug.Log("second part");
                             
                             if (waitForInverseSecondPart)
                             {
@@ -202,13 +202,15 @@ public class SwipeScript : MonoBehaviour {
                                 return;
                             }
                         }
+                        /* 
                         String res = String.Format("{0}: {1} ({2}px, {3}{4})\n[{5} out of {6} comparisons made]",
-                        name,
-                        Math.Round(result.Score, 2),
-                        Math.Round(result.Distance, 2),
-                        Math.Round(result.Angle, 2), (char)176,
-                        result.getActualComparisons(),
-                        result.getTotalComparisons());
+                                                    name,
+                                                    Math.Round(result.Score, 2),
+                                                    Math.Round(result.Distance, 2),
+                                                    Math.Round(result.Angle, 2), (char)176,
+                                                    result.getActualComparisons(),
+                                                    result.getTotalComparisons()
+                        ); */
                         shapeText.text = String.Format("{0}", name);
                         spellManager.Instance.addSpell(name);
                     }

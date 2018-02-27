@@ -79,7 +79,7 @@ namespace Recognizer.NDollar
 
         // batch testing
         private const int NumRandomTests = 100;
-        private int[] numberOfTrainingSamples = new int[] { 1, 2, 4, 8 }; 
+        //private int[] numberOfTrainingSamples = new int[] { 1, 2, 4, 8 }; 
         //public event ProgressEventHandler ProgressChangedEvent;
 
 		private Hashtable _gestures;

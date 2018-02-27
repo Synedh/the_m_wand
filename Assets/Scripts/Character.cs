@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Character : MonoBehaviour {
     
     public int CurrentLife = 5;
     public int maxLife = 5;
-    private Character chara;
     public Heart heart;
     public Heart[] hearts;
     public GameObject lifebar;
 
     private void Start()
     {
-        chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
         hearts = new Heart[maxLife];
         RectTransform rt = (RectTransform)heart.transform;
         float width = rt.rect.width;
@@ -39,12 +38,12 @@ public class Character : MonoBehaviour {
         CurrentLife--;
         if (CurrentLife == 0)
         {
-            //GameOver
+            // A FAIRE PROPRE
+            SceneManager.LoadScene(2);
         }
     }
 
     private void Update()
     {
-        //HeartUI.sprite = HearstSprite[chara.CurrentLife];
     }
 }

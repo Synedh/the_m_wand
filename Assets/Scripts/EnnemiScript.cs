@@ -21,30 +21,18 @@ public class EnnemiScript : MonoBehaviour {
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
         n = Assets.Scripts.Fonctions.Tree.getRandomNodeForEnnemy();
-        //t = GetComponentInChildren<Text>();// <Text>();
-
-		//test
-		//TEXDrawObject = this.transform.Find("TEXDraw").gameObject;
-		//TEXDrawObject = GameObject.Find("TEXDraw");
 		TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
-		//!test
         updateText();
     }
     private void updateText()
     {
 		TEXDrawComponent.text = n.value;
-        //t.text = n.value;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
             attackMode = 1;
-        }
-        else
-        {
-            Debug.Log(collision.gameObject.name);
-            //Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
         }
     }
 
@@ -66,26 +54,28 @@ public class EnnemiScript : MonoBehaviour {
     void OnMouseDown()
     {
         // this object was clicked - do something
-        Debug.Log("click on ennemy");
-        FireballScript fireball = spellManager.Instance.currentSpellParticle.GetComponent<FireballScript>();
-        fireball.launchOnEnnemy(this.gameObject);
+        //Debug.Log("click on ennemy");
+        //FireballScript fireball = spellManager.Instance.currentSpellParticle.GetComponent<FireballScript>();
+        //fireball.launchOnEnnemy(this.gameObject);
+
         if (spellManager.Instance.currentSpell != null)
         {
             Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(n.valueSimplified, spellManager.Instance.currentSpell);
+            spellManager.Instance.onSpellUsed();
             if (newNode != null)
             {
-				if (newNode.value.Equals ("x")) {
+                // Bonne fonction 
+				if (newNode.value.Equals("x")) {
 					newNode.value = "killed";
-					Destroy (this.gameObject);
+					Destroy(this.gameObject);
 				}
-
-                Debug.Log("Bien joué");
+                
                 n = newNode;
                 updateText();
             }
             else
             {
-                Debug.Log("Non");
+                // Mauvaise fonction
             }
         }
     }

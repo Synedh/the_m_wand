@@ -52,14 +52,14 @@ namespace Assets.Scripts.Fonctions
                 {
                     String racine = String.Format(dict["square"], parent.parent.value);
                     n3.valueSimplified = String.Format(dict["inverse"], racine);
-                    Debug.Log("Simplified racine(1/x))"+n3.valueSimplified);
+                    //Debug.Log("Simplified racine(1/x))"+n3.valueSimplified);
                 }
                 //la racine du carré = l'inverse du carré
                 else if (parent.operatorToParent.Equals("inverse") && operatorDisplay.Key.Equals("racine"))
                 {
                     String square = String.Format(dict["racine"], parent.parent.value);
                     n3.valueSimplified = String.Format(dict["inverse"], square);
-                    Debug.Log("Simplified square(1/x))" + n3.valueSimplified);
+                    //Debug.Log("Simplified square(1/x))" + n3.valueSimplified);
                 }
                 else
                     n3.valueSimplified = n3.value;
@@ -83,7 +83,7 @@ namespace Assets.Scripts.Fonctions
         public static void displayTree()
         {
 
-            Debug.Log("Value root="+root.value);
+            //Debug.Log("Value root="+root.value);
 
             recursiveDisplayTree(root);
         }
@@ -98,7 +98,7 @@ namespace Assets.Scripts.Fonctions
                     //
                 }
             }
-            Debug.Log("Value child: " + n.value + " Value simplified: " + n.valueSimplified  + " Operator to parent-> " + n.operatorToParent);
+            //Debug.Log("Value child: " + n.value + " Value simplified: " + n.valueSimplified  + " Operator to parent-> " + n.operatorToParent);
 
         }
 

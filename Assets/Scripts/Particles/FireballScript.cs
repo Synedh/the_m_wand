@@ -33,8 +33,8 @@ namespace Assets
             {
                 Debug.Log("Target reached");
                 //var burst = transform.Find("Burst");
-               // burst.gameObject.SetActive(true);
-                GameObject currentBurst = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Burst"), this.transform.position, Quaternion.identity);
+                //burst.gameObject.SetActive(true);
+                //GameObject currentBurst = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Burst"), this.transform.position, Quaternion.identity);
                 Destroy(this.gameObject);
                 //Destroy(target);
                

@@ -20,10 +20,12 @@ public class spellManager : MonoBehaviour {
 	public Sprite InverseSprite;
 	public Sprite DeriveSprite;
 
+    public string currentSpell;
+    public Image currentSpellObject;
+
     public static spellManager Instance;
     private Flash flash;
     public GameObject fireBallObject;
-    public string currentSpell = null;
     private GameObject spwanPoint;
     public GameObject currentSpellParticle;
     // Use this for initialization
@@ -34,10 +36,10 @@ public class spellManager : MonoBehaviour {
         ThirdSpell = GameObject.FindGameObjectWithTag("ThirdSpell").GetComponent<Image>();
 
         Instance = this;
+        currentSpell = null;
     }
 
     void addSpellSprite(Sprite spellSprite) {
-        print(spellSprite);
         if (FirstSpell.sprite == EmptySprite)
             FirstSpell.sprite = spellSprite;
         else if (SecondSpell.sprite == EmptySprite)
@@ -78,12 +80,26 @@ public class spellManager : MonoBehaviour {
        }
     }
 
+    public void onSpellUsed() {
+        currentSpellObject.sprite = EmptySprite;
+        currentSpellObject.color = new Color(1, 1, 1);
+        currentSpell = null;
+    }
+
     public void onSpellClick(Image spell){
         // flash.Instance.flash = true;
         //spell.sprite = EmptySprite;
         //var NewGameObject = GameObject.Instantiate(fireBallObject);
-        Debug.Log(spwanPoint.transform.position);
 
+        // Put all spells to white        
+        FirstSpell.color = new Color(1, 1, 1);
+        SecondSpell.color = new Color(1, 1, 1);
+        ThirdSpell.color = new Color(1, 1, 1);
+
+
+        // Set current spell
+        currentSpellObject = spell;
+        currentSpellObject.color = new Color(0, 1, 1);
 
         if (spell.sprite.Equals(LinearPosSprite))
             currentSpell = "lineairePositive";
