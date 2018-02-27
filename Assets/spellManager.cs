@@ -80,13 +80,20 @@ public class spellManager : MonoBehaviour {
        }
     }
 
-    public void onSpellUsed() {
-        currentSpellObject.sprite = EmptySprite;
+    public void resetSpell()
+    {
         currentSpellObject.color = new Color(1, 1, 1);
+        currentSpellObject = null;
         currentSpell = null;
+
     }
 
-    public void onSpellClick(Image spell){
+    public void removeSpell() {
+        currentSpellObject.sprite = EmptySprite;
+        resetSpell();
+    }
+
+    public void onSpellClick(Image spell) {
         // flash.Instance.flash = true;
         //spell.sprite = EmptySprite;
         //var NewGameObject = GameObject.Instantiate(fireBallObject);
@@ -97,42 +104,45 @@ public class spellManager : MonoBehaviour {
         ThirdSpell.color = new Color(1, 1, 1);
 
 
-        // Set current spell
-        currentSpellObject = spell;
-        currentSpellObject.color = new Color(0, 1, 1);
-
-        if (spell.sprite.Equals(LinearPosSprite))
+        if (spell == currentSpellObject) {
+            resetSpell();
+            return;
+        }
+        else if (spell.sprite.Equals(EmptySprite)) {
+            return;
+        }
+        else if (spell.sprite.Equals(LinearPosSprite)) {
             currentSpell = "lineairePositive";
-
-        else if (spell.sprite.Equals(LinearNegSprite))
+        }
+        else if (spell.sprite.Equals(LinearNegSprite)) {
             currentSpell = "lineaireNegative";
-
-        else if (spell.sprite.Equals(SquareSprite))
-        {
+        }
+        else if (spell.sprite.Equals(SquareSprite)) {
             currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Fireball"), spwanPoint.transform.position, Quaternion.identity);
             currentSpell = "square";
         }
-
-        else if (spell.sprite.Equals(RootSprite))
-        {
+        else if (spell.sprite.Equals(RootSprite)) {
             currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Thunder"), spwanPoint.transform.position, Quaternion.identity);
             currentSpell = "racine";
         }
-
-        else if (spell.sprite.Equals(ExponentialSprite))
+        else if (spell.sprite.Equals(ExponentialSprite)) {
             currentSpell = "exponentielle";
-
-        else if (spell.sprite.Equals(LogSprite))
+        }
+        else if (spell.sprite.Equals(LogSprite)) {
             currentSpell = "logarithme";
-
-        else if (spell.sprite.Equals(IntegralSprite))
+        }
+        else if (spell.sprite.Equals(IntegralSprite)) {
             currentSpell = "integrale";
-
-        else if (spell.sprite.Equals(InverseSprite))
+        }
+        else if (spell.sprite.Equals(InverseSprite)) {
             currentSpell = "inverse";
+        }
+        else if (spell.sprite.Equals(DeriveSprite)) {
+            currentSpell = "derivee";
+        }
 
-        else if (spell.sprite.Equals(DeriveSprite))
-            currentSpell = "derivee";   
-		
+        // Set current spell
+        currentSpellObject = spell;
+        currentSpellObject.color = new Color(0, 1, 1);
     }
 }

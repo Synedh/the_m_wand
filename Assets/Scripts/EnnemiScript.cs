@@ -61,7 +61,7 @@ public class EnnemiScript : MonoBehaviour {
         if (spellManager.Instance.currentSpell != null)
         {
             Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(n.valueSimplified, spellManager.Instance.currentSpell);
-            spellManager.Instance.onSpellUsed();
+            spellManager.Instance.removeSpell();
             if (newNode != null)
             {
                 // Bonne fonction 
