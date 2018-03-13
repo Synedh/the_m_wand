@@ -8,6 +8,8 @@ TagManager:
   - FirstSpell
   - SecondSpell
   - ThirdSpell
+  - StartButton
+  - ExitButton
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Background
   - 
   - 
   - 
@@ -42,9 +44,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Thunder
-    uniqueID: 1420116383
+  - name: Background
+    uniqueID: 3440036521
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Thunder
+    uniqueID: 1420116383
     locked: 0

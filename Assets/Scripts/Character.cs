@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
@@ -34,12 +35,17 @@ public class Character : MonoBehaviour {
         {
             hearts[i].shake();
         }
-        hearts[CurrentLife-1].shatter();
-        CurrentLife--;
-        if (CurrentLife == 0)
+
+        if (CurrentLife > 0)
+        {
+            hearts[CurrentLife - 1].shatter();
+            CurrentLife--;
+        }
+        else // if (CurrentLife <= 0)
         {
             // A FAIRE PROPRE
-            SceneManager.LoadScene(2);
+            LoadSceneOnClick.StartButtonText = "RESTART";
+            SceneManager.LoadScene(0);
         }
     }
 

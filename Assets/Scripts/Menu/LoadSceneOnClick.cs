@@ -5,25 +5,15 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class LoadSceneOnClick : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class LoadSceneOnClick : MonoBehaviour
 {
-    Text txt;
+    public static string StartButtonText = "Start";
 
     void Start() {
-        txt = GetComponentInChildren<Text>();
+        GameObject.FindGameObjectWithTag("StartButton").GetComponentInChildren<Text>().text = StartButtonText;
     }
 
     public void LoadByIndex(int sceneIndex) {
         SceneManager.LoadScene(sceneIndex);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        txt.color = Color.red; //Or however you do your color
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        txt.color = Color.white; //Or however you do your color
     }
 }

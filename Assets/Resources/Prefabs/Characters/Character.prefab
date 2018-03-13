@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 95000013399438792}
   - component: {fileID: 61000012995911852}
   - component: {fileID: 114000014210847100}
-  - component: {fileID: 114000013115184676}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -53,7 +52,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013993668386}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.99, y: -0.84825134, z: 0}
+  m_LocalPosition: {x: -8, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4970568614701378}
@@ -115,25 +114,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114000013115184676
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013993668386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db8db85adf522154eba8eea906c0d34c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HearstSprite:
-  - {fileID: 21300010, guid: ab70b90670c083a428e19a9686c975d0, type: 3}
-  - {fileID: 21300008, guid: ab70b90670c083a428e19a9686c975d0, type: 3}
-  - {fileID: 21300006, guid: ab70b90670c083a428e19a9686c975d0, type: 3}
-  - {fileID: 21300004, guid: ab70b90670c083a428e19a9686c975d0, type: 3}
-  - {fileID: 21300002, guid: ab70b90670c083a428e19a9686c975d0, type: 3}
-  - {fileID: 21300000, guid: ab70b90670c083a428e19a9686c975d0, type: 3}
-  HeartUI: {fileID: 0}
 --- !u!114 &114000014210847100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,8 +125,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 027026321380ef24faca8fb9f1fb5c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentLife: 5
-  maxLife: 5
+  CurrentLife: 8
+  maxLife: 8
+  heart: {fileID: 114518377031021636, guid: fbd2f59f83c3bdc499a4cb1d7c582ec5, type: 2}
+  hearts: []
+  lifebar: {fileID: 0}
 --- !u!212 &212000011835298610
 SpriteRenderer:
   m_ObjectHideFlags: 1
