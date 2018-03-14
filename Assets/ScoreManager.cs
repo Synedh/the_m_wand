@@ -7,8 +7,7 @@ using UnityEngine.UI;
 public class ScoreManager : MonoBehaviour {
     public string scoreString;
     public static ScoreManager instance;
-
-	// Use this for initialization
+    
 	void Start () {
         instance = this;
         scoreString = "00";
@@ -21,7 +20,6 @@ public class ScoreManager : MonoBehaviour {
         scoreString = (score + qty).ToString("D" + Math.Floor(Math.Log10(score + qty) + 2).ToString());
     }
 	
-	// Update is called once per frame
 	void Update () {
         GetComponent<Text>().text = scoreString;
     }

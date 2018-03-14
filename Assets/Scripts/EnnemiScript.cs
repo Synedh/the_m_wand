@@ -11,7 +11,9 @@ public class EnnemiScript : MonoBehaviour {
     public float attackSpeed;
     public float lastAttack;
     private int attackMode = 0;
+    public int difficulty;
     private Character chara;
+
     Node n;
     Text t;
 	GameObject TEXDrawObject;
@@ -20,14 +22,25 @@ public class EnnemiScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
-        n = Assets.Scripts.Fonctions.Tree.getRandomNodeForEnnemy();
-		TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
+        n = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
+
+        TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
         updateText();
     }
+
+    public static EnnemiScript Create(int difficulty, Transform spawnPoint)
+    {
+        GameObject newObject = Instantiate(Resources.Load("Prefabs/Characters/Ennemi"), spawnPoint.position, spawnPoint.rotation) as GameObject;
+        EnnemiScript ennemi = newObject.GetComponent<EnnemiScript>();
+        ennemi.difficulty = difficulty;
+        return ennemi;
+    }
+
     private void updateText()
     {
 		TEXDrawComponent.text = n.value;
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
@@ -66,7 +79,7 @@ public class EnnemiScript : MonoBehaviour {
                 ScoreManager.instance.addScore(1);
 				if (newNode.value.Equals("x")) {
                     // Addscore
-                    ScoreManager.instance.addScore(2);
+                    ScoreManager.instance.addScore(1);
                     Destroy(this.gameObject);
 				}
                 else {

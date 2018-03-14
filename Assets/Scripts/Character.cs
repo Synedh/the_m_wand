@@ -41,7 +41,7 @@ public class Character : MonoBehaviour {
             hearts[CurrentLife - 1].shatter();
             CurrentLife--;
         }
-        else // if (CurrentLife <= 0)
+        else
         {
             // A FAIRE PROPRE
             LoadSceneOnClick.titleText = "SCORE : " + ScoreManager.instance.scoreString;

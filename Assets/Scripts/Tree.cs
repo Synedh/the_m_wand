@@ -23,6 +23,7 @@ namespace Assets.Scripts.Fonctions
         {
             Node n = new Node();
             n.value = "x";
+            n.depth = 0;
             n.children = new List<Node>();
             root = n;
             n.operatorToParent = "";
@@ -44,6 +45,7 @@ namespace Assets.Scripts.Fonctions
 
                 Node n3 = new Node();
                 n3.value = String.Format(operatorDisplay.Value, parent.value);
+                n3.depth = depth;
                 n3.operatorToParent = operatorDisplay.Key;
                 n3.parent = parent;
 
@@ -63,43 +65,42 @@ namespace Assets.Scripts.Fonctions
                 }
                 else
                     n3.valueSimplified = n3.value;
-
-
-
                
                 parent.children.Add(n3);
                 listNodeForRandom.Add(n3);
-                if (depth < 2)
+                if (depth < 2) /* CHIFFRE A MODIFIER POUR LIMITE DE PROFONDEUR DE GENERATION */
                 {
                     n3.children = new List<Node>();
                     recursiveCreateTree(n3, depth + 1);
                 }
 
             }
-
-
-
+            
         }
         public static void displayTree()
         {
-
-            //Debug.Log("Value root="+root.value);
-
             recursiveDisplayTree(root);
         }
+
         private static void recursiveDisplayTree(Node n)
         {
             if (n.children != null)
             {
                 foreach (Node child in n.children)
                 {
-
                     recursiveDisplayTree(child);
-                    //
                 }
             }
-            //Debug.Log("Value child: " + n.value + " Value simplified: " + n.valueSimplified  + " Operator to parent-> " + n.operatorToParent);
 
+        }
+
+        private static List<Node> getNodesOfDepth(int depth)
+        {
+            List<Node> nodes = new List<Node>();
+            for (int i = 0; i < listNodeForRandom.Count; ++i)
+                if (listNodeForRandom[i].depth == depth)
+                    nodes.Add(listNodeForRandom[i]);
+            return nodes;
         }
 
         public static Node getRandomNodeForEnnemy()
@@ -111,6 +112,12 @@ namespace Assets.Scripts.Fonctions
                 return listNodeForRandom[index];
             }
             return null;
+        }
+
+        public static Node getRandomNodeOfDepth(int depth)
+        {
+            List<Node> nodesOfDepth = getNodesOfDepth(depth);
+            return nodesOfDepth[new System.Random().Next() % nodesOfDepth.Count()];
         }
 
         public static Node tryExecuteFunction (String value, String function)
