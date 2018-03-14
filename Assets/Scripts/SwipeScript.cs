@@ -211,7 +211,7 @@ public class SwipeScript : MonoBehaviour {
                                                     result.getActualComparisons(),
                                                     result.getTotalComparisons()
                         ); */
-                        shapeText.text = String.Format("{0}", name);
+                        shapeText.text = String.Format("{0} - {1}", name, Math.Round(result.Score, 2));
                         spellManager.Instance.addSpell(name);
                     }
 

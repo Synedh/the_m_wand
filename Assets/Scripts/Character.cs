@@ -44,7 +44,8 @@ public class Character : MonoBehaviour {
         else // if (CurrentLife <= 0)
         {
             // A FAIRE PROPRE
-            LoadSceneOnClick.StartButtonText = "RESTART";
+            LoadSceneOnClick.titleText = "SCORE : " + ScoreManager.instance.scoreString;
+            LoadSceneOnClick.startButtonText = "RESTART";
             SceneManager.LoadScene(0);
         }
     }

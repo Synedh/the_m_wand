@@ -10,6 +10,7 @@ TagManager:
   - ThirdSpell
   - StartButton
   - ExitButton
+  - MainTitle
   layers:
   - Default
   - TransparentFX

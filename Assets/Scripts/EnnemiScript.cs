@@ -53,8 +53,6 @@ public class EnnemiScript : MonoBehaviour {
 	}
     void OnMouseDown()
     {
-        // this object was clicked - do something
-        //Debug.Log("click on ennemy");
         //FireballScript fireball = spellManager.Instance.currentSpellParticle.GetComponent<FireballScript>();
         //fireball.launchOnEnnemy(this.gameObject);
 
@@ -62,20 +60,23 @@ public class EnnemiScript : MonoBehaviour {
         {
             Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(n.valueSimplified, spellManager.Instance.currentSpell);
             spellManager.Instance.removeSpell();
-            if (newNode != null)
+            if (newNode != null) // Bonne fonction appliquée
             {
-                // Bonne fonction 
+                // Addscore
+                ScoreManager.instance.addScore(1);
 				if (newNode.value.Equals("x")) {
-					newNode.value = "killed";
-					Destroy(this.gameObject);
+                    // Addscore
+                    ScoreManager.instance.addScore(2);
+                    Destroy(this.gameObject);
 				}
-                
-                n = newNode;
-                updateText();
+                else {
+                    n = newNode;
+                    updateText();
+                }
             }
-            else
+            else // Mauvaise fonction appliquée
             {
-                // Mauvaise fonction
+                // Retour utilisateur de mauvais spell appliqué
             }
         }
     }
