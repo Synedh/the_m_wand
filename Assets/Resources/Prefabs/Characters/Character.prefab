@@ -125,8 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 027026321380ef24faca8fb9f1fb5c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentLife: 8
-  maxLife: 8
+  CurrentLife: 2
+  maxLife: 2
   heart: {fileID: 114518377031021636, guid: fbd2f59f83c3bdc499a4cb1d7c582ec5, type: 2}
   hearts: []
   lifebar: {fileID: 0}

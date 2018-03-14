@@ -13,6 +13,7 @@ public class EnnemiScript : MonoBehaviour {
     private int attackMode = 0;
     public int difficulty;
     private Character chara;
+    private float timer;
 
     Node n;
     Text t;
@@ -23,6 +24,7 @@ public class EnnemiScript : MonoBehaviour {
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
         n = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
+        timer = 0;
 
         TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
         updateText();
@@ -50,7 +52,7 @@ public class EnnemiScript : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void FixedUpdate () {
+    void Update () {
         if (attackMode == 0)
             // Déplace l'entité vers le joueur
             this.transform.position = Vector2.MoveTowards(this.transform.position, chara.transform.position, Time.deltaTime * speed);
@@ -63,7 +65,17 @@ public class EnnemiScript : MonoBehaviour {
                 lastAttack = 0;
             }
         }
+
+        if (n.value.Equals("x"))
+        {
+            speed = 0;
+            // ANIMATION DE MORT
+            timer += Time.deltaTime;
+            if (timer > 1)
+                Destroy(this.gameObject);
+        }
 	}
+
     void OnMouseDown()
     {
         //FireballScript fireball = spellManager.Instance.currentSpellParticle.GetComponent<FireballScript>();
@@ -75,17 +87,11 @@ public class EnnemiScript : MonoBehaviour {
             spellManager.Instance.removeSpell();
             if (newNode != null) // Bonne fonction appliquée
             {
-                // Addscore
                 ScoreManager.instance.addScore(1);
-				if (newNode.value.Equals("x")) {
-                    // Addscore
+				if (newNode.value.Equals("x"))
                     ScoreManager.instance.addScore(1);
-                    Destroy(this.gameObject);
-				}
-                else {
-                    n = newNode;
-                    updateText();
-                }
+                n = newNode;
+                updateText();
             }
             else // Mauvaise fonction appliquée
             {

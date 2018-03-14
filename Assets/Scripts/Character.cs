@@ -36,7 +36,7 @@ public class Character : MonoBehaviour {
             hearts[i].shake();
         }
 
-        if (CurrentLife > 0)
+        if (CurrentLife > 1)
         {
             hearts[CurrentLife - 1].shatter();
             CurrentLife--;
