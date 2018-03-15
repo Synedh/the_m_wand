@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class spellManager : MonoBehaviour {
+public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
     private Image FirstSpell;
     private Image SecondSpell;
@@ -28,6 +29,11 @@ public class spellManager : MonoBehaviour {
     public GameObject fireBallObject;
     private GameObject spwanPoint;
     public GameObject currentSpellParticle;
+	private Vector3 currentSpellPosition;
+
+	private bool imBeingDragged = false;
+	private bool isOverSpell = false;
+
     // Use this for initialization
     void Start () {
         spwanPoint = GameObject.Find("SpawnParticlePoint");
@@ -85,7 +91,6 @@ public class spellManager : MonoBehaviour {
         currentSpellObject.color = new Color(1, 1, 1);
         currentSpellObject = null;
         currentSpell = null;
-
     }
 
     public void removeSpell() {
@@ -139,10 +144,58 @@ public class spellManager : MonoBehaviour {
         }
         else if (spell.sprite.Equals(DeriveSprite)) {
             currentSpell = "derivee";
-        }
+		}
 
         // Set current spell
         currentSpellObject = spell;
         currentSpellObject.color = new Color(0, 1, 1);
+		currentSpellPosition.x = currentSpellObject.rectTransform.anchoredPosition.x;	//PROBLEM ?
+		currentSpellPosition.y = currentSpellObject.rectTransform.anchoredPosition.y - 5;	//PROBLEM ?
     }
+
+	void moveSpell()
+	{
+		if (Input.GetMouseButtonDown (0)) imBeingDragged = true;
+		if (Input.GetMouseButtonUp (0)) imBeingDragged = false;
+
+		if (currentSpellObject != null && imBeingDragged && isOverSpell) { //Move the spell
+			var screenPoint = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 100.0f);
+			currentSpellObject.transform.position = Camera.main.ScreenToWorldPoint (screenPoint);
+		} 
+		else if ((Input.mousePosition.x <= 0 || Input.mousePosition.y <= 0) && !imBeingDragged) { //cancel the spell
+			cancelSpell ();
+		} 
+		else if (
+			currentSpellObject != null
+			&& !imBeingDragged
+			&& distancePoint (currentSpellObject.rectTransform.anchoredPosition.x, currentSpellObject.rectTransform.anchoredPosition.y, currentSpellPosition.x, currentSpellPosition.y) > 20 //Add minimum distance
+		) { //Replace the spell at origin position - THE PROBLEM IS HERE AND ON LINE 152 AND 153 AND 181 ?
+			var screenPoint = new Vector3 (currentSpellPosition.x, currentSpellPosition.y, 100.0f);
+			currentSpellObject.transform.position = Camera.main.ScreenToWorldPoint (screenPoint);
+		}
+	}
+
+	public void cancelSpell()
+	{
+		if (currentSpellObject != null) {
+			var screenPoint = new Vector3 (currentSpellPosition.x, currentSpellPosition.y, 100.0f);	//PROBLEM ?
+			currentSpellObject.transform.position = Camera.main.ScreenToWorldPoint (screenPoint);
+			removeSpell ();
+		}
+	}
+
+	public float distancePoint(float x1, float y1, float x2, float y2)
+	{
+		return Mathf.Sqrt (((y2 - y1) * (y2 - y1)) + ((x2 - x1) * (x2 - x1)));
+	}
+
+	// Update is called once per frame
+	void FixedUpdate()
+	{
+		moveSpell ();
+	}
+
+	public void OnPointerEnter(PointerEventData eventData) { isOverSpell = true; }
+
+	public void OnPointerExit(PointerEventData eventData) {	isOverSpell = false; }
 }
