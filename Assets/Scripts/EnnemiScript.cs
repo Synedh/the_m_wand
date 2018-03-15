@@ -102,8 +102,6 @@ public class EnnemiScript : MonoBehaviour {
     {
         //FireballScript fireball = spellManager.Instance.currentSpellParticle.GetComponent<FireballScript>();
         //fireball.launchOnEnnemy(this.gameObject);
-        getHit = true;
-
         if (spellManager.Instance.currentSpell != null)
         {
             Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(n.valueSimplified, spellManager.Instance.currentSpell);
