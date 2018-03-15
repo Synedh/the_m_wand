@@ -14,6 +14,10 @@ public class EnnemiScript : MonoBehaviour {
     public int difficulty;
     private Character chara;
     private float timer;
+    private bool getHit = false;
+    public int pushBack;
+    Animator animator;
+
 
     Node n;
     Text t;
@@ -25,6 +29,8 @@ public class EnnemiScript : MonoBehaviour {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
         n = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
         timer = 0;
+        animator = GetComponent<Animator>();
+
 
         TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
         updateText();
@@ -66,20 +72,37 @@ public class EnnemiScript : MonoBehaviour {
             }
         }
 
+        if (getHit)
+        {
+            GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
+            getHit = false;
+        }
         if (n.value.Equals("x"))
         {
+            animator.SetBool("die", true);
             speed = 0;
-            // ANIMATION DE MORT
-            timer += Time.deltaTime;
-            if (timer > 1)
-                Destroy(this.gameObject);
+            attackMode = 0;
+            GetComponent<BoxCollider2D>().isTrigger = true;
         }
-	}
+
+    }
+
+    public void DestroyMe()
+    {
+        Destroy(this.gameObject);
+    }
+
+    public void stopStagger()
+    {
+        animator.SetBool("getHit", false);
+    }
+
 
     void OnMouseDown()
     {
         //FireballScript fireball = spellManager.Instance.currentSpellParticle.GetComponent<FireballScript>();
         //fireball.launchOnEnnemy(this.gameObject);
+        getHit = true;
 
         if (spellManager.Instance.currentSpell != null)
         {
@@ -91,6 +114,8 @@ public class EnnemiScript : MonoBehaviour {
 				if (newNode.value.Equals("x"))
                     ScoreManager.instance.addScore(1);
                 n = newNode;
+                animator.SetBool("getHit", true);
+                getHit = true;
                 updateText();
             }
             else // Mauvaise fonction appliquée
