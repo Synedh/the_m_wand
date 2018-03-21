@@ -34,12 +34,16 @@ public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	private bool imBeingDragged = false;
 	private bool isOverSpell = false;
 
+    private Animator charaAnimator;
+
     // Use this for initialization
     void Start () {
         spwanPoint = GameObject.Find("SpawnParticlePoint");
         FirstSpell = GameObject.FindGameObjectWithTag("FirstSpell").GetComponent<Image>();
         SecondSpell = GameObject.FindGameObjectWithTag("SecondSpell").GetComponent<Image>();
         ThirdSpell = GameObject.FindGameObjectWithTag("ThirdSpell").GetComponent<Image>();
+
+        charaAnimator = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
 
         Instance = this;
         currentSpell = null;
@@ -146,6 +150,8 @@ public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             currentSpell = "derivee";
 		}
 
+        charaAnimator.SetBool("spell_charge", true);
+
         // Set current spell
         currentSpellObject = spell;
         currentSpellObject.color = new Color(0, 1, 1);
@@ -177,7 +183,9 @@ public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 	public void cancelSpell()
 	{
-		if (currentSpellObject != null) {
+        charaAnimator.SetBool("spell_charge", false);
+
+        if (currentSpellObject != null) {
 			var screenPoint = new Vector3 (currentSpellPosition.x, currentSpellPosition.y, 100.0f);	//PROBLEM ?
 			currentSpellObject.transform.position = Camera.main.ScreenToWorldPoint (screenPoint);
 			removeSpell ();

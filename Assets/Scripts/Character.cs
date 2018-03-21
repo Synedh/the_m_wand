@@ -10,9 +10,13 @@ public class Character : MonoBehaviour {
     public Heart heart;
     public Heart[] hearts;
     public GameObject lifebar;
+    Animator animator;
+
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
+
         hearts = new Heart[maxLife];
         RectTransform rt = (RectTransform)heart.transform;
         float width = rt.rect.width;
@@ -31,6 +35,8 @@ public class Character : MonoBehaviour {
 
     public void getHit()
     {
+        animator.SetBool("isHurt", true);
+
         for (int i = 0; i < CurrentLife; i++)
         {
             hearts[i].shake();
@@ -48,6 +54,18 @@ public class Character : MonoBehaviour {
             LoadSceneOnClick.startButtonText = "RESTART";
             SceneManager.LoadScene(0);
         }
+    }
+
+    public void stopStagger()
+    {
+        animator.SetBool("isHurt", false);
+    }
+
+    public void stopCast()
+    {
+        animator.SetBool("spell_cast", false);
+        animator.SetBool("spell_charge", false);
+
     }
 
     private void Update()

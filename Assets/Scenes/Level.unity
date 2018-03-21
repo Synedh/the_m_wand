@@ -1413,11 +1413,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4000010120800836, guid: e0434012a442c8241acce466bf5d97a2, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -8
+      value: -7.86
       objectReference: {fileID: 0}
     - target: {fileID: 4000010120800836, guid: e0434012a442c8241acce466bf5d97a2, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -0.14
       objectReference: {fileID: 0}
     - target: {fileID: 4000010120800836, guid: e0434012a442c8241acce466bf5d97a2, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1448,6 +1448,12 @@ Prefab:
       propertyPath: lifebar
       value: 
       objectReference: {fileID: 1226781098}
+    - target: {fileID: 212000011835298610, guid: e0434012a442c8241acce466bf5d97a2,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 76d8ee0310e10d549854859d6acc3871,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e0434012a442c8241acce466bf5d97a2, type: 2}
   m_IsPrefabParent: 0

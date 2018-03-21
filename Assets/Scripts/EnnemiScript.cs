@@ -17,6 +17,7 @@ public class EnnemiScript : MonoBehaviour {
     private bool getHit = false;
     public int pushBack;
     Animator animator;
+    Animator chara_animator;
 
 
     Node n;
@@ -30,7 +31,7 @@ public class EnnemiScript : MonoBehaviour {
         n = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
         timer = 0;
         animator = GetComponent<Animator>();
-
+        chara_animator = chara.GetComponent<Animator>();
 
         TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
         updateText();
@@ -74,6 +75,7 @@ public class EnnemiScript : MonoBehaviour {
 
         if (getHit)
         {
+           
             GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
             getHit = false;
         }
@@ -112,6 +114,7 @@ public class EnnemiScript : MonoBehaviour {
 				if (newNode.value.Equals("x"))
                     ScoreManager.instance.addScore(1);
                 n = newNode;
+                chara_animator.SetBool("spell_cast", true);
                 animator.SetBool("getHit", true);
                 getHit = true;
                 updateText();
