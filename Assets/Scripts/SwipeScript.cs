@@ -10,7 +10,7 @@ public class SwipeScript : MonoBehaviour {
     List<PointR> _points = new List<PointR>();
     private List<List<PointR>> _strokes = new List<List<PointR>>(); 
     bool _isDown = false; // for testing on coputer
-    public bool isRecording = true;
+    public bool isRecording;
     private spellManager SpellManager;
     Text shapeText;
 	TrailRenderer trail;
@@ -65,6 +65,8 @@ public class SwipeScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        if (spellManager.Instance.isDragged)
+            return;
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) || Input.GetMouseButton(0))
         {
             Plane objPlane = new Plane(Camera.main.transform.forward * -1, this.transform.position);

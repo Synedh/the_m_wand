@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
+public class spellManager : MonoBehaviour
+{
 
     private Image FirstSpell;
     private Image SecondSpell;
@@ -18,27 +19,24 @@ public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public Sprite ExponentialSprite;
     public Sprite LogSprite;
     public Sprite IntegralSprite;
-	public Sprite InverseSprite;
-	public Sprite DeriveSprite;
+    public Sprite InverseSprite;
+    public Sprite DeriveSprite;
 
-    public string currentSpell;
     public Image currentSpellObject;
+    private Vector3 defaultSpellPosition;
+    public string currentSpellName;
+    public GameObject currentSpellParticle;
 
     public static spellManager Instance;
-    private Flash flash;
-    public GameObject fireBallObject;
-    private GameObject spwanPoint;
-    public GameObject currentSpellParticle;
-	private Vector3 currentSpellPosition;
-
-	private bool imBeingDragged = false;
-	private bool isOverSpell = false;
+    public bool isDragged;
+    private GameObject spwanParticlePoint;
 
     private Animator charaAnimator;
 
     // Use this for initialization
-    void Start () {
-        spwanPoint = GameObject.Find("SpawnParticlePoint");
+    void Start()
+    {
+        spwanParticlePoint = GameObject.Find("SpawnParticlePoint");
         FirstSpell = GameObject.FindGameObjectWithTag("FirstSpell").GetComponent<Image>();
         SecondSpell = GameObject.FindGameObjectWithTag("SecondSpell").GetComponent<Image>();
         ThirdSpell = GameObject.FindGameObjectWithTag("ThirdSpell").GetComponent<Image>();
@@ -46,10 +44,12 @@ public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         charaAnimator = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
 
         Instance = this;
-        currentSpell = null;
+        currentSpellName = null;
+        isDragged = false;
     }
 
-    void addSpellSprite(Sprite spellSprite) {
+    void addSpellSprite(Sprite spellSprite)
+    {
         if (FirstSpell.sprite == EmptySprite)
             FirstSpell.sprite = spellSprite;
         else if (SecondSpell.sprite == EmptySprite)
@@ -58,8 +58,10 @@ public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             ThirdSpell.sprite = spellSprite;
     }
 
-    public void addSpell(string spellName) {
-        switch (spellName) {
+    public void addSpell(string spellName)
+    {
+        switch (spellName)
+        {
             case "lineairePositive":
                 addSpellSprite(LinearPosSprite);
                 break;
@@ -81,31 +83,30 @@ public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case "integrale":
                 addSpellSprite(IntegralSprite);
                 break;
-			case "inverse":
-			addSpellSprite(InverseSprite);
-			break;
-			case "derivee":
-			addSpellSprite(DeriveSprite);
-			break;
-       }
+            case "inverse":
+                addSpellSprite(InverseSprite);
+                break;
+            case "derivee":
+                addSpellSprite(DeriveSprite);
+                break;
+        }
     }
 
     public void resetSpell()
     {
         currentSpellObject.color = new Color(1, 1, 1);
         currentSpellObject = null;
-        currentSpell = null;
+        currentSpellName = null;
     }
 
-    public void removeSpell() {
+    public void removeSpell()
+    {
         currentSpellObject.sprite = EmptySprite;
         resetSpell();
     }
 
-    public void onSpellClick(Image spell) {
-        // flash.Instance.flash = true;
-        //spell.sprite = EmptySprite;
-        //var NewGameObject = GameObject.Instantiate(fireBallObject);
+    public void onSpellClick(Image spell)
+    {
 
         // Put all spells to white        
         FirstSpell.color = new Color(1, 1, 1);
@@ -113,97 +114,85 @@ public class spellManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         ThirdSpell.color = new Color(1, 1, 1);
 
 
-        if (spell == currentSpellObject) {
+        if (spell == currentSpellObject)
+        {
             resetSpell();
             return;
         }
-        else if (spell.sprite.Equals(EmptySprite)) {
+        else if (spell.sprite.Equals(EmptySprite))
+        {
             return;
         }
-        else if (spell.sprite.Equals(LinearPosSprite)) {
-            currentSpell = "lineairePositive";
+        else if (spell.sprite.Equals(LinearPosSprite))
+        {
+            currentSpellName = "lineairePositive";
         }
-        else if (spell.sprite.Equals(LinearNegSprite)) {
-            currentSpell = "lineaireNegative";
+        else if (spell.sprite.Equals(LinearNegSprite))
+        {
+            currentSpellName = "lineaireNegative";
         }
-        else if (spell.sprite.Equals(SquareSprite)) {
-            currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Fireball"), spwanPoint.transform.position, Quaternion.identity);
-            currentSpell = "square";
+        else if (spell.sprite.Equals(SquareSprite))
+        {
+            currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Fireball"), spwanParticlePoint.transform.position, Quaternion.identity);
+            currentSpellName = "square";
         }
-        else if (spell.sprite.Equals(RootSprite)) {
-            currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Thunder"), spwanPoint.transform.position, Quaternion.identity);
-            currentSpell = "racine";
+        else if (spell.sprite.Equals(RootSprite))
+        {
+            currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity);
+            currentSpellName = "racine";
         }
-        else if (spell.sprite.Equals(ExponentialSprite)) {
-            currentSpell = "exponentielle";
+        else if (spell.sprite.Equals(ExponentialSprite))
+        {
+            currentSpellName = "exponentielle";
         }
-        else if (spell.sprite.Equals(LogSprite)) {
-            currentSpell = "logarithme";
+        else if (spell.sprite.Equals(LogSprite))
+        {
+            currentSpellName = "logarithme";
         }
-        else if (spell.sprite.Equals(IntegralSprite)) {
-            currentSpell = "integrale";
+        else if (spell.sprite.Equals(IntegralSprite))
+        {
+            currentSpellName = "integrale";
         }
-        else if (spell.sprite.Equals(InverseSprite)) {
-            currentSpell = "inverse";
+        else if (spell.sprite.Equals(InverseSprite))
+        {
+            currentSpellName = "inverse";
         }
-        else if (spell.sprite.Equals(DeriveSprite)) {
-            currentSpell = "derivee";
-		}
+        else if (spell.sprite.Equals(DeriveSprite))
+        {
+            currentSpellName = "derivee";
+        }
 
         charaAnimator.SetBool("spell_charge", true);
 
         // Set current spell
         currentSpellObject = spell;
         currentSpellObject.color = new Color(0, 1, 1);
-		currentSpellPosition.x = currentSpellObject.rectTransform.anchoredPosition.x;	//PROBLEM ?
-		currentSpellPosition.y = currentSpellObject.rectTransform.anchoredPosition.y - 5;	//PROBLEM ?
     }
 
-	void moveSpell()
-	{
-		if (Input.GetMouseButtonDown (0)) imBeingDragged = true;
-		if (Input.GetMouseButtonUp (0)) imBeingDragged = false;
+    public void onSpellDrag(Image spell)
+    {
+        if (spell.sprite != EmptySprite)
+        {
+            Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 100.0f);
+            spell.transform.position = Camera.main.ScreenToWorldPoint(mousePosition);
+        }
+    }
 
-		if (currentSpellObject != null && imBeingDragged && isOverSpell) { //Move the spell
-			var screenPoint = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 100.0f);
-			currentSpellObject.transform.position = Camera.main.ScreenToWorldPoint (screenPoint);
-		} 
-		else if ((Input.mousePosition.x <= 0 || Input.mousePosition.y <= 0) && !imBeingDragged) { //cancel the spell
-			cancelSpell ();
-		} 
-		else if (
-			currentSpellObject != null
-			&& !imBeingDragged
-			&& distancePoint (currentSpellObject.rectTransform.anchoredPosition.x, currentSpellObject.rectTransform.anchoredPosition.y, currentSpellPosition.x, currentSpellPosition.y) > 20 //Add minimum distance
-		) { //Replace the spell at origin position - THE PROBLEM IS HERE AND ON LINE 152 AND 153 AND 181 ?
-			var screenPoint = new Vector3 (currentSpellPosition.x, currentSpellPosition.y, 100.0f);
-			currentSpellObject.transform.position = Camera.main.ScreenToWorldPoint (screenPoint);
-		}
-	}
+    public void onStartDrag(Image spell)
+    {
+        isDragged = true;
+        defaultSpellPosition = spell.transform.position;
+    }
 
-	public void cancelSpell()
-	{
-        charaAnimator.SetBool("spell_charge", false);
-
-        if (currentSpellObject != null) {
-			var screenPoint = new Vector3 (currentSpellPosition.x, currentSpellPosition.y, 100.0f);	//PROBLEM ?
-			currentSpellObject.transform.position = Camera.main.ScreenToWorldPoint (screenPoint);
-			removeSpell ();
-		}
-	}
-
-	public float distancePoint(float x1, float y1, float x2, float y2)
-	{
-		return Mathf.Sqrt (((y2 - y1) * (y2 - y1)) + ((x2 - x1) * (x2 - x1)));
-	}
-
-	// Update is called once per frame
-	void FixedUpdate()
-	{
-		moveSpell ();
-	}
-
-	public void OnPointerEnter(PointerEventData eventData) { isOverSpell = true; }
-
-	public void OnPointerExit(PointerEventData eventData) {	isOverSpell = false; }
+    public void onEndDrag(Image spell)
+    {
+        isDragged = false;
+        Debug.Log(Vector2.Distance(defaultSpellPosition, spell.transform.position));
+        if (Vector2.Distance(defaultSpellPosition, spell.transform.position) > 1.5f)
+        {
+            currentSpellObject = spell;
+            removeSpell();
+        }
+        spell.transform.position = defaultSpellPosition;
+    }
 }
