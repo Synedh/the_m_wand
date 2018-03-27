@@ -11,6 +11,8 @@ public class spellManager : MonoBehaviour
     private Image FirstSpell;
     private Image SecondSpell;
     private Image ThirdSpell;
+    private Image FourthSpell;
+    private Image FifthSpell;
 
     public Sprite EmptySprite;
     public Sprite LinearPosSprite;
@@ -41,6 +43,8 @@ public class spellManager : MonoBehaviour
         FirstSpell = GameObject.FindGameObjectWithTag("FirstSpell").GetComponent<Image>();
         SecondSpell = GameObject.FindGameObjectWithTag("SecondSpell").GetComponent<Image>();
         ThirdSpell = GameObject.FindGameObjectWithTag("ThirdSpell").GetComponent<Image>();
+        FourthSpell = GameObject.FindGameObjectWithTag("FourthSpell").GetComponent<Image>();
+        FifthSpell = GameObject.FindGameObjectWithTag("FifthSpell").GetComponent<Image>();
 
         charaAnimator = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
 
@@ -57,6 +61,10 @@ public class spellManager : MonoBehaviour
             SecondSpell.sprite = spellSprite;
         else if (ThirdSpell.sprite == EmptySprite)
             ThirdSpell.sprite = spellSprite;
+        else if (FourthSpell.sprite == EmptySprite)
+            FourthSpell.sprite = spellSprite;
+        else if (FifthSpell.sprite == EmptySprite)
+            FifthSpell.sprite = spellSprite;
     }
 
     public void addSpell(string spellName)
@@ -113,6 +121,8 @@ public class spellManager : MonoBehaviour
         FirstSpell.color = new Color(1, 1, 1);
         SecondSpell.color = new Color(1, 1, 1);
         ThirdSpell.color = new Color(1, 1, 1);
+        FourthSpell.color = new Color(1, 1, 1);
+        FifthSpell.color = new Color(1, 1, 1);
 
 
         if (spell == currentSpellObject)

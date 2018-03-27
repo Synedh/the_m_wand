@@ -94,11 +94,9 @@ namespace Assets.Scripts.Fonctions
             {
                 foreach (Node child in n.children)
                 {
-					Debug.Log (child.value);
                     recursiveDisplayTree(child);
                 }
             }
-
         }
 
         private static List<Node> getNodesOfDepth(int depth)

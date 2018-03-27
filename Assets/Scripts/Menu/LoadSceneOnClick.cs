@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System;
 
 public class LoadSceneOnClick : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class LoadSceneOnClick : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex == 0) {
             TextButtons.Add(GameObject.FindGameObjectWithTag("StartButton").GetComponentInChildren<Text>());
             TextButtons.Add(GameObject.FindGameObjectWithTag("ExitButton").GetComponentInChildren<Text>());
+        }
+        else if (SceneManager.GetActiveScene().buildIndex == 2) {
+            GameObject.FindGameObjectWithTag("ScoreText").GetComponentInChildren<Text>().text = "Score : " + Int32.Parse(ScoreManager.instance.scoreString);
         }
     }
 

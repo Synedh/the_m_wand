@@ -12,6 +12,9 @@ TagManager:
   - ExitButton
   - MainTitle
   - Lightning
+  - ScoreText
+  - FourthSpell
+  - FifthSpell
   layers:
   - Default
   - TransparentFX
