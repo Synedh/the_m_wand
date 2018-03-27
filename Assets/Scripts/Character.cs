@@ -48,10 +48,7 @@ public class Character : MonoBehaviour {
         }
         else
         {
-            // A FAIRE PROPRE
-            LoadSceneOnClick.titleText = "SCORE : " + ScoreManager.instance.scoreString;
-            LoadSceneOnClick.startButtonText = "RESTART";
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(2);
         }
     }
 

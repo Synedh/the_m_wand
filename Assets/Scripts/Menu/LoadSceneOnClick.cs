@@ -7,39 +7,35 @@ using UnityEngine.SceneManagement;
 
 public class LoadSceneOnClick : MonoBehaviour
 {
-    public static string startButtonText = "START";
-    public static string titleText = "THE M . WAND";
-
     float timer;
+    List<Text> TextButtons = new List<Text>();
 
     void Start() {
-        GameObject.FindGameObjectWithTag("MainTitle").GetComponentInChildren<Text>().text = titleText;
-        GameObject.FindGameObjectWithTag("StartButton").GetComponentInChildren<Text>().text = startButtonText;
         timer = 0;
+        if (SceneManager.GetActiveScene().buildIndex == 0) {
+            TextButtons.Add(GameObject.FindGameObjectWithTag("StartButton").GetComponentInChildren<Text>());
+            TextButtons.Add(GameObject.FindGameObjectWithTag("ExitButton").GetComponentInChildren<Text>());
+        }
     }
 
     public void LoadByIndex(int sceneIndex) {
         SceneManager.LoadScene(sceneIndex);
     }
 
-    private void SwitchMenuFontStyle()
+    private void SwitchTextButtonFontStyle(Text TextButton)
     {
-        if (GameObject.FindGameObjectWithTag("StartButton").GetComponentInChildren<Text>().fontStyle == FontStyle.Bold) {
-            GameObject.FindGameObjectWithTag("StartButton").GetComponentInChildren<Text>().fontStyle = FontStyle.BoldAndItalic;
-            GameObject.FindGameObjectWithTag("ExitButton").GetComponentInChildren<Text>().fontStyle = FontStyle.Bold;
-        }
+        if (TextButton.fontStyle == FontStyle.Bold)
+            TextButton.fontStyle = FontStyle.BoldAndItalic;
         else
-        {
-            GameObject.FindGameObjectWithTag("StartButton").GetComponentInChildren<Text>().fontStyle = FontStyle.Bold;
-            GameObject.FindGameObjectWithTag("ExitButton").GetComponentInChildren<Text>().fontStyle = FontStyle.BoldAndItalic;
-        }
+            TextButton.fontStyle = FontStyle.Bold;
     }
 
     public void Update()
     {
         timer += Time.deltaTime;
         if (timer > 0.2) {
-            SwitchMenuFontStyle();
+            for (int i = 0; i < TextButtons.Count; ++i)
+                SwitchTextButtonFontStyle(TextButtons[i]);
             timer = 0;
         }
     }
