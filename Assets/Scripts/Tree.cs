@@ -10,12 +10,16 @@ namespace Assets.Scripts.Fonctions
     {
         static Node root;
         static Dictionary<String, String> dict = new Dictionary<String, String>(){
-            { "racine","({0})^2" },
-            { "square","\\root[2]{{{0}}}" },
-			{ "inverse","\\frac{{1}}{{{0}}}" },
-			{"exponentielle","log({0})"},
-			{"logarithme","\\e^{{{0}}}"},
-			{"derivee square","\\frac{{{0}^2}}{{2}}"}
+			{ "racine","({0})^2" }, // carrée et sa fonction annulle est racine carrée
+			{ "square","\\root[2]{{{0}}}" }, // racine carrée et sa fonction annulle est carrée
+			{ "inverse","\\frac{{1}}{{{0}}}" }, // inverse et sa fonction est inverse 
+			{"exponentielle","log({0})"},// log et sa fonction annulle est exp
+			{"logarithme","\\e^{{{0}}}"}, // exp et sa fonction annulle est log
+			//{"derivee square","\\frac{{{0}^2}}{{2}}"}, 
+			//{ "integrale","\\frac{{\\partial{{0}}}}{{\\partial{{x}}}}" },
+			{ "integrale","\\frac{{\\partial{{0}}}}{{\\partial{{x}}}}({{x}})" }, // derivée et sa fonction annulle est intégrale
+			//{ "derivee","\\int{{0}}\\partial{{x}}" }				
+			{ "derivee","\\int{{x}}" } // intégrale et sa fonction annulle est derivée 
 
 
         };
@@ -48,7 +52,9 @@ namespace Assets.Scripts.Fonctions
                     continue;
 				if (parent.operatorToParent.Equals("logarithme") && operatorDisplay.Key.Equals("exponentielle") || parent.operatorToParent.Equals("exponentielle") && operatorDisplay.Key.Equals("logarithme"))
 					continue;
-
+				
+				if (parent.operatorToParent.Equals("derivee") && operatorDisplay.Key.Equals("integrale") || parent.operatorToParent.Equals("integrale") && operatorDisplay.Key.Equals("derivee"))
+					continue;
                 Node n3 = new Node();
                 n3.value = String.Format(operatorDisplay.Value, parent.value);
                 n3.depth = depth;
@@ -131,10 +137,10 @@ namespace Assets.Scripts.Fonctions
             {
                 if (n.valueSimplified.Equals(value))
                 {
-					if(n.operatorToParent.Equals(function) || (function.Equals("derivee") && n.operatorToParent.StartsWith("derivee")))
-                    {
+					//if(n.operatorToParent.Equals(function) || (function.Equals("derivee") && n.operatorToParent.StartsWith("derivee")))
+                    //{
                         return n.parent;
-                    }
+                   // }
                 }
             }
             return null;
