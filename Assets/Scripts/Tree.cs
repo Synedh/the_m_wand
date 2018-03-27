@@ -10,17 +10,16 @@ namespace Assets.Scripts.Fonctions
     {
         static Node root;
         static Dictionary<String, String> dict = new Dictionary<String, String>(){
-			//{ "racine","({0})^2" },
-			//{ "square","\\root[2]{{{0}}}" },
-			//{ "inverse","\\frac{{1}}{{{0}}}" },
-			//{"exponentielle","log({0})"},
-			//{"logarithme","\\e^{{{0}}}"},
-			//{"derivee square","\\frac{{{0}^2}}{{2}}"},
-
+			{ "racine","({0})^2" }, // carrée et sa fonction annulle est racine carrée
+			{ "square","\\root[2]{{{0}}}" }, // racine carrée et sa fonction annulle est carrée
+			{ "inverse","\\frac{{1}}{{{0}}}" }, // inverse et sa fonction est inverse 
+			{"exponentielle","log({0})"},// log et sa fonction annulle est exp
+			{"logarithme","\\e^{{{0}}}"}, // exp et sa fonction annulle est log
+			//{"derivee square","\\frac{{{0}^2}}{{2}}"}, 
 			//{ "integrale","\\frac{{\\partial{{0}}}}{{\\partial{{x}}}}" },
-			{ "integrale","\\frac{{\\partial{{0}}}}{{\\partial{{x}}}}({{x}})" },
+			{ "integrale","\\frac{{\\partial{{0}}}}{{\\partial{{x}}}}({{x}})" }, // derivée et sa fonction annulle est intégrale
 			//{ "derivee","\\int{{0}}\\partial{{x}}" }				
-			{ "derivee","\\int{{x}}" }				
+			{ "derivee","\\int{{x}}" } // intégrale et sa fonction annulle est derivée 
 
 
         };
