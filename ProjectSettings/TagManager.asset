@@ -15,6 +15,7 @@ TagManager:
   - ScoreText
   - FourthSpell
   - FifthSpell
+  - Flash
   layers:
   - Default
   - TransparentFX
