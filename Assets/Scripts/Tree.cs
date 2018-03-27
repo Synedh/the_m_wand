@@ -10,18 +10,13 @@ namespace Assets.Scripts.Fonctions
     {
         static Node root;
         static Dictionary<String, String> dict = new Dictionary<String, String>(){
-			{ "racine","({0})^2" }, // carrée et sa fonction annulle est racine carrée
-			{ "square","\\root[2]{{{0}}}" }, // racine carrée et sa fonction annulle est carrée
-			{ "inverse","\\frac{{1}}{{{0}}}" }, // inverse et sa fonction est inverse 
-			{"exponentielle","log({0})"},// log et sa fonction annulle est exp
-			{"logarithme","\\e^{{{0}}}"}, // exp et sa fonction annulle est log
-			//{"derivee square","\\frac{{{0}^2}}{{2}}"}, 
-			//{ "integrale","\\frac{{\\partial{{0}}}}{{\\partial{{x}}}}" },
-			{ "integrale","\\frac{{\\partial{{0}}}}{{\\partial{{x}}}}({{x}})" }, // derivée et sa fonction annulle est intégrale
-			//{ "derivee","\\int{{0}}\\partial{{x}}" }				
-			{ "derivee","\\int{{x}}" } // intégrale et sa fonction annulle est derivée 
-
-
+			{ "racine", "({0})^2" }, // carrée et sa fonction annulle est racine carrée
+			{ "inverse", "\\frac{{1}}{{{0}}}" }, // inverse et sa fonction est inverse 
+			{ "square", "\\root[2]{{{0}}}" }, // racine carrée et sa fonction annulle est carrée
+			{ "exponentielle", "log({0})" },// log et sa fonction annulle est exp
+			{ "logarithme", "\\e^{{{0}}}" }, // exp et sa fonction annulle est log
+			{ "integrale", "\\frac{{\\partial{{0}}}}{{\\partial{{x}}}}({{x}})" }, // derivée et sa fonction annulle est intégrale
+			{ "derivee", "\\int{{x}}" } // intégrale et sa fonction annulle est derivée 
         };
 
 
@@ -36,15 +31,11 @@ namespace Assets.Scripts.Fonctions
             n.operatorToParent = "";
             recursiveCreateTree(n, 1);
 			// displayTree();
-
-
         }
         private static void recursiveCreateTree(Node parent, int depth)
         {
-
             foreach (KeyValuePair<String, String> operatorDisplay in dict)
-            {
-                
+            {                
                 //si cette fonction annule la fonction d'avant, ne pas sauvegarder cette equation
                 if (parent.operatorToParent.Equals("racine") && operatorDisplay.Key.Equals("square") || parent.operatorToParent.Equals("square") && operatorDisplay.Key.Equals("racine"))
                     continue;
@@ -85,9 +76,7 @@ namespace Assets.Scripts.Fonctions
                     n3.children = new List<Node>();
                     recursiveCreateTree(n3, depth + 1);
                 }
-
             }
-            
         }
         public static void displayTree()
         {
@@ -144,10 +133,7 @@ namespace Assets.Scripts.Fonctions
             {
                 if (n.valueSimplified.Equals(value))
                 {
-					//if(n.operatorToParent.Equals(function) || (function.Equals("derivee") && n.operatorToParent.StartsWith("derivee")))
-                    //{
-                        return n.parent;
-                   // }
+                    return n.parent;
                 }
             }
             return null;

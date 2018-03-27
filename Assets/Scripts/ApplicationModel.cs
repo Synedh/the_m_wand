@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class ApplicationModel {
 
-    static public int level = 1;
+    static public int level = 0;
 }

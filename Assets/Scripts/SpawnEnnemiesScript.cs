@@ -9,6 +9,8 @@ public class SpawnEnnemiesScript : MonoBehaviour {
     public Character chara;
     public GameObject enemy;
     public float spawnTime;
+    public int maxEnemies;
+    private float spawnTimer;
     public Transform[] spawnPoints;
 
 	// Use this for initialization
@@ -17,9 +19,19 @@ public class SpawnEnnemiesScript : MonoBehaviour {
         Assets.Scripts.Fonctions.Tree.createTree();
         // Assets.Scripts.Fonctions.Tree.displayTree();
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
-        
-        InvokeRepeating("Spawn", spawnTime, spawnTime);
+
+        spawnTimer = 0f;
 	}
+
+    void Update()
+    {
+        spawnTimer += Time.deltaTime;
+        if (spawnTimer >= spawnTime && GameObject.FindGameObjectsWithTag("Enemy").Length < maxEnemies)
+        {
+            Spawn();
+            spawnTimer = 0f;
+        }
+    }
 
     private int generateDifficulty(int score)
     {
@@ -37,6 +49,7 @@ public class SpawnEnnemiesScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Spawn () {
+        Debug.Log(GameObject.FindGameObjectsWithTag("Enemy").Length);
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
         EnnemiScript.Create(generateDifficulty(Int32.Parse(ScoreManager.instance.scoreString)), spawnPoint);
     }
