@@ -30,7 +30,6 @@ public class Character : MonoBehaviour {
             if (i >= CurrentLife)
                 hearts[i].shatter();
         }
-        //TODO fonction a call qui retire une vie
     }
 
     public void getHit()

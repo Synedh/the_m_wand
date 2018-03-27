@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Assets;
 
 public class spellManager : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class spellManager : MonoBehaviour
     public Image currentSpellObject;
     private Vector3 defaultSpellPosition;
     public string currentSpellName;
-    public GameObject currentSpellParticle;
+    public FireballScript currentSpellParticle;
 
     public static spellManager Instance;
     public bool isDragged;
@@ -119,7 +120,9 @@ public class spellManager : MonoBehaviour
             resetSpell();
             return;
         }
-        else if (spell.sprite.Equals(EmptySprite))
+		//currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Ressources/Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
+
+        if (spell.sprite.Equals(EmptySprite))
         {
             return;
         }
@@ -133,12 +136,12 @@ public class spellManager : MonoBehaviour
         }
         else if (spell.sprite.Equals(SquareSprite))
         {
-            currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Fireball"), spwanParticlePoint.transform.position, Quaternion.identity);
+			//currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Ressources/Prefabs/Particles/Fireball"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
             currentSpellName = "square";
         }
         else if (spell.sprite.Equals(RootSprite))
         {
-            currentSpellParticle = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity);
+			//currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Ressources/Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
             currentSpellName = "racine";
         }
         else if (spell.sprite.Equals(ExponentialSprite))
