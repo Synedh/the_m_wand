@@ -24,6 +24,7 @@ public class EnnemiScript : MonoBehaviour {
     Text t;
 	GameObject TEXDrawObject;
 	TEXDraw TEXDrawComponent;
+    public GameObject lightning;
 
     // Use this for initialization
     void Start () {
@@ -75,7 +76,15 @@ public class EnnemiScript : MonoBehaviour {
 
         if (getHit)
         {
-           
+            //TODO cast Lightningbolt
+            //DigitalRuby.LightningBolt.LightningBoltScript lightBolt = Instantiate(lightning, this.transform);
+            //lightBolt.StartObject = null;
+            // lightBolt.EndObject = null;
+            //  lightBolt.StartPosition = chara.transform.position;
+            //  lightBolt.EndPosition = this.transform.position;
+            //SimpleLightningBoltPrefab test = chara.GetComponentsInChildren<SimpleLightningBoltPrefab>;
+            chara.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().EndObject = this.gameObject;
+            chara.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().Trigger();
             GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
             getHit = false;
         }
