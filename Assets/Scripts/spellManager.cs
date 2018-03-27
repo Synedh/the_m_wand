@@ -120,7 +120,7 @@ public class spellManager : MonoBehaviour
             resetSpell();
             return;
         }
-		currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
+		//currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Ressources/Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
 
         if (spell.sprite.Equals(EmptySprite))
         {
@@ -136,12 +136,12 @@ public class spellManager : MonoBehaviour
         }
         else if (spell.sprite.Equals(SquareSprite))
         {
-			currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Fireball"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();;
+			//currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Ressources/Prefabs/Particles/Fireball"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
             currentSpellName = "square";
         }
         else if (spell.sprite.Equals(RootSprite))
         {
-			currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();;
+			//currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Ressources/Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
             currentSpellName = "racine";
         }
         else if (spell.sprite.Equals(ExponentialSprite))
