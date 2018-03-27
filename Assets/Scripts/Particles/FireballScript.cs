@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets
 {
-    class FireballScript : MonoBehaviour
+    public class FireballScript : MonoBehaviour
     
     {
         public float speed = 2;

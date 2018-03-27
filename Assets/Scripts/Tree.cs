@@ -12,7 +12,10 @@ namespace Assets.Scripts.Fonctions
         static Dictionary<String, String> dict = new Dictionary<String, String>(){
             { "racine","({0})^2" },
             { "square","\\root[2]{{{0}}}" },
-			{ "inverse","\\frac{{1}}{{{0}}}" }
+			{ "inverse","\\frac{{1}}{{{0}}}" },
+			{"exponentielle","log({0})"},
+			{"logarithme","\\e^{{{0}}}"},
+			{"derivee square","\\frac{{{0}^2}}{{2}}"}
 
 
         };
@@ -28,6 +31,7 @@ namespace Assets.Scripts.Fonctions
             root = n;
             n.operatorToParent = "";
             recursiveCreateTree(n, 1);
+			displayTree ();
 
 
         }
@@ -42,6 +46,8 @@ namespace Assets.Scripts.Fonctions
                     continue;
                 else if (parent.operatorToParent.Equals("inverse") && operatorDisplay.Key.Equals("inverse"))
                     continue;
+				if (parent.operatorToParent.Equals("logarithme") && operatorDisplay.Key.Equals("exponentielle") || parent.operatorToParent.Equals("exponentielle") && operatorDisplay.Key.Equals("logarithme"))
+					continue;
 
                 Node n3 = new Node();
                 n3.value = String.Format(operatorDisplay.Value, parent.value);
@@ -88,6 +94,7 @@ namespace Assets.Scripts.Fonctions
             {
                 foreach (Node child in n.children)
                 {
+					Debug.Log (child.value);
                     recursiveDisplayTree(child);
                 }
             }
@@ -126,7 +133,7 @@ namespace Assets.Scripts.Fonctions
             {
                 if (n.valueSimplified.Equals(value))
                 {
-                    if(n.operatorToParent.Equals(function))
+					if(n.operatorToParent.Equals(function) || (function.Equals("derivee") && n.operatorToParent.StartsWith("derivee")))
                     {
                         return n.parent;
                     }

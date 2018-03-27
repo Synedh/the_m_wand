@@ -108,6 +108,7 @@ public class EnnemiScript : MonoBehaviour {
         {
             Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(n.valueSimplified, spellManager.Instance.currentSpellName);
             spellManager.Instance.removeSpell();
+			spellManager.Instance.currentSpellParticle.launchOnEnnemy (this.gameObject);
             if (newNode != null) // Bonne fonction appliquée
             {
                 ScoreManager.instance.addScore(1);
