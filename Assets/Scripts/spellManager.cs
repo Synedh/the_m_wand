@@ -200,7 +200,6 @@ public class spellManager : MonoBehaviour
     public void onEndDrag(Image spell)
     {
         isDragged = false;
-        Debug.Log(Vector2.Distance(defaultSpellPosition, spell.transform.position));
         if (Vector2.Distance(defaultSpellPosition, spell.transform.position) > 1.5f)
         {
             currentSpellObject = spell;

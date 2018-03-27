@@ -13,7 +13,6 @@ public class EnnemiScript : MonoBehaviour {
     private int attackMode = 0;
     public int difficulty;
     private Character chara;
-    private float timer;
     private bool getHit = false;
     public int pushBack;
     Animator animator;
@@ -30,7 +29,6 @@ public class EnnemiScript : MonoBehaviour {
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
         n = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
-        timer = 0;
         animator = GetComponent<Animator>();
         chara_animator = chara.GetComponent<Animator>();
 

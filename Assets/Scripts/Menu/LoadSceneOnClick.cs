@@ -26,6 +26,10 @@ public class LoadSceneOnClick : MonoBehaviour
         SceneManager.LoadScene(sceneIndex);
     }
 
+    public void SetLevel(int level) {
+        ApplicationModel.level = level;
+    }
+
     private void SwitchTextButtonFontStyle(Text TextButton)
     {
         if (TextButton.fontStyle == FontStyle.Bold)

@@ -35,7 +35,7 @@ namespace Assets.Scripts.Fonctions
             root = n;
             n.operatorToParent = "";
             recursiveCreateTree(n, 1);
-			displayTree ();
+			// displayTree();
 
 
         }
@@ -100,6 +100,7 @@ namespace Assets.Scripts.Fonctions
             {
                 foreach (Node child in n.children)
                 {
+                    Debug.Log(child.value);
                     recursiveDisplayTree(child);
                 }
             }
@@ -112,6 +113,12 @@ namespace Assets.Scripts.Fonctions
                 if (listNodeForRandom[i].depth == depth)
                     nodes.Add(listNodeForRandom[i]);
             return nodes;
+        }
+
+        public static void setLevel(int level)
+        {
+            if (level > 0)
+                dict = dict.Skip(0).Take(level).ToDictionary(x => x.Key, x => x.Value);
         }
 
         public static Node getRandomNodeForEnnemy()

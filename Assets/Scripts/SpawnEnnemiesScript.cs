@@ -8,15 +8,15 @@ public class SpawnEnnemiesScript : MonoBehaviour {
 
     public Character chara;
     public GameObject enemy;
-    public float spawnTime = 3f;
+    public float spawnTime;
     public Transform[] spawnPoints;
 
 	// Use this for initialization
 	void Start () {
+        Assets.Scripts.Fonctions.Tree.setLevel(ApplicationModel.level);
         Assets.Scripts.Fonctions.Tree.createTree();
-        Assets.Scripts.Fonctions.Tree.displayTree();
+        // Assets.Scripts.Fonctions.Tree.displayTree();
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
-        //enemy = GameObject.FindGameObjectWithTag("Enemy");
         
         InvokeRepeating("Spawn", spawnTime, spawnTime);
 	}
@@ -25,10 +25,14 @@ public class SpawnEnnemiesScript : MonoBehaviour {
     {
         if (score < 10)
             return 1;
-        else if (score < 50)
+        else if (score < 40)
             return new System.Random().Next(2) + 1;
-        else
+        else if (score < 60)
             return 2;
+        else if (score < 80)
+            return new System.Random().Next(2) + 2;
+        else
+            return 3;
     }
 	
 	// Update is called once per frame
