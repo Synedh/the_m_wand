@@ -6,19 +6,29 @@ using UnityEngine.UI;
 public class Flash : MonoBehaviour {
 
     public Image defaultImage;
-    public bool flash;
+    //public bool flash;
 
-    public Flash Instance;
+	public static Flash Instance;
 
 	// Use this for initialization
 	void Start () {
-        Instance = this;
-        defaultImage = this.GetComponent<Image>();
-        flash = true;
+		defaultImage = GameObject.FindGameObjectWithTag("Flash").GetComponent<Image>();
+		Instance = this;
+        //flash = true;
+	}
+
+	public void showFlash () {
+		Color Transparent = new Color(1, 0, 0, 1);
+		defaultImage.color = Color.Lerp(defaultImage.color, Transparent, 20 * Time.deltaTime);
+	}
+
+	public void hideFlash () {
+		Color Transparent = new Color(0, 0, 0, 0);
+		defaultImage.color = Color.Lerp(defaultImage.color, Transparent, 20 * Time.deltaTime);
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	/*void Update () {
         if (flash) {
             Color white = new Color(1, 1, 1, 1);
             defaultImage.color = Color.Lerp(defaultImage.color, white, 20 * Time.deltaTime);
@@ -30,5 +40,5 @@ public class Flash : MonoBehaviour {
             Color Transparent = new Color(1, 1, 1, 0);
             defaultImage.color = Color.Lerp(defaultImage.color, Transparent, 20 * Time.deltaTime);
         }
-    }
+    }*/
 }

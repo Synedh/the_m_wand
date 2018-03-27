@@ -11,12 +11,19 @@ public class Character : MonoBehaviour {
     public Heart[] hearts;
     public GameObject lifebar;
     Animator animator;
+	public Image flash;
+	float startFlashDuration = 0;
+	float flashDuration = 0.9f;
+	float flashIntensity = 0.3f;
 
 
     private void Start()
     {
         animator = GetComponent<Animator>();
 
+		//TEST
+		flash = GameObject.FindGameObjectWithTag("Flash").GetComponent<Image>();
+		//!TEST
         hearts = new Heart[maxLife];
         RectTransform rt = (RectTransform)heart.transform;
         float width = rt.rect.width;
@@ -34,7 +41,8 @@ public class Character : MonoBehaviour {
 
     public void getHit()
     {
-        animator.SetBool("isHurt", true);
+		animator.SetBool("isHurt", true);
+		startFlashDuration = 0;
 
         for (int i = 0; i < CurrentLife; i++)
         {
@@ -66,5 +74,15 @@ public class Character : MonoBehaviour {
 
     private void Update()
     {
+		//Flash
+		if (animator.GetBool ("isHurt")) {
+			flash.color = Color.Lerp (new Color (0, 0, 0, 0), new Color (1, 0, 0, flashIntensity), startFlashDuration);
+		
+			if (startFlashDuration < 1) {
+				startFlashDuration += Time.deltaTime / flashDuration;
+			} else {
+				flash.color = Color.Lerp (new Color (1, 0, 0, flashIntensity), new Color (0, 0, 0, 0), startFlashDuration);
+			}
+		}
     }
 }
