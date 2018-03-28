@@ -10,30 +10,26 @@ public class EnnemiScript : MonoBehaviour {
     public float speed;
     public float attackSpeed;
     public float lastAttack;
-    private int attackMode = 0;
     public int difficulty;
+    private int attackMode = 0;
     private Character chara;
-    private bool getHit = false;
     public int pushBack;
-    Animator animator;
-    Animator chara_animator;
+    Animator enemy_animator;
+    Animator player_animator;
 
-
-    Node n;
-    Text t;
-	GameObject TEXDrawObject;
+    Node currentNode;
 	TEXDraw TEXDrawComponent;
     public GameObject lightning;
 
     // Use this for initialization
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
-        n = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
-        animator = GetComponent<Animator>();
-        chara_animator = chara.GetComponent<Animator>();
+        currentNode = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
+        enemy_animator = GetComponent<Animator>();
+        player_animator = chara.GetComponent<Animator>();
 
         TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
-        updateText();
+        updateText(currentNode.value);
     }
 
     public static EnnemiScript Create(int difficulty, Transform spawnPoint)
@@ -44,17 +40,22 @@ public class EnnemiScript : MonoBehaviour {
         return ennemi;
     }
 
-    private void updateText()
+    private void updateText(string str)
     {
-		TEXDrawComponent.text = n.value;
+		TEXDrawComponent.text = str;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
-        {
             attackMode = 1;
-        }
+    }
+
+    void ThrowLightningBolt(GameObject endObject)
+    {
+        chara.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().EndObject = endObject;
+        chara.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().Trigger();
+        GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
     }
 
     // Update is called once per frame
@@ -72,28 +73,6 @@ public class EnnemiScript : MonoBehaviour {
             }
         }
 
-        if (getHit)
-        {
-            //TODO cast Lightningbolt
-            //DigitalRuby.LightningBolt.LightningBoltScript lightBolt = Instantiate(lightning, this.transform);
-            //lightBolt.StartObject = null;
-            // lightBolt.EndObject = null;
-            //  lightBolt.StartPosition = chara.transform.position;
-            //  lightBolt.EndPosition = this.transform.position;
-            //SimpleLightningBoltPrefab test = chara.GetComponentsInChildren<SimpleLightningBoltPrefab>;
-            chara.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().EndObject = this.gameObject;
-            chara.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().Trigger();
-            GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
-            getHit = false;
-        }
-        if (n.value.Equals("x"))
-        {
-            animator.SetBool("die", true);
-            speed = 0;
-            attackMode = 0;
-            GetComponent<BoxCollider2D>().isTrigger = true;
-        }
-
     }
 
     public void DestroyMe()
@@ -103,29 +82,35 @@ public class EnnemiScript : MonoBehaviour {
 
     public void stopStagger()
     {
-        animator.SetBool("getHit", false);
+        enemy_animator.SetBool("getHit", false);
     }
 
 
     void OnMouseDown()
     {
-        //FireballScript fireball = spellManager.Instance.currentSpellParticle.GetComponent<FireballScript>();
-        //fireball.launchOnEnnemy(this.gameObject);
         if (spellManager.Instance.currentSpellName != null)
         {
-            Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(n.valueSimplified, spellManager.Instance.currentSpellName);
+            Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(currentNode.valueSimplified, spellManager.Instance.currentSpellName);
             spellManager.Instance.removeSpell();
-			//spellManager.Instance.currentSpellParticle.launchOnEnnemy (this.gameObject);
+
             if (newNode != null) // Bonne fonction appliquée
             {
                 ScoreManager.instance.addScore(1);
-				if (newNode.value.Equals("x"))
+                updateText(newNode.value);
+                player_animator.SetBool("spell_cast", true);
+                ThrowLightningBolt(this.gameObject);
+                enemy_animator.SetBool("getHit", true);
+                attackMode = 0;
+
+                if (newNode.value.Equals("x")) // Ennemi mort
+                {
                     ScoreManager.instance.addScore(1);
-                n = newNode;
-                chara_animator.SetBool("spell_cast", true);
-                animator.SetBool("getHit", true);
-                getHit = true;
-                updateText();
+                    enemy_animator.SetBool("die", true);
+                    speed = 0;
+                    attackMode = 0;
+                    GetComponent<BoxCollider2D>().isTrigger = true;
+                }
+                currentNode = newNode;
             }
             else // Mauvaise fonction appliquée
             {

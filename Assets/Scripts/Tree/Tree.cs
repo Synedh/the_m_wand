@@ -8,6 +8,7 @@ namespace Assets.Scripts.Fonctions
 {
     class Tree
     {
+        public static int maxDepth = 4;
         static Node root;
         static Dictionary<String, String> dict = new Dictionary<String, String>(){
 			{ "racine", "({0})^2" }, // carrée et sa fonction annulle est racine carrée
@@ -57,21 +58,19 @@ namespace Assets.Scripts.Fonctions
                 {
                     String racine = String.Format(dict["square"], parent.parent.value);
                     n3.valueSimplified = String.Format(dict["inverse"], racine);
-                    //Debug.Log("Simplified racine(1/x))"+n3.valueSimplified);
                 }
                 //la racine du carré = l'inverse du carré
                 else if (parent.operatorToParent.Equals("inverse") && operatorDisplay.Key.Equals("racine"))
                 {
                     String square = String.Format(dict["racine"], parent.parent.value);
                     n3.valueSimplified = String.Format(dict["inverse"], square);
-                    //Debug.Log("Simplified square(1/x))" + n3.valueSimplified);
                 }
                 else
                     n3.valueSimplified = n3.value;
                
                 parent.children.Add(n3);
                 listNodeForRandom.Add(n3);
-                if (depth < 2) /* CHIFFRE A MODIFIER POUR LIMITE DE PROFONDEUR DE GENERATION */
+                if (depth < maxDepth)
                 {
                     n3.children = new List<Node>();
                     recursiveCreateTree(n3, depth + 1);
@@ -131,7 +130,7 @@ namespace Assets.Scripts.Fonctions
         {
             foreach(Node n in listNodeForRandom)
             {
-                if (n.valueSimplified.Equals(value))
+                if (n.valueSimplified.Equals(value) && n.operatorToParent.Equals(function))
                 {
                     return n.parent;
                 }

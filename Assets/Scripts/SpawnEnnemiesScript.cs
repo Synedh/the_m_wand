@@ -49,7 +49,6 @@ public class SpawnEnnemiesScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Spawn () {
-        Debug.Log(GameObject.FindGameObjectsWithTag("Enemy").Length);
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
         EnnemiScript.Create(generateDifficulty(Int32.Parse(ScoreManager.instance.scoreString)), spawnPoint);
     }

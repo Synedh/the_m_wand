@@ -4,41 +4,34 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Flash : MonoBehaviour {
+    private Image flash;
+    private static float startDuration;
+    private static Color color;
+    private static float duration;
+    private static bool doFlash;
 
-    public Image defaultImage;
-    //public bool flash;
-
-	public static Flash Instance;
-
-	// Use this for initialization
 	void Start () {
-		defaultImage = GameObject.FindGameObjectWithTag("Flash").GetComponent<Image>();
-		Instance = this;
-        //flash = true;
+		flash = this.gameObject.GetComponent<Image>();
+        doFlash = false;
 	}
 
-	public void showFlash () {
-		Color Transparent = new Color(1, 0, 0, 1);
-		defaultImage.color = Color.Lerp(defaultImage.color, Transparent, 20 * Time.deltaTime);
-	}
+    private void Update()
+    {
+        if (doFlash)
+        {
+            flash.color = Color.Lerp(color, new Color(0, 0, 0, 0), startDuration);
 
-	public void hideFlash () {
-		Color Transparent = new Color(0, 0, 0, 0);
-		defaultImage.color = Color.Lerp(defaultImage.color, Transparent, 20 * Time.deltaTime);
-	}
-	
-	// Update is called once per frame
-	/*void Update () {
-        if (flash) {
-            Color white = new Color(1, 1, 1, 1);
-            defaultImage.color = Color.Lerp(defaultImage.color, white, 20 * Time.deltaTime);
-            if (defaultImage.color.a >= 0.8) {
-                flash = false;
-            }
+            if (startDuration < duration)
+                startDuration += Time.deltaTime;
+            else
+                doFlash = false;
         }
-        else {
-            Color Transparent = new Color(1, 1, 1, 0);
-            defaultImage.color = Color.Lerp(defaultImage.color, Transparent, 20 * Time.deltaTime);
-        }
-    }*/
+    }
+
+    public static void sendFlash (Color flashColor, float flashDuration) {
+        color = flashColor;
+        duration = flashDuration;
+        startDuration = 0f;
+        doFlash = true;
+    }
 }

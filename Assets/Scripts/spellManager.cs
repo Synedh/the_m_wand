@@ -28,18 +28,15 @@ public class spellManager : MonoBehaviour
     public Image currentSpellObject;
     private Vector3 defaultSpellPosition;
     public string currentSpellName;
-    public FireballScript currentSpellParticle;
 
     public static spellManager Instance;
     public bool isDragged;
-    private GameObject spwanParticlePoint;
 
     private Animator charaAnimator;
 
     // Use this for initialization
     void Start()
     {
-        spwanParticlePoint = GameObject.Find("SpawnParticlePoint");
         FirstSpell = GameObject.FindGameObjectWithTag("FirstSpell").GetComponent<Image>();
         SecondSpell = GameObject.FindGameObjectWithTag("SecondSpell").GetComponent<Image>();
         ThirdSpell = GameObject.FindGameObjectWithTag("ThirdSpell").GetComponent<Image>();
