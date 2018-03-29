@@ -821,6 +821,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isRecording: 0
+  minimalRecognitionScore: -1
 --- !u!4 &462976907
 Transform:
   m_ObjectHideFlags: 0
@@ -1602,6 +1603,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1241634736}
   - component: {fileID: 1241634735}
+  - component: {fileID: 1241634737}
   m_Layer: 0
   m_Name: SpawnEnemies
   m_TagString: Untagged
@@ -1649,6 +1651,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 0.5}
+--- !u!114 &1241634737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1241634734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdeee3a28a624d6418a9297cfd08ff6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDepth: 4
 --- !u!1 &1330998545
 GameObject:
   m_ObjectHideFlags: 0

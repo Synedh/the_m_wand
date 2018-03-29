@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Assets.Scripts.Fonctions
 {
@@ -13,7 +11,5 @@ namespace Assets.Scripts.Fonctions
         public String operatorToParent;
         public Node parent;
         public List<Node> children;
-
-        
     }
 }

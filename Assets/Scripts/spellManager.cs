@@ -7,12 +7,11 @@ using Assets;
 
 public class spellManager : MonoBehaviour
 {
-
-    private Image FirstSpell;
-    private Image SecondSpell;
-    private Image ThirdSpell;
-    private Image FourthSpell;
-    private Image FifthSpell;
+    Image FirstSpell;
+    Image SecondSpell;
+    Image ThirdSpell;
+    Image FourthSpell;
+    Image FifthSpell;
 
     public Sprite EmptySprite;
     public Sprite LinearPosSprite;
@@ -26,13 +25,13 @@ public class spellManager : MonoBehaviour
     public Sprite DeriveSprite;
 
     public Image currentSpellObject;
-    private Vector3 defaultSpellPosition;
     public string currentSpellName;
+    Vector3 defaultSpellPosition;
 
     public static spellManager Instance;
     public bool isDragged;
 
-    private Animator charaAnimator;
+    Animator charaAnimator;
 
     // Use this for initialization
     void Start()

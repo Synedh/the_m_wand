@@ -11,13 +11,11 @@ public class SpawnEnnemiesScript : MonoBehaviour {
     public GameObject enemy;
     public float spawnTime;
     public int maxEnemies;
-    private float spawnTimer;
     public Transform[] spawnPoints;
+    float spawnTimer;
 
 	// Use this for initialization
 	void Start () {
-        Assets.Scripts.Fonctions.Tree.setLevel(ApplicationModel.level);
-        Assets.Scripts.Fonctions.Tree.createTree();
         // Assets.Scripts.Fonctions.Tree.displayTree();
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
 
@@ -38,7 +36,7 @@ public class SpawnEnnemiesScript : MonoBehaviour {
         }
     }
 
-    private int generateDifficulty(int score)
+    int generateDifficulty(int score)
     {
         if (score < 10)
             return 1;
