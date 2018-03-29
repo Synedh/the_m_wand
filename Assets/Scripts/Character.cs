@@ -38,13 +38,15 @@ public class Character : MonoBehaviour
     public void getHit()
     {
         animator.SetBool("isHurt", true);
-        Flash.sendFlash(new Color(1, 0, 0, 0.3f), 0.9f);
-        Shake.sendShake(0.3f, 0.05f);
+        Shake.sendShake(0.4f, 0.07f);
 
         for (int i = 0; i < CurrentLife; i++)
         {
             hearts[i].shake();
         }
+
+        if (CurrentLife <= maxLife / 3 + 1)
+            Flash.sendFlash(new Color(1, 0, 0, 0.3f), 0.9f);
 
         if (CurrentLife > 1)
         {

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnEnnemiesScript : MonoBehaviour {
 
@@ -10,13 +11,11 @@ public class SpawnEnnemiesScript : MonoBehaviour {
     public GameObject enemy;
     public float spawnTime;
     public int maxEnemies;
-    private float spawnTimer;
     public Transform[] spawnPoints;
+    float spawnTimer;
 
 	// Use this for initialization
 	void Start () {
-        Assets.Scripts.Fonctions.Tree.setLevel(ApplicationModel.level);
-        Assets.Scripts.Fonctions.Tree.createTree();
         // Assets.Scripts.Fonctions.Tree.displayTree();
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
 
@@ -25,15 +24,19 @@ public class SpawnEnnemiesScript : MonoBehaviour {
 
     void Update()
     {
-        spawnTimer += Time.deltaTime;
-        if (spawnTimer >= spawnTime && GameObject.FindGameObjectsWithTag("Enemy").Length < maxEnemies)
-        {
-            Spawn();
-            spawnTimer = 0f;
+        if (ApplicationModel.level == 0 || Int32.Parse(ScoreManager.instance.scoreString) < 50) {
+            spawnTimer += Time.deltaTime;
+            if (spawnTimer >= spawnTime && GameObject.FindGameObjectsWithTag("Enemy").Length < maxEnemies) {
+                Spawn();
+                spawnTimer = 0f;
+            }
+        }
+        else if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0) {
+            SceneManager.LoadScene(2);
         }
     }
 
-    private int generateDifficulty(int score)
+    int generateDifficulty(int score)
     {
         if (score < 10)
             return 1;

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace Assets.Scripts.Fonctions
 {
-    class Tree
+    class Tree: MonoBehaviour
     {
-        public static int maxDepth = 4;
+        public int maxDepth;
         static Node root;
+        static List<Node> listNodeForRandom;
         static Dictionary<String, String> dict = new Dictionary<String, String>(){
 			{ "racine", "({0})^2" }, // carrée et sa fonction annulle est racine carrée
 			{ "inverse", "\\frac{{1}}{{{0}}}" }, // inverse et sa fonction est inverse 
@@ -17,12 +17,18 @@ namespace Assets.Scripts.Fonctions
 			{ "exponentielle", "log({0})" },// log et sa fonction annulle est exp
 			{ "logarithme", "\\e^{{{0}}}" }, // exp et sa fonction annulle est log
 			{ "integrale", "\\frac{{\\partial{{}}}}{{\\partial{{x}}}}(x)" }, // derivée et sa fonction annulle est intégrale
-			{ "derivee", "\\int{{x}}" } // intégrale et sa fonction annulle est derivée 
+			{ "derivee", "\\int{{0}}" } // intégrale et sa fonction annulle est derivée 
         };
 
-
-        static List<Node> listNodeForRandom = new List<Node>();
-        public static void createTree()
+        void Start()
+        {
+            listNodeForRandom = new List<Node>();
+            int level = ApplicationModel.level;
+            if (level > 0)
+                dict = dict.Skip(0).Take(level).ToDictionary(x => x.Key, x => x.Value);
+            createTree();
+        }
+        void createTree()
         {
             Node n = new Node();
             n.value = "x";
@@ -33,7 +39,8 @@ namespace Assets.Scripts.Fonctions
             recursiveCreateTree(n, 1);
 			// displayTree();
         }
-        private static void recursiveCreateTree(Node parent, int depth)
+
+        private void recursiveCreateTree(Node parent, int depth)
         {
             foreach (KeyValuePair<String, String> operatorDisplay in dict)
             {                
@@ -103,27 +110,15 @@ namespace Assets.Scripts.Fonctions
             return nodes;
         }
 
-        public static void setLevel(int level)
-        {
-            if (level > 0)
-                dict = dict.Skip(0).Take(level).ToDictionary(x => x.Key, x => x.Value);
-        }
-
-        public static Node getRandomNodeForEnnemy()
-        {
-            if (listNodeForRandom.Count > 0)
-            {
-                System.Random r = new System.Random();
-                int index = r.Next() % listNodeForRandom.Count();
-                return listNodeForRandom[index];
-            }
-            return null;
-        }
-
         public static Node getRandomNodeOfDepth(int depth)
         {
             List<Node> nodesOfDepth = getNodesOfDepth(depth);
             return nodesOfDepth[new System.Random().Next() % nodesOfDepth.Count()];
+        }
+
+        public static Dictionary<String, String> getDict()
+        {
+            return dict;
         }
 
         public static Node tryExecuteFunction (String value, String function)

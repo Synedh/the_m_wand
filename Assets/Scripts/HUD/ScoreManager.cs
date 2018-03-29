@@ -13,14 +13,14 @@ public class ScoreManager : MonoBehaviour {
         scoreString = "00";
         GetComponent<Text>().text = "00";
 	}
+	
+	void Update () {
+        GetComponent<Text>().text = scoreString;
+    }
 
     public void addScore(int qty)
     {
         int score = Int32.Parse(scoreString);
         scoreString = (score + qty).ToString("D" + Math.Floor(Math.Log10(score + qty) + 2).ToString());
-    }
-	
-	void Update () {
-        GetComponent<Text>().text = scoreString;
     }
 }

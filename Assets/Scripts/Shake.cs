@@ -3,29 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Shake : MonoBehaviour {
-    private Transform cameraPosition;
-    private Transform defaultCameraPosition;
-    private static float startDuration;
-    private static float duration;
-    private static float power;
-    private static bool doShake;
+    Transform cameraPosition;
+    Vector3 defaultCameraPosition;
+    static float startDuration;
+    static float duration;
+    static float power;
+    static bool doShake;
 
 	void Start () {
         cameraPosition = this.gameObject.transform;
-        defaultCameraPosition = this.gameObject.transform;
+        defaultCameraPosition = this.gameObject.transform.localPosition;
         doShake = false;
 	}
 	
 	void Update () {
 		if (doShake)
         {
-            cameraPosition.localPosition = defaultCameraPosition.localPosition + Random.insideUnitSphere * power;
+            cameraPosition.localPosition = defaultCameraPosition + Random.insideUnitSphere * power;
 
             if (startDuration < duration)
                 startDuration += Time.deltaTime;
             else
             {
-                cameraPosition = defaultCameraPosition;
+                cameraPosition.localPosition = defaultCameraPosition;
                 doShake = false;
             }
         }

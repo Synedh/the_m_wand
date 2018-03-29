@@ -4,18 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Flash : MonoBehaviour {
-    private Image flash;
-    private static float startDuration;
-    private static Color color;
-    private static float duration;
-    private static bool doFlash;
+    Image flash;
+    static float startDuration;
+    static Color color;
+    static float duration;
+    static bool doFlash;
 
 	void Start () {
 		flash = this.gameObject.GetComponent<Image>();
         doFlash = false;
 	}
 
-    private void Update()
+    void Update()
     {
         if (doFlash)
         {

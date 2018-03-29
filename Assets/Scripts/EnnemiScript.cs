@@ -11,22 +11,23 @@ public class EnnemiScript : MonoBehaviour {
     public float attackSpeed;
     public float lastAttack;
     public int difficulty;
-    private int attackMode = 0;
-    private Character chara;
     public int pushBack;
+    public GameObject lightning;
+
+    bool doAttack;
+    Character chara;
     Animator enemy_animator;
     Animator player_animator;
 
     Node currentNode;
 	TEXDraw TEXDrawComponent;
-    public GameObject lightning;
 
-    // Use this for initialization
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
         currentNode = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
         enemy_animator = GetComponent<Animator>();
         player_animator = chara.GetComponent<Animator>();
+        doAttack = false;
 
         TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
         updateText(currentNode.value);
@@ -40,7 +41,7 @@ public class EnnemiScript : MonoBehaviour {
         return ennemi;
     }
 
-    private void updateText(string str)
+    void updateText(string str)
     {
 		TEXDrawComponent.text = str;
     }
@@ -48,7 +49,7 @@ public class EnnemiScript : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
-            attackMode = 1;
+            doAttack = true;
     }
 
     void ThrowLightningBolt(GameObject endObject)
@@ -57,10 +58,9 @@ public class EnnemiScript : MonoBehaviour {
         chara.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().Trigger();
         GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
     }
-
-    // Update is called once per frame
+    
     void Update () {
-        if (attackMode == 0)
+        if (!doAttack)
             // Déplace l'entité vers le joueur
             this.transform.position = Vector2.MoveTowards(this.transform.position, chara.transform.position, Time.deltaTime * speed);
         else
@@ -100,20 +100,20 @@ public class EnnemiScript : MonoBehaviour {
                 player_animator.SetBool("spell_cast", true);
                 ThrowLightningBolt(this.gameObject);
                 enemy_animator.SetBool("getHit", true);
-                attackMode = 0;
+                doAttack = false;
 
                 if (newNode.value.Equals("x")) // Ennemi mort
                 {
                     ScoreManager.instance.addScore(1);
                     enemy_animator.SetBool("die", true);
                     speed = 0;
-                    attackMode = 0;
                     GetComponent<BoxCollider2D>().isTrigger = true;
                 }
                 currentNode = newNode;
             }
             else // Mauvaise fonction appliquée
             {
+                Shake.sendShake(0.5f, 0.07f);
                 // Retour utilisateur de mauvais spell appliqué
             }
         }
