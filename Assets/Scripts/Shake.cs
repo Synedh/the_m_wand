@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Shake : MonoBehaviour {
     private Transform cameraPosition;
-    private Transform defaultCameraPosition;
+    private Vector3 defaultCameraPosition;
     private static float startDuration;
     private static float duration;
     private static float power;
@@ -12,20 +12,20 @@ public class Shake : MonoBehaviour {
 
 	void Start () {
         cameraPosition = this.gameObject.transform;
-        defaultCameraPosition = this.gameObject.transform;
+        defaultCameraPosition = this.gameObject.transform.localPosition;
         doShake = false;
 	}
 	
 	void Update () {
 		if (doShake)
         {
-            cameraPosition.localPosition = defaultCameraPosition.localPosition + Random.insideUnitSphere * power;
+            cameraPosition.localPosition = defaultCameraPosition + Random.insideUnitSphere * power;
 
             if (startDuration < duration)
                 startDuration += Time.deltaTime;
             else
             {
-                cameraPosition = defaultCameraPosition;
+                cameraPosition.localPosition = defaultCameraPosition;
                 doShake = false;
             }
         }

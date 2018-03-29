@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnEnnemiesScript : MonoBehaviour {
 
@@ -25,11 +26,15 @@ public class SpawnEnnemiesScript : MonoBehaviour {
 
     void Update()
     {
-        spawnTimer += Time.deltaTime;
-        if (spawnTimer >= spawnTime && GameObject.FindGameObjectsWithTag("Enemy").Length < maxEnemies)
-        {
-            Spawn();
-            spawnTimer = 0f;
+        if (ApplicationModel.level == 0 || Int32.Parse(ScoreManager.instance.scoreString) < 50) {
+            spawnTimer += Time.deltaTime;
+            if (spawnTimer >= spawnTime && GameObject.FindGameObjectsWithTag("Enemy").Length < maxEnemies) {
+                Spawn();
+                spawnTimer = 0f;
+            }
+        }
+        else if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0) {
+            SceneManager.LoadScene(2);
         }
     }
 

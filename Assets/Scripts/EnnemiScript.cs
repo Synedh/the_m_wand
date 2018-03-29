@@ -114,6 +114,7 @@ public class EnnemiScript : MonoBehaviour {
             }
             else // Mauvaise fonction appliquée
             {
+                Shake.sendShake(0.5f, 0.07f);
                 // Retour utilisateur de mauvais spell appliqué
             }
         }
