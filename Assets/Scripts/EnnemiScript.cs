@@ -54,11 +54,16 @@ public class EnnemiScript : MonoBehaviour {
 
     void ThrowLightningBolt(GameObject endObject)
     {
-        chara.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().EndObject = endObject;
-        chara.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().Trigger();
-        GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
+        this.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().EndObject = endObject;
+        this.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().Trigger();
     }
-    
+
+    void ThrowLightningBoltChara()
+    {
+        this.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().EndPosition = chara.transform.position + new Vector3(54, 3)/100;
+        this.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().Trigger();
+    }
+
     void Update () {
         if (!doAttack)
             // Déplace l'entité vers le joueur
@@ -91,24 +96,36 @@ public class EnnemiScript : MonoBehaviour {
         if (spellManager.Instance.currentSpellName != null)
         {
             Node newNode = Assets.Scripts.Fonctions.Tree.tryExecuteFunction(currentNode.valueSimplified, spellManager.Instance.currentSpellName);
-            spellManager.Instance.removeSpell();
-
             if (newNode != null) // Bonne fonction appliquée
             {
-                ScoreManager.instance.addScore(1);
+                int score = 5;
+                int multip = 1;
                 updateText(newNode.value);
                 player_animator.SetBool("spell_cast", true);
-                ThrowLightningBolt(this.gameObject);
+                ThrowLightningBoltChara();
                 enemy_animator.SetBool("getHit", true);
+                GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
+                GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+                for (int i = 0; i < enemies.Length; i++)
+                {
+                    if (enemies[i] != this.gameObject)
+                    {
+                        if (currentNode == enemies[i].GetComponent<EnnemiScript>().currentNode)
+                        {
+                            enemies[i].GetComponent<EnnemiScript>().GetComboHit(this.gameObject, newNode);
+                            multip++;
+                        }
+                    }
+                }
                 doAttack = false;
-
                 if (newNode.value.Equals("x")) // Ennemi mort
                 {
-                    ScoreManager.instance.addScore(1);
+                    score += 5;
                     enemy_animator.SetBool("die", true);
                     speed = 0;
                     GetComponent<BoxCollider2D>().isTrigger = true;
                 }
+                ScoreManager.instance.addScore(score * multip);
                 currentNode = newNode;
             }
             else // Mauvaise fonction appliquée
@@ -116,6 +133,28 @@ public class EnnemiScript : MonoBehaviour {
                 Shake.sendShake(0.5f, 0.07f);
                 // Retour utilisateur de mauvais spell appliqué
             }
+            spellManager.Instance.removeSpell();
         }
+    }
+
+
+
+    public int GetComboHit(GameObject source, Node newNode)
+    {
+        int score = 5;
+        ThrowLightningBolt(source);
+        GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
+        enemy_animator.SetBool("getHit", true);
+        doAttack = false;
+        if (newNode.value.Equals("x")) // Ennemi mort
+        {
+            score = 10;
+            enemy_animator.SetBool("die", true);
+            speed = 0;
+            GetComponent<BoxCollider2D>().isTrigger = true;
+        }
+        updateText(newNode.value);
+        currentNode = newNode;
+        return score;
     }
 }

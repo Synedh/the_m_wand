@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Assets.Scripts.Fonctions
 {
-    class Node
+    public class Node
     {
         public String value;
         public int depth;
