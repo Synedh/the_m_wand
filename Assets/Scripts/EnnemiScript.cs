@@ -60,7 +60,9 @@ public class EnnemiScript : MonoBehaviour {
 
     void ThrowLightningBoltChara()
     {
-        this.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().EndPosition = chara.transform.position + new Vector3(54, 3)/100;
+        this.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().EndObject = null;
+        this.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().EndPosition = chara.transform.position + new Vector3(54, 33)/100;
+        chara.GetComponentInChildren<ParticleSystem>().Play();
         this.GetComponentInChildren<DigitalRuby.LightningBolt.LightningBoltScript>().Trigger();
     }
 
