@@ -76,12 +76,13 @@ public class SwipeScript : MonoBehaviour
 
             FingerMove(Input.mousePosition.x, Input.mousePosition.y);
         }
-		else if (_points.Count >= 20) //Add sound
-			Sound.sendSound("Sounds/write_blackboard");
+		//else if (_points.Count >= 20) //Add sound
+		//	Sound.sendSound("Sounds/write_blackboard");
 
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
         {
             FingerDown(Input.mousePosition.x, Input.mousePosition.y);
+			Sound.sendSound("Sounds/write_blackboard");
         }
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0))
         {
