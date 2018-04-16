@@ -76,6 +76,9 @@ public class SwipeScript : MonoBehaviour
 
             FingerMove(Input.mousePosition.x, Input.mousePosition.y);
         }
+		else if (_points.Count >= 20) //Add sound
+			Sound.sendSound("Sounds/write_blackboard");
+
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
         {
             FingerDown(Input.mousePosition.x, Input.mousePosition.y);
@@ -89,7 +92,8 @@ public class SwipeScript : MonoBehaviour
 
 
     void FingerDown(double x, double y)
-    {
+	{
+
 		trail.enabled = true;
 		trail.Clear ();
        
