@@ -14,6 +14,7 @@ public class EnnemiScript : MonoBehaviour {
     public int pushBack;
     public GameObject lightning;
 
+	bool spellStatus;
     bool doAttack;
     Character chara;
     Animator enemy_animator;
@@ -28,6 +29,7 @@ public class EnnemiScript : MonoBehaviour {
         enemy_animator = GetComponent<Animator>();
         player_animator = chara.GetComponent<Animator>();
 		doAttack = false;
+		spellStatus = false;
 
         TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
         updateText(currentNode.value);
@@ -84,11 +86,16 @@ public class EnnemiScript : MonoBehaviour {
         }
 		if (enemy_animator.GetBool("getHit")) //hit sound
 			Sound.sendSound("Sounds/foudre");
+		if (spellStatus) { //bad spell sound
+			Sound.sendSound ("Sounds/wrong_spell");
+			spellStatus = false;
+		}
 			
     }
 
     public void DestroyMe()
     {
+		Sound.sendSound ("Sounds/swipe_out");
         Destroy(this.gameObject);
     }
 
@@ -138,6 +145,7 @@ public class EnnemiScript : MonoBehaviour {
             else // Mauvaise fonction appliquée
             {
                 Shake.sendShake(0.5f, 0.07f);
+				spellStatus = true;
                 // Retour utilisateur de mauvais spell appliqué
             }
             spellManager.Instance.removeSpell();
