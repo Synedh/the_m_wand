@@ -8,43 +8,55 @@ using System;
 
 public class LoadSceneOnClick : MonoBehaviour
 {
-    float timer;
+    public GameObject BlackPannel;
+
     List<Text> TextButtons = new List<Text>();
+    bool doLerp;
+    int sceneIndex;
+    float startDuration;
+    float totalDuration;
 
     void Start() {
-        timer = 0;
-        if (SceneManager.GetActiveScene().buildIndex == 0) {
-            TextButtons.Add(GameObject.FindGameObjectWithTag("StartButton").GetComponentInChildren<Text>());
-            TextButtons.Add(GameObject.FindGameObjectWithTag("ExitButton").GetComponentInChildren<Text>());
-        }
-        else if (SceneManager.GetActiveScene().buildIndex == 2) {
+        sceneIndex = 0;
+        startDuration = 0;
+        totalDuration = 2;
+        BlackPannel.SetActive(false);
+        if (SceneManager.GetActiveScene().buildIndex == 2) {
             GameObject.FindGameObjectWithTag("ScoreText").GetComponentInChildren<Text>().text = "Score : " + Int32.Parse(ScoreManager.instance.scoreString);
         }
     }
 
-    public void LoadByIndex(int sceneIndex) {
-        SceneManager.LoadScene(sceneIndex);
+    public void LoadByIndex(int SceneIndex)
+    {
+        if (SceneIndex == 0)
+            SceneManager.LoadScene(0);
+        else
+        {
+            BlackPannel.SetActive(true);
+            sceneIndex = SceneIndex;
+            doLerp = true;
+        }
     }
 
     public void SetLevel(int level) {
         ApplicationModel.level = level;
     }
 
-    private void SwitchTextButtonFontStyle(Text TextButton)
-    {
-        if (TextButton.fontStyle == FontStyle.Bold)
-            TextButton.fontStyle = FontStyle.BoldAndItalic;
-        else
-            TextButton.fontStyle = FontStyle.Bold;
-    }
-
     public void Update()
     {
-        timer += Time.deltaTime;
-        if (timer > 0.2) {
-            for (int i = 0; i < TextButtons.Count; ++i)
-                SwitchTextButtonFontStyle(TextButtons[i]);
-            timer = 0;
+        if (doLerp)
+        {
+            if (startDuration < totalDuration)
+            {
+                startDuration += Time.deltaTime;
+                BlackPannel.GetComponent<Image>().color = Color.Lerp(BlackPannel.GetComponent<Image>().color, new Color(0, 0, 0, 1), startDuration / totalDuration);
+            }
+            else
+            {
+                doLerp = false;
+                SceneManager.LoadScene(sceneIndex);
+
+            }
         }
     }
 }

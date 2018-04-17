@@ -52,15 +52,30 @@ public class spellManager : MonoBehaviour
     void addSpellSprite(Sprite spellSprite)
     {
         if (FirstSpell.sprite == EmptySprite)
+        {
             FirstSpell.sprite = spellSprite;
+            onSpellClick(FirstSpell);
+        }
         else if (SecondSpell.sprite == EmptySprite)
+        {
             SecondSpell.sprite = spellSprite;
+            onSpellClick(SecondSpell);
+        }
         else if (ThirdSpell.sprite == EmptySprite)
+        {
             ThirdSpell.sprite = spellSprite;
+            onSpellClick(ThirdSpell);
+        }
         else if (FourthSpell.sprite == EmptySprite)
+        {
             FourthSpell.sprite = spellSprite;
+            onSpellClick(FourthSpell);
+        }
         else if (FifthSpell.sprite == EmptySprite)
+        {
             FifthSpell.sprite = spellSprite;
+            onSpellClick(FifthSpell);
+        }
     }
 
     public void addSpell(string spellName)

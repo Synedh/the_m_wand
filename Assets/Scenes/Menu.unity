@@ -401,6 +401,7 @@ GameObject:
   - component: {fileID: 904407921}
   - component: {fileID: 904407920}
   - component: {fileID: 904407919}
+  - component: {fileID: 904407923}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -486,6 +487,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &904407923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 904407918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04df9315ec722ef40ac404d6bf5fe627, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1461559098
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,7 +849,6 @@ GameObject:
   - component: {fileID: 1658306545}
   - component: {fileID: 1658306544}
   - component: {fileID: 1658306543}
-  - component: {fileID: 1658306546}
   m_Layer: 0
   m_Name: LevelMenu
   m_TagString: StartButton
@@ -903,7 +914,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1658306546}
+      - m_Target: {fileID: 904407923}
         m_MethodName: LoadByIndex
         m_Mode: 3
         m_Arguments:
@@ -949,14 +960,3 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1658306541}
---- !u!114 &1658306546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1658306541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18227dc2015a53d408aabe4e49cc0742, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -6,7 +6,7 @@ public class Sound : MonoBehaviour {
 	static AudioSource audioSource;
 
 	void Start () {
-		audioSource = gameObject.AddComponent <AudioSource>() as AudioSource;
+		audioSource = gameObject.GetComponent<AudioSource>();
 	}
 
 	public static void sendSound(string soundName)
