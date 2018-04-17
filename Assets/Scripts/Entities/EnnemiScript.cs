@@ -14,6 +14,7 @@ public class EnnemiScript : MonoBehaviour {
     public int pushBack;
     public GameObject lightning;
 
+	bool spellStatus;
     bool doAttack;
     Character chara;
     Animator enemy_animator;
@@ -27,7 +28,8 @@ public class EnnemiScript : MonoBehaviour {
         currentNode = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
         enemy_animator = GetComponent<Animator>();
         player_animator = chara.GetComponent<Animator>();
-        doAttack = false;
+		doAttack = false;
+		spellStatus = false;
 
         TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
         updateText(currentNode.value);
@@ -48,8 +50,11 @@ public class EnnemiScript : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-            doAttack = true;
+	if (collision.gameObject.tag == "Player") {
+		doAttack = true;
+		Handheld.Vibrate ();
+	}
+
     }
 
     void ThrowLightningBolt(GameObject endObject)
@@ -79,16 +84,23 @@ public class EnnemiScript : MonoBehaviour {
                 lastAttack = 0;
             }
         }
-
+		if (enemy_animator.GetBool("getHit")) //hit sound
+			Sound.sendSound("Sounds/foudre");
+		if (spellStatus) { //bad spell sound
+			Sound.sendSound ("Sounds/wrong_spell");
+			spellStatus = false;
+		}
+			
     }
 
     public void DestroyMe()
     {
+		Sound.sendSound ("Sounds/swipe_out");
         Destroy(this.gameObject);
     }
 
     public void stopStagger()
-    {
+	{
         enemy_animator.SetBool("getHit", false);
     }
 
@@ -102,6 +114,7 @@ public class EnnemiScript : MonoBehaviour {
             {
                 int score = 5;
                 int multip = 1;
+                doAttack = false;
                 updateText(newNode.value);
                 player_animator.SetBool("spell_cast", true);
                 ThrowLightningBoltChara();
@@ -119,7 +132,6 @@ public class EnnemiScript : MonoBehaviour {
                         }
                     }
                 }
-                doAttack = false;
                 if (newNode.value.Equals("x")) // Ennemi mort
                 {
                     score += 5;
@@ -133,6 +145,7 @@ public class EnnemiScript : MonoBehaviour {
             else // Mauvaise fonction appliquée
             {
                 Shake.sendShake(0.5f, 0.07f);
+				spellStatus = true;
                 // Retour utilisateur de mauvais spell appliqué
             }
             spellManager.Instance.removeSpell();

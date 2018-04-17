@@ -6,14 +6,18 @@ public class Sound : MonoBehaviour {
 	static AudioSource audioSource;
 
 	void Start () {
-		audioSource = gameObject.AddComponent <AudioSource>() as AudioSource;
+		audioSource = gameObject.GetComponent<AudioSource>();
 	}
 
 	public static void sendSound(string soundName)
 	{
 		AudioClip clip = (AudioClip)Resources.Load (soundName);
-		if (audioSource.isPlaying)
-			audioSource.Stop ();
+		audioSource.Stop();
 		audioSource.PlayOneShot (clip);
 	}
+
+    public static void stopSound()
+    {
+        audioSource.Stop();
+    }
 }

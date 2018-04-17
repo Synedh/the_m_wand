@@ -32,6 +32,9 @@ public class spellManager : MonoBehaviour
     public bool isDragged;
 
     Animator charaAnimator;
+    bool doLerp;
+    float startDuration;
+    float lerpDuration;
 
     // Use this for initialization
     void Start()
@@ -47,20 +50,61 @@ public class spellManager : MonoBehaviour
         Instance = this;
         currentSpellName = null;
         isDragged = false;
+
+        doLerp = false;
+        startDuration = 0;
+        lerpDuration = 0.25f;
+    }
+
+    private void Update()
+    {
+        if (doLerp)
+        {
+            if (startDuration < lerpDuration / 2)
+            {
+                startDuration += Time.deltaTime;
+                currentSpellObject.transform.localScale = Vector3.Lerp(currentSpellObject.transform.localScale, new Vector3(1.2f, 1.2f, 1.2f), startDuration / lerpDuration / 2);
+            }
+            else if (startDuration < lerpDuration)
+            {
+                startDuration += Time.deltaTime;
+                currentSpellObject.transform.localScale = Vector3.Lerp(currentSpellObject.transform.localScale, new Vector3(1f, 1f, 1f), (startDuration - lerpDuration / 2) / lerpDuration / 2);
+            }
+            else
+            {
+                doLerp = false;
+                startDuration = 0;
+            }
+        }
     }
 
     void addSpellSprite(Sprite spellSprite)
     {
         if (FirstSpell.sprite == EmptySprite)
+        {
             FirstSpell.sprite = spellSprite;
+            onSpellClick(FirstSpell);
+        }
         else if (SecondSpell.sprite == EmptySprite)
+        {
             SecondSpell.sprite = spellSprite;
+            onSpellClick(SecondSpell);
+        }
         else if (ThirdSpell.sprite == EmptySprite)
+        {
             ThirdSpell.sprite = spellSprite;
+            onSpellClick(ThirdSpell);
+        }
         else if (FourthSpell.sprite == EmptySprite)
+        {
             FourthSpell.sprite = spellSprite;
+            onSpellClick(FourthSpell);
+        }
         else if (FifthSpell.sprite == EmptySprite)
+        {
             FifthSpell.sprite = spellSprite;
+            onSpellClick(FifthSpell);
+        }
     }
 
     public void addSpell(string spellName)
@@ -136,7 +180,6 @@ public class spellManager : MonoBehaviour
             resetSpell();
             return;
         }
-		//currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Ressources/Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
 
         if (spell.sprite.Equals(EmptySprite))
         {
@@ -152,13 +195,11 @@ public class spellManager : MonoBehaviour
         }
         else if (spell.sprite.Equals(SquareSprite))
         {
-			//currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Ressources/Prefabs/Particles/Fireball"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
-            currentSpellName = "square";
+			currentSpellName = "square";
         }
         else if (spell.sprite.Equals(RootSprite))
         {
-			//currentSpellParticle = ((GameObject)GameObject.Instantiate(Resources.Load("Ressources/Prefabs/Particles/Thunder"), spwanParticlePoint.transform.position, Quaternion.identity)).GetComponent<FireballScript>();
-            currentSpellName = "racine";
+			currentSpellName = "racine";
         }
         else if (spell.sprite.Equals(ExponentialSprite))
         {
@@ -186,6 +227,7 @@ public class spellManager : MonoBehaviour
         // Set current spell
         currentSpellObject = spell;
         currentSpellObject.color = new Color(0, 1, 1);
+        doLerp = true;
     }
 
     public void onSpellDrag(Image spell)

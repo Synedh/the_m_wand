@@ -38,6 +38,7 @@ public class Character : MonoBehaviour
     public void getHit()
     {
         animator.SetBool("isHurt", true);
+		Sound.sendSound("Sounds/ennemi_attack");
         Shake.sendShake(0.4f, 0.07f);
 
         for (int i = 0; i < CurrentLife; i++)
@@ -54,7 +55,7 @@ public class Character : MonoBehaviour
             CurrentLife--;
         }
         else
-        {
+		{
             SceneManager.LoadScene(2);
         }
     }
