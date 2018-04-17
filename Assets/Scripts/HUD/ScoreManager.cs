@@ -37,13 +37,13 @@ public class ScoreManager : MonoBehaviour {
             else
             {
                 doLerp = false;
+                startDuration = 0;
             }
         }
     }
 
     public void addScore(int qty)
     {
-        startDuration = 0f;
         doLerp = true;
         int score = Int32.Parse(scoreString);
         scoreString = (score + qty).ToString("D" + Math.Floor(Math.Log10(score + qty) + 2).ToString());

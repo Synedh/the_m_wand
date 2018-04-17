@@ -22,7 +22,7 @@ public class LoadSceneOnClick : MonoBehaviour
         totalDuration = 2;
         BlackPannel.SetActive(false);
         if (SceneManager.GetActiveScene().buildIndex == 2) {
-            GameObject.FindGameObjectWithTag("ScoreText").GetComponentInChildren<Text>().text = "Score : " + Int32.Parse(ScoreManager.instance.scoreString);
+            GameObject.FindGameObjectWithTag("ScoreText").GetComponentInChildren<Text>().text = "Score : <score>";
         }
     }
 

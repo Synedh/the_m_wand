@@ -102,6 +102,7 @@ public class EnnemiScript : MonoBehaviour {
             {
                 int score = 5;
                 int multip = 1;
+                doAttack = false;
                 updateText(newNode.value);
                 player_animator.SetBool("spell_cast", true);
                 ThrowLightningBoltChara();
@@ -119,7 +120,6 @@ public class EnnemiScript : MonoBehaviour {
                         }
                     }
                 }
-                doAttack = false;
                 if (newNode.value.Equals("x")) // Ennemi mort
                 {
                     score += 5;
