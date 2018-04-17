@@ -48,8 +48,11 @@ public class EnnemiScript : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-            doAttack = true;
+	if (collision.gameObject.tag == "Player") {
+		doAttack = true;
+		Handheld.Vibrate ();
+	}
+
     }
 
     void ThrowLightningBolt(GameObject endObject)
