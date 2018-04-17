@@ -17,6 +17,7 @@ public class SwipeScript : MonoBehaviour
     Text shapeText;
 	TrailRenderer trail;
     bool waitForInverseSecondPart = false;
+	bool badSpell = false;
 
     String[] fileNames =
     {
@@ -89,6 +90,10 @@ public class SwipeScript : MonoBehaviour
             FingerUp(Input.mousePosition.x, Input.mousePosition.y);
             Sound.stopSound();
         }
+		if (badSpell) {
+			Sound.sendSound ("Sounds/buzz_error");
+			badSpell = false;
+		}
     }
 
 
@@ -156,6 +161,7 @@ public class SwipeScript : MonoBehaviour
 
     void spellNotFound()
     {
+		badSpell = true;
         Shake.sendShake(0.3f, 0.08f);
     }
 
