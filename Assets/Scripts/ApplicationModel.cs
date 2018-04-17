@@ -5,4 +5,5 @@ using UnityEngine;
 public class ApplicationModel {
 
     static public int level = 0;
+    static public int score = 0;
 }

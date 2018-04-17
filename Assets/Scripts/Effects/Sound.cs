@@ -12,8 +12,12 @@ public class Sound : MonoBehaviour {
 	public static void sendSound(string soundName)
 	{
 		AudioClip clip = (AudioClip)Resources.Load (soundName);
-		if (audioSource.isPlaying)
-			audioSource.Stop ();
+		audioSource.Stop();
 		audioSource.PlayOneShot (clip);
 	}
+
+    public static void stopSound()
+    {
+        audioSource.Stop();
+    }
 }

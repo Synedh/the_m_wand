@@ -17,6 +17,7 @@ public class ScoreManager : MonoBehaviour {
         startDuration = 0f;
         instance = this;
         scoreString = "00";
+        ApplicationModel.score = 0;
         GetComponent<Text>().text = "00";
 	}
 	
@@ -46,6 +47,7 @@ public class ScoreManager : MonoBehaviour {
     {
         doLerp = true;
         int score = Int32.Parse(scoreString);
+        ApplicationModel.score += qty;
         scoreString = (score + qty).ToString("D" + Math.Floor(Math.Log10(score + qty) + 2).ToString());
     }
 }

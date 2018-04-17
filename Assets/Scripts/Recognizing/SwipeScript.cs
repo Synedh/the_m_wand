@@ -87,6 +87,7 @@ public class SwipeScript : MonoBehaviour
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0))
         {
             FingerUp(Input.mousePosition.x, Input.mousePosition.y);
+            Sound.stopSound();
         }
     }
 
