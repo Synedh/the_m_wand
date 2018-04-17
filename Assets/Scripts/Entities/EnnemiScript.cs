@@ -35,7 +35,7 @@ public class EnnemiScript : MonoBehaviour {
 
     public static EnnemiScript Create(int difficulty, Transform spawnPoint)
     {
-        GameObject newObject = Instantiate(Resources.Load("Prefabs/Characters/Ennemi"), spawnPoint.position, spawnPoint.rotation) as GameObject;
+        GameObject newObject = Instantiate(Resources.Load("Prefabs/Entities/Enemy"), spawnPoint.position, spawnPoint.rotation) as GameObject;
         EnnemiScript ennemi = newObject.GetComponent<EnnemiScript>();
         ennemi.difficulty = difficulty;
         return ennemi;

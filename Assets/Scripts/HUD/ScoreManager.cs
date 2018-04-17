@@ -31,9 +31,8 @@ public class ScoreManager : MonoBehaviour {
             }
             else if (startDuration < 0.5f)
             {
-                score.transform.localScale = Vector3.Lerp(score.transform.localScale, new Vector3(1f, 1f, 1f), (startDuration - 0.25f) * 4);
-                Debug.Log(score.transform.localScale);
                 startDuration += Time.deltaTime;
+                score.transform.localScale = Vector3.Lerp(score.transform.localScale, new Vector3(1f, 1f, 1f), (startDuration - 0.25f) * 4);
             }
             else
             {
