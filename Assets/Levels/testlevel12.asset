@@ -12,37 +12,32 @@ MonoBehaviour:
   m_Name: testlevel12
   m_EditorClassIdentifier: 
   goal: Ennemies
-  valueGoal: 20
+  valueGoal: 1
   eventList:
-  - type: okBox
-    enemies: []
-  - type: Enemies
+  - type: Wave
+    dialogs:
+    - isFunction: 0
+      functionName: 
+      content: Contenu du pop-up
     enemies:
-    - speed: 1
-      attack: 1
+    - enemy: {fileID: 0}
       spawnpoint: 0
-      depth: 1
-    - speed: 1
-      attack: 1
+      function: 
+    - enemy: {fileID: 0}
       spawnpoint: 0
-      depth: 1
-  - type: Enemies
+      function: 
+  - type: Wave
+    dialogs:
+    - isFunction: 0
+      functionName: 
+      content: Contenu du pop-up
     enemies:
-    - speed: 1
-      attack: 1
+    - enemy: {fileID: 0}
       spawnpoint: 0
-      depth: 1
-    - speed: 1
-      attack: 1
+      function: 
+    - enemy: {fileID: 0}
       spawnpoint: 0
-      depth: 1
-  - type: Enemies
-    enemies:
-    - speed: 1
-      attack: 1
+      function: 
+    - enemy: {fileID: 0}
       spawnpoint: 0
-      depth: 1
-    - speed: 1
-      attack: 1
-      spawnpoint: 0
-      depth: 1
+      function: 
