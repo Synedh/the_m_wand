@@ -155,7 +155,7 @@ public class SwipeScript : MonoBehaviour
 
     void spellNotFound()
     {
-        Shake.sendShake(0.2f, 0.05f);
+        Shake.sendShake(0.3f, 0.08f);
     }
 
     void Recognize()

@@ -65,6 +65,16 @@ public class spellManager : MonoBehaviour
 
     public void addSpell(string spellName)
     {
+        if (TextBoxes.instance.isWaitingForFunction != null)
+        {
+            if (TextBoxes.instance.isWaitingForFunction == spellName)
+                TextBoxes.instance.Resume();
+            else
+            {
+                Shake.sendShake(0.3f, 0.08f);
+                return;
+            }
+        }
         switch (spellName)
         {
             case "lineairePositive":
