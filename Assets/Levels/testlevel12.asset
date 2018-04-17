@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 813258581b059f0429f486a0a916f07d, type: 3}
+  m_Name: testlevel12
+  m_EditorClassIdentifier: 
+  goal: Ennemies
+  valueGoal: 20
+  eventList:
+  - type: okBox
+    enemies: []
+  - type: Enemies
+    enemies:
+    - speed: 1
+      attack: 1
+      spawnpoint: 0
+      depth: 1
+    - speed: 1
+      attack: 1
+      spawnpoint: 0
+      depth: 1
+  - type: Enemies
+    enemies:
+    - speed: 1
+      attack: 1
+      spawnpoint: 0
+      depth: 1
+    - speed: 1
+      attack: 1
+      spawnpoint: 0
+      depth: 1
+  - type: Enemies
+    enemies:
+    - speed: 1
+      attack: 1
+      spawnpoint: 0
+      depth: 1
+    - speed: 1
+      attack: 1
+      spawnpoint: 0
+      depth: 1
