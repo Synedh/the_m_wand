@@ -27,7 +27,7 @@ public class EnnemiScript : MonoBehaviour {
         currentNode = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
         enemy_animator = GetComponent<Animator>();
         player_animator = chara.GetComponent<Animator>();
-        doAttack = false;
+		doAttack = false;
 
         TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
         updateText(currentNode.value);
@@ -82,7 +82,9 @@ public class EnnemiScript : MonoBehaviour {
                 lastAttack = 0;
             }
         }
-
+		if (enemy_animator.GetBool("getHit")) //hit sound
+			Sound.sendSound("Sounds/foudre");
+			
     }
 
     public void DestroyMe()
@@ -91,7 +93,7 @@ public class EnnemiScript : MonoBehaviour {
     }
 
     public void stopStagger()
-    {
+	{
         enemy_animator.SetBool("getHit", false);
     }
 
