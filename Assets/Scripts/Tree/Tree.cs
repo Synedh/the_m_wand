@@ -16,8 +16,8 @@ namespace Assets.Scripts.Fonctions
 			{ "square", "\\root[2]{{{0}}}" }, // racine carrée et sa fonction annulle est carrée
 			{ "exponentielle", "log({0})" },// log et sa fonction annulle est exp
 			{ "logarithme", "\\e^{{{0}}}" }, // exp et sa fonction annulle est log
-			{ "integrale", "\\frac{{\\partial{{}}}}{{\\partial{{x}}}}(x)" }, // derivée et sa fonction annulle est intégrale
-			{ "derivee", "\\int{{0}}" } // intégrale et sa fonction annulle est derivée 
+			{ "integrale", "\\frac{{\\partial{{x}}}}{{\\partial{{x}}}}({0})" }, // derivée et sa fonction annulle est intégrale
+			{ "derivee", "\\int{{{0}}}" } // intégrale et sa fonction annulle est derivée 
         };
 
         void Start()
