@@ -58,7 +58,7 @@ public class spellManager : MonoBehaviour
 
     private void Update()
     {
-        if (doLerp)
+        if (doLerp && currentSpellObject)
         {
             if (startDuration < lerpDuration / 2)
             {

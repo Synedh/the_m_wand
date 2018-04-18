@@ -81,7 +81,7 @@ public class SwipeScript : MonoBehaviour
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
         {
             FingerDown(Input.mousePosition.x, Input.mousePosition.y);
-			swipeSound = Sound.loadSound("Sounds/write_blackboard");
+			swipeSound = Sound.loadSound("Sounds/chalk_writing");
         }
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0))
         {
