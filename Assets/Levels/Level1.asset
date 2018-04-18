@@ -9,21 +9,54 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 813258581b059f0429f486a0a916f07d, type: 3}
-  m_Name: Level 1
+  m_Name: Level1
   m_EditorClassIdentifier: 
   goal: Ennemies
   valueGoal: 20
   eventList:
-  - type: Wave
-    show: 1
+  - time: 100
+    show: 0
     dialogs:
     - isFunction: 0
       functionName: 
-      content: TESTESTEST
+      content: Bienvenue dans le niveau 1 !
     - isFunction: 1
-      functionName: "Carr\xE9"
-      content: TEST FUNCTRION
+      functionName: square
+      content: "Dessinez la courbe de la fonction \"x\xB2\""
+    enemies:
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 2
+      function: 
+  - time: 2
+    show: 0
+    dialogs:
+    - isFunction: 0
+      functionName: 
+      content: Bravo !
+    enemies:
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 3
+      function: 
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 1
+      function: 
+  - time: 100
+    show: 0
+    dialogs: []
     enemies:
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 1
       function: 
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 2
+      function: 
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 3
+      function: 
+  - time: 0
+    show: 0
+    dialogs:
+    - isFunction: 0
+      functionName: 
+      content: GG !
+    enemies: []
