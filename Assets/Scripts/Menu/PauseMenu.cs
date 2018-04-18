@@ -4,30 +4,27 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour {
-
-    public static bool GameIsPaused;
+    
     public GameObject pauseMenuUi;
     public GameObject swipe;
 
 	// Use this for initialization
 	void Start () {
-        GameIsPaused = false;
 	}
 
     public void Resume()
     {
+        Sound.loadSound("Sounds/click_button");
         pauseMenuUi.SetActive(false);
-        swipe.SetActive(true);
         Time.timeScale = 1f;
-        GameIsPaused = false;
+        ApplicationModel.gameIsPaused= false;
     }
 
     public void Pause()
     {
         pauseMenuUi.SetActive(true);
-        swipe.SetActive(false);
         Time.timeScale = 0f;
-        GameIsPaused = true;
+        ApplicationModel.gameIsPaused = true;
     }
 
     public void BackToMenu()

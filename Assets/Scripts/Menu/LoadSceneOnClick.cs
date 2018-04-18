@@ -27,6 +27,7 @@ public class LoadSceneOnClick : MonoBehaviour
 
     public void LoadByIndex(int SceneIndex)
     {
+        Sound.loadSound("Sounds/click_button");
         if (SceneIndex == 0)
             SceneManager.LoadScene(0);
         else

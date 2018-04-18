@@ -17,7 +17,7 @@ public class SwipeScript : MonoBehaviour
     Text shapeText;
 	TrailRenderer trail;
     bool waitForInverseSecondPart = false;
-    Sound swipeSound;
+    public static Sound swipeSound;
 
     String[] fileNames =
     {
@@ -65,7 +65,7 @@ public class SwipeScript : MonoBehaviour
     {
         if (spellManager.Instance.isDragged)
             return;
-        if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) || Input.GetMouseButton(0))
+        if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) || Input.GetMouseButton(0) && !ApplicationModel.gameIsPaused)
         {
             Plane objPlane = new Plane(Camera.main.transform.forward * -1, this.transform.position);
             Ray mRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -78,7 +78,7 @@ public class SwipeScript : MonoBehaviour
             FingerMove(Input.mousePosition.x, Input.mousePosition.y);
         }
 
-        if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
+        if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetMouseButtonDown(0) && !ApplicationModel.gameIsPaused)
         {
             FingerDown(Input.mousePosition.x, Input.mousePosition.y);
 			swipeSound = Sound.loadSound("Sounds/chalk_writing");
