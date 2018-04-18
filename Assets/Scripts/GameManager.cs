@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour {
             ApplicationModel.isWinned = true;
             SceneManager.LoadScene(2);
         }
-        else if (currentEventIndex < level.eventList.Count)
+        else if (currentEventIndex +1 < level.eventList.Count)
         {
             currentEvent = level.eventList[++currentEventIndex];
             enemiesSpawned = false;
