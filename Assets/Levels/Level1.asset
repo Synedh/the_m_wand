@@ -11,8 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 813258581b059f0429f486a0a916f07d, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  goal: Ennemies
-  valueGoal: 20
+  numLevel: 1
   eventList:
   - time: 100
     show: 0
@@ -23,40 +22,51 @@ MonoBehaviour:
     - isFunction: 1
       functionName: square
       content: "Dessinez la courbe de la fonction \"x\xB2\""
+    - isFunction: 0
+      functionName: 
+      content: "Le sort est s\xE9lectionn\xE9 automatiquement."
+    - isFunction: 0
+      functionName: 
+      content: Lance le sur l'ennemi !
     enemies:
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 2
-      function: 
+      function: square
   - time: 2
     show: 0
     dialogs:
     - isFunction: 0
       functionName: 
-      content: Bravo !
+      content: "Bravo ! Tout les ennemis identique serons affect\xE9 par le sort,
+        essaye !"
     enemies:
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 3
-      function: 
+      function: square
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 1
-      function: 
+      function: square
   - time: 100
     show: 0
     dialogs: []
     enemies:
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 1
-      function: 
+      function: square
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 2
-      function: 
+      function: square,square
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 3
-      function: 
+      function: square
   - time: 0
     show: 0
     dialogs:
     - isFunction: 0
       functionName: 
       content: GG !
+    enemies: []
+  - time: 0
+    show: 1
+    dialogs: []
     enemies: []

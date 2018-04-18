@@ -44,6 +44,7 @@ public class LoadSceneOnClick : MonoBehaviour
 
     public void SetLevel(Level level)
     {
+        ApplicationModel.level = level.numLevel;
         ApplicationModel.currentLevel = level;
     }
 

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour {
 
@@ -34,8 +36,11 @@ public class GameManager : MonoBehaviour {
 
     void nextEvent()
     {
-        if (currentEventIndex + 1 > level.eventList.Count) { }
-        //TODO WIn level
+        if (currentEventIndex + 1 > level.eventList.Count && !dialog.isTextBoxActiv())
+        {
+            SceneManager.LoadScene(2);
+
+        }
         else
         {
             currentEvent = level.eventList[++currentEventIndex];
@@ -45,10 +50,10 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-        private void spawnEnemi(Enemy e)
+    private void spawnEnemi(Enemy e)
     {
         EnnemiScript enemy = spawner.spawn(e.enemy, e.spawnpoint);
-        enemy.difficulty = 1;//TODO ajouter la foonction a l'ennemy
+        enemy.function = e.function;
     }
 
     // Update is called once per frame

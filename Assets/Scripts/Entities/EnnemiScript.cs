@@ -10,7 +10,7 @@ public class EnnemiScript : MonoBehaviour {
     public float speed;
     public float attackSpeed;
     public float lastAttack;
-    public int difficulty;
+    public string function;
     public int pushBack;
     public GameObject lightning;
     
@@ -19,12 +19,12 @@ public class EnnemiScript : MonoBehaviour {
     Animator enemy_animator;
     Animator player_animator;
 
-    Node currentNode;
+    public Node currentNode;
 	TEXDraw TEXDrawComponent;
 
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
-        currentNode = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(difficulty);
+        currentNode = Assets.Scripts.Fonctions.Tree.getNodeFromString(function.Split(','));
         enemy_animator = GetComponent<Animator>();
         player_animator = chara.GetComponent<Animator>();
 		doAttack = false;
@@ -33,11 +33,11 @@ public class EnnemiScript : MonoBehaviour {
         updateText(currentNode.value);
     }
 
-    public static EnnemiScript Create(int difficulty, Transform spawnPoint)
+    public static EnnemiScript Create(string function, Transform spawnPoint)
     {
         GameObject newObject = Instantiate(Resources.Load("Prefabs/Entities/Enemy"), spawnPoint.position, spawnPoint.rotation) as GameObject;
         EnnemiScript ennemi = newObject.GetComponent<EnnemiScript>();
-        ennemi.difficulty = difficulty;
+        ennemi.function = function;
         return ennemi;
     }
 

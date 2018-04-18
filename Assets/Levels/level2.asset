@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 813258581b059f0429f486a0a916f07d, type: 3}
+  m_Name: level2
+  m_EditorClassIdentifier: 
+  numLevel: 2
+  eventList:
+  - time: 0
+    show: 1
+    dialogs:
+    - isFunction: 0
+      functionName: 
+      content: Contenu du pop-up
+    enemies:
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 1
+      function: 
+  - time: 0
+    show: 0
+    dialogs: []
+    enemies: []
+  - time: 0
+    show: 0
+    dialogs: []
+    enemies:
+    - enemy: {fileID: 0}
+      spawnpoint: 0
+      function: 
+  - time: 0
+    show: 0
+    dialogs: []
+    enemies:
+    - enemy: {fileID: 0}
+      spawnpoint: 0
+      function: 

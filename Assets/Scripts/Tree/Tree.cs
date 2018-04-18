@@ -138,6 +138,23 @@ namespace Assets.Scripts.Fonctions
             return nodesOfDepth[new System.Random().Next() % nodesOfDepth.Count()];
         }
 
+        public static Node getNodeFromString(String[] str)
+        {
+            Node result = root;
+            foreach (String s in str)
+                foreach (Node next in result.children)
+                {
+                    if (next.operatorToParent.CompareTo(s) == 0)
+                    {
+                        result = next;
+                        break;
+                    }
+                }
+            print(result.value);
+            
+            return result;
+        }
+
         public static Dictionary<String, String> getDict()
         {
             return dict;

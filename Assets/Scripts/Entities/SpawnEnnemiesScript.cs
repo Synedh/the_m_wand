@@ -50,12 +50,13 @@ public class SpawnEnnemiesScript : MonoBehaviour {
         else
             return 3;
     }
-	
+
+	/* deprecated, see GameManager for spawning ennemies
 	// Update is called once per frame
 	void Spawn () {
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
         EnnemiScript.Create(generateDifficulty(Int32.Parse(ScoreManager.instance.scoreString)), spawnPoint);
-    }
+    }*/
 
 
     public EnnemiScript spawn(GameObject enemyType, int spawn)

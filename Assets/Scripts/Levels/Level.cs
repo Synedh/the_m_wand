@@ -7,15 +7,13 @@ using UnityEngine;
 [Serializable]
 public class Level : ScriptableObject{
    
-    public string goal;
-    public int valueGoal;
+    public int numLevel;
     public List<Wave> eventList;
 
     public Level()
     {
         eventList = new List<Wave>();
-        goal = "Ennemies";
-        valueGoal = 20;
+        numLevel = 0;
     }
 
     public void addWave()

@@ -54,9 +54,7 @@ public class LevelEditor : EditorWindow
 
         if (level != null)
         {
-            level.goal = EditorGUILayout.TextField("Level goal", level.goal as string);
-            level.valueGoal = EditorGUILayout.IntField("Goal value", level.valueGoal);
-
+            level.numLevel = EditorGUILayout.IntField("Numero du niveau", level.numLevel);
             GUILayout.Label("Events : ");
             if (GUILayout.Button("Add Event", GUILayout.ExpandWidth(false)))
             {

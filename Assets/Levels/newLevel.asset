@@ -11,34 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 813258581b059f0429f486a0a916f07d, type: 3}
   m_Name: newLevel
   m_EditorClassIdentifier: 
-  goal: Ennemies
-  valueGoal: 20
-  eventList:
-  - type: Wave
-    show: 1
-    dialogs:
-    - isFunction: 0
-      functionName: 
-      content: Contenu du pop-up
-    enemies:
-    - enemy: {fileID: 0}
-      spawnpoint: 1
-      function: 
-  - type: Wave
-    show: 0
-    dialogs: []
-    enemies: []
-  - type: Wave
-    show: 0
-    dialogs: []
-    enemies:
-    - enemy: {fileID: 0}
-      spawnpoint: 0
-      function: 
-  - type: Wave
-    show: 0
-    dialogs: []
-    enemies:
-    - enemy: {fileID: 0}
-      spawnpoint: 0
-      function: 
+  numLevel: 0
+  eventList: []
