@@ -17,7 +17,7 @@ public class SwipeScript : MonoBehaviour
     Text shapeText;
 	TrailRenderer trail;
     bool waitForInverseSecondPart = false;
-	bool badSpell = false;
+    Sound swipeSound;
 
     String[] fileNames =
     {
@@ -77,23 +77,17 @@ public class SwipeScript : MonoBehaviour
 
             FingerMove(Input.mousePosition.x, Input.mousePosition.y);
         }
-		//else if (_points.Count >= 20) //Add sound
-		//	Sound.sendSound("Sounds/write_blackboard");
 
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
         {
             FingerDown(Input.mousePosition.x, Input.mousePosition.y);
-			Sound.sendSound("Sounds/write_blackboard");
+			swipeSound = Sound.loadSound("Sounds/write_blackboard");
         }
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0))
         {
             FingerUp(Input.mousePosition.x, Input.mousePosition.y);
-            Sound.stopSound();
+            swipeSound.stop();
         }
-		if (badSpell) {
-			Sound.sendSound ("Sounds/buzz_error");
-			badSpell = false;
-		}
     }
 
 
@@ -161,7 +155,7 @@ public class SwipeScript : MonoBehaviour
 
     void spellNotFound()
     {
-		badSpell = true;
+        Sound.loadSound("Sounds/buzz_error");
         Shake.sendShake(0.3f, 0.08f);
     }
 

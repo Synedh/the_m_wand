@@ -12,9 +12,7 @@ public class Character : MonoBehaviour
     public Heart[] hearts;
     public GameObject lifebar;
 
-
-    private Animator animator;
-
+    Animator animator;
 
     private void Start()
     {
@@ -38,7 +36,7 @@ public class Character : MonoBehaviour
     public void getHit()
     {
         animator.SetBool("isHurt", true);
-		Sound.sendSound("Sounds/ennemi_attack");
+		Sound.loadSound("Sounds/ennemi_attack");
         Shake.sendShake(0.4f, 0.07f);
 
         for (int i = 0; i < CurrentLife; i++)
