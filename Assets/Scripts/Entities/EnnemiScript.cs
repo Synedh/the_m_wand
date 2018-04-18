@@ -13,8 +13,7 @@ public class EnnemiScript : MonoBehaviour {
     public int difficulty;
     public int pushBack;
     public GameObject lightning;
-
-	bool spellStatus;
+    
     bool doAttack;
     Character chara;
     Animator enemy_animator;
@@ -29,7 +28,6 @@ public class EnnemiScript : MonoBehaviour {
         enemy_animator = GetComponent<Animator>();
         player_animator = chara.GetComponent<Animator>();
 		doAttack = false;
-		spellStatus = false;
 
         TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
         updateText(currentNode.value);
@@ -52,7 +50,10 @@ public class EnnemiScript : MonoBehaviour {
     {
 	if (collision.gameObject.tag == "Player") {
 		doAttack = true;
-		Handheld.Vibrate ();
+		//Handheld.Vibrate ();
+		Vibration.Vibrate(250);		
+		
+
 	}
 
     }
@@ -84,18 +85,12 @@ public class EnnemiScript : MonoBehaviour {
                 lastAttack = 0;
             }
         }
-		if (enemy_animator.GetBool("getHit")) //hit sound
-			Sound.sendSound("Sounds/foudre");
-		if (spellStatus) { //bad spell sound
-			Sound.sendSound ("Sounds/wrong_spell");
-			spellStatus = false;
-		}
 			
     }
 
     public void DestroyMe()
     {
-		Sound.sendSound ("Sounds/swipe_out");
+		Sound.loadSound("Sounds/swipe_out");
         Destroy(this.gameObject);
     }
 
@@ -119,8 +114,11 @@ public class EnnemiScript : MonoBehaviour {
                 player_animator.SetBool("spell_cast", true);
                 ThrowLightningBoltChara();
                 enemy_animator.SetBool("getHit", true);
+                Sound.loadSound("Sounds/foudre");
+
                 GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
                 for (int i = 0; i < enemies.Length; i++)
                 {
                     if (enemies[i] != this.gameObject)
@@ -144,8 +142,8 @@ public class EnnemiScript : MonoBehaviour {
             }
             else // Mauvaise fonction appliquée
             {
+                Sound.loadSound("Sounds/wrong_spell");
                 Shake.sendShake(0.5f, 0.07f);
-				spellStatus = true;
                 // Retour utilisateur de mauvais spell appliqué
             }
             spellManager.Instance.removeSpell();

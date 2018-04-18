@@ -10,7 +10,6 @@ public class LoadSceneOnClick : MonoBehaviour
 {
     public GameObject BlackPannel;
 
-    List<Text> TextButtons = new List<Text>();
     bool doLerp;
     int sceneIndex;
     float startDuration;

@@ -32,9 +32,10 @@ public class LevelIntro : MonoBehaviour {
     {
         if (soundNotplayed)
         {
-            Sound.sendSound("Sounds/StartLevel");
+            Sound.loadSound("Sounds/StartLevel");
             soundNotplayed = false;
         }
+    
         if (doLerp)
         {
             if (startDuration < totalDuration / 2)

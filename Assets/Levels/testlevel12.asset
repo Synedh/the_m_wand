@@ -15,6 +15,7 @@ MonoBehaviour:
   valueGoal: 1
   eventList:
   - type: Wave
+    show: 1
     dialogs:
     - isFunction: 0
       functionName: 
@@ -27,6 +28,7 @@ MonoBehaviour:
       spawnpoint: 0
       function: 
   - type: Wave
+    show: 0
     dialogs:
     - isFunction: 0
       functionName: 

@@ -2,22 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sound : MonoBehaviour {
-	static AudioSource audioSource;
+public class Sound : MonoBehaviour
+{
+    AudioSource audioSource;
+    string SoundName;
+    bool hasPlayed;
 
 	void Start () {
 		audioSource = gameObject.GetComponent<AudioSource>();
+        hasPlayed = false;
 	}
 
-	public static void sendSound(string soundName)
-	{
-		AudioClip clip = (AudioClip)Resources.Load (soundName);
-		audioSource.Stop();
-		audioSource.PlayOneShot (clip);
-	}
+    void Update()
+    {
+        if (!audioSource.isPlaying && hasPlayed)
+        {
+            audioSource.Stop();
+            DestroyImmediate(this.gameObject);
+        }
+        else if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(Resources.Load(SoundName) as AudioClip);
+            hasPlayed = true;
+        }
+    }
 
-    public static void stopSound()
+    public void stop()
     {
         audioSource.Stop();
+        DestroyImmediate(this.gameObject);
+    }
+
+    public static Sound loadSound(string soundName)
+    {
+        GameObject newSound = Instantiate(Resources.Load("Prefabs/Sound"), new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+
+        Sound soundScript = newSound.GetComponent<Sound>();
+        soundScript.SoundName = soundName;
+        return soundScript;
     }
 }
