@@ -14,7 +14,7 @@ MonoBehaviour:
   numLevel: 1
   eventList:
   - time: 100
-    show: 0
+    show: 1
     dialogs:
     - isFunction: 0
       functionName: 
@@ -67,6 +67,6 @@ MonoBehaviour:
       content: GG !
     enemies: []
   - time: 0
-    show: 1
+    show: 0
     dialogs: []
     enemies: []
