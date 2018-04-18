@@ -36,14 +36,15 @@ public class GameManager : MonoBehaviour {
 
     void nextEvent()
     {
+        currentEventIndex++;
         if (currentEventIndex >= level.eventList.Count && !dialog.isTextBoxActiv())
         {
             ApplicationModel.isWinned = true;
             SceneManager.LoadScene(2);
         }
-        else if (currentEventIndex +1 < level.eventList.Count)
+        else 
         {
-            currentEvent = level.eventList[++currentEventIndex];
+            currentEvent = level.eventList[currentEventIndex];
             enemiesSpawned = false;
             spawnTime = level.eventList[currentEventIndex].time;
             nextDialog = 0;
