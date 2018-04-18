@@ -145,9 +145,7 @@ namespace Assets.Scripts.Fonctions
                         result = next;
                         break;
                     }
-                }
-            print(result.value);
-            
+                }            
             return result;
         }
 

@@ -38,8 +38,8 @@ public class GameManager : MonoBehaviour {
     {
         if (currentEventIndex + 1 > level.eventList.Count && !dialog.isTextBoxActiv())
         {
+            ApplicationModel.isWinned = true;
             SceneManager.LoadScene(2);
-
         }
         else
         {

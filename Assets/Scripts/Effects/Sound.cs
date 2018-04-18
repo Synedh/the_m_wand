@@ -29,8 +29,11 @@ public class Sound : MonoBehaviour
 
     public void stop()
     {
-        audioSource.Stop();
-        DestroyImmediate(this.gameObject);
+        if (audioSource)
+        {
+            audioSource.Stop();
+            DestroyImmediate(this.gameObject);
+        }
     }
 
     public static Sound loadSound(string soundName)

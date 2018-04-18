@@ -14,20 +14,20 @@ MonoBehaviour:
   numLevel: 1
   eventList:
   - time: 100
-    show: 0
+    show: 1
     dialogs:
     - isFunction: 0
       functionName: 
       content: Bienvenue dans le niveau 1 !
     - isFunction: 1
       functionName: square
-      content: "Dessinez la courbe de la fonction \"x\xB2\""
+      content: "Dessines la courbe de la fonction \"x\xB2\""
     - isFunction: 0
       functionName: 
       content: "Le sort est s\xE9lectionn\xE9 automatiquement."
     - isFunction: 0
       functionName: 
-      content: Lance le sur l'ennemi !
+      content: Lance-le sur l'ennemi !
     enemies:
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 2
@@ -37,7 +37,7 @@ MonoBehaviour:
     dialogs:
     - isFunction: 0
       functionName: 
-      content: "Bravo ! Tout les ennemis identique serons affect\xE9 par le sort,
+      content: "Bravo ! Tous les ennemis identiques seront affect\xE9s par le sort,
         essaye !"
     enemies:
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
@@ -67,6 +67,6 @@ MonoBehaviour:
       content: GG !
     enemies: []
   - time: 0
-    show: 1
+    show: 0
     dialogs: []
     enemies: []

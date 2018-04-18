@@ -23,6 +23,8 @@ public class LoadSceneOnClick : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex == 2) {
             GameObject.FindGameObjectWithTag("ScoreText").GetComponentInChildren<Text>().text = "Score : " + ApplicationModel.score.ToString();
         }
+        if (ApplicationModel.isWinned)
+            GameObject.FindGameObjectWithTag("MainTitle").GetComponentInChildren<Text>().text = "Victory !";
     }
 
     public void LoadByIndex(int SceneIndex)
