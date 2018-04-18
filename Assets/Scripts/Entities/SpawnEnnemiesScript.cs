@@ -24,6 +24,7 @@ public class SpawnEnnemiesScript : MonoBehaviour {
 
     void Update()
     {
+        /* deprecated, see GameManager
         if (ApplicationModel.level == 0 || Int32.Parse(ScoreManager.instance.scoreString) < 50) {
             spawnTimer += Time.deltaTime;
             if (spawnTimer >= spawnTime && GameObject.FindGameObjectsWithTag("Enemy").Length < maxEnemies) {
@@ -33,7 +34,7 @@ public class SpawnEnnemiesScript : MonoBehaviour {
         }
         else if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0) {
             SceneManager.LoadScene(2);
-        }
+        }*/ 
     }
 
     int generateDifficulty(int score)
@@ -54,5 +55,18 @@ public class SpawnEnnemiesScript : MonoBehaviour {
 	void Spawn () {
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
         EnnemiScript.Create(generateDifficulty(Int32.Parse(ScoreManager.instance.scoreString)), spawnPoint);
+    }
+
+
+    public EnnemiScript spawn(GameObject enemyType, int spawn)
+    {
+        Transform spawnPoint;
+        if (spawn == 0)
+            spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
+        else
+            spawnPoint = spawnPoints[spawn - 1];
+        GameObject newObject = Instantiate(enemyType, spawnPoint.position, spawnPoint.rotation) as GameObject;
+        EnnemiScript ennemi = newObject.GetComponent<EnnemiScript>();
+        return ennemi;
     }
 }

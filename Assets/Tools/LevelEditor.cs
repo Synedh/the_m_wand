@@ -72,7 +72,10 @@ public class LevelEditor : EditorWindow
                 GUI.Box(rectEvent, GUIContent.none);
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(5);
-                GUILayout.Label("Wave " + (i + 1) + " :");
+                GUILayout.Label("Event " + (i + 1) + " :");
+                GUILayout.Label("nb Dialog : " + level.eventList[i].dialogs.Count);
+                GUILayout.Label("nb Enemy : " + level.eventList[i].enemies.Count);
+
                 level.eventList[i].show = ((bool)EditorGUILayout.Toggle("Show", level.eventList[i].show, GUILayout.ExpandWidth(false)));
                 
                 if (GUILayout.Button("Delete", GUILayout.ExpandWidth(false)))

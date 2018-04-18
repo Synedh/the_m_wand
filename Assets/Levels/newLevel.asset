@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 813258581b059f0429f486a0a916f07d, type: 3}
-  m_Name: Level 1
+  m_Name: newLevel
   m_EditorClassIdentifier: 
   goal: Ennemies
   valueGoal: 20
@@ -19,8 +19,26 @@ MonoBehaviour:
     dialogs:
     - isFunction: 0
       functionName: 
-      content: TESTESTEST
+      content: Contenu du pop-up
     enemies:
-    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+    - enemy: {fileID: 0}
       spawnpoint: 1
+      function: 
+  - type: Wave
+    show: 0
+    dialogs: []
+    enemies: []
+  - type: Wave
+    show: 0
+    dialogs: []
+    enemies:
+    - enemy: {fileID: 0}
+      spawnpoint: 0
+      function: 
+  - type: Wave
+    show: 0
+    dialogs: []
+    enemies:
+    - enemy: {fileID: 0}
+      spawnpoint: 0
       function: 

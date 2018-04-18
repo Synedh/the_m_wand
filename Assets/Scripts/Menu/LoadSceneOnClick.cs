@@ -38,8 +38,14 @@ public class LoadSceneOnClick : MonoBehaviour
         }
     }
 
-    public void SetLevel(int level) {
+    public void SetLevel(int level)
+    {
         ApplicationModel.level = level;
+    }
+
+    public void SetLevel(Level level)
+    {
+        ApplicationModel.currentLevel = level;
     }
 
     public void Update()
