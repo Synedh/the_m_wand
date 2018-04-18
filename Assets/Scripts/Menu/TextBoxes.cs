@@ -46,4 +46,9 @@ public class TextBoxes : MonoBehaviour {
         FctTextBoxUI.GetComponentInChildren<Text>().text = content;
         isWaitingForFunction = functionName;
     }
+
+    public bool isTextBoxActiv()
+    {
+        return OkTextBoxUI.activeSelf || FctTextBoxUI.activeSelf;
+    }
 }

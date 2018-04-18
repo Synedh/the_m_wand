@@ -56,7 +56,7 @@ public class LevelEditor : EditorWindow
         {
             level.goal = EditorGUILayout.TextField("Level goal", level.goal as string);
             level.valueGoal = EditorGUILayout.IntField("Goal value", level.valueGoal);
-            
+
             GUILayout.Label("Events : ");
             if (GUILayout.Button("Add Event", GUILayout.ExpandWidth(false)))
             {
@@ -93,6 +93,8 @@ public class LevelEditor : EditorWindow
                     EditorGUILayout.EndVertical();
                     continue;
                 }
+                level.eventList[i].time = EditorGUILayout.FloatField("Seconds for the Wave", level.eventList[i].time);
+
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(5);
                 if (GUILayout.Button("Add Dialog", GUILayout.ExpandWidth(false)))

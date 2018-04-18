@@ -25,7 +25,7 @@ public class Level : ScriptableObject{
 
     public void addDialog()
     {
-        eventList.Add(new Wave("okBox"));
+        eventList.Add(new Wave());
     }
 
     internal void deleteWave(int v)
@@ -43,21 +43,16 @@ public class Level : ScriptableObject{
 [Serializable]
 public class Wave
 {
-    public string type;
+    public float time;
+
     public bool show = false;
     public List<Dialog> dialogs;
     public List<Enemy> enemies;
 
     public Wave()
     {
-        type = "Wave";
         enemies = new List<Enemy>();
         dialogs = new List<Dialog>();
-    }
-
-    public Wave(String type)
-    {
-        this.type = type;
     }
 
     internal void addEnemy()
@@ -69,6 +64,12 @@ public class Wave
     {
         enemies.RemoveAt(j);
     }
+
+    internal void deleteEnemy(Enemy j)
+    {
+        enemies.Remove(j);
+    }
+
 
     internal void addDialog()
     {

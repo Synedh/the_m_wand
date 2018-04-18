@@ -20,6 +20,9 @@ MonoBehaviour:
     - isFunction: 0
       functionName: 
       content: TESTESTEST
+    - isFunction: 1
+      functionName: "Carr\xE9"
+      content: TEST FUNCTRION
     enemies:
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 1

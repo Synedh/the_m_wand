@@ -14,20 +14,38 @@ public class GameManager : MonoBehaviour {
     public SpawnEnnemiesScript spawner;
     public TextBoxes dialog;
     public Level level;
+    public float spawnTime;
 
-    private bool next = true;
+
+    private float spawnTimer = 0;
+    private bool enemiesSpawned = false;
     private int nextDialog = 0;
     private Wave currentEvent;
+    private int currentEventIndex = 0 ;
 
 
 
     // Use this for initialization
     void Start () {
         level = ApplicationModel.currentLevel;
-        currentEvent = level.eventList[0];
+        currentEvent = level.eventList[currentEventIndex];
+        spawnTime = level.eventList[currentEventIndex].time;
     }
 
-    private void spawnEnemi(Enemy e)
+    void nextEvent()
+    {
+        if (currentEventIndex + 1 > level.eventList.Count) { }
+        //TODO WIn level
+        else
+        {
+            currentEvent = level.eventList[++currentEventIndex];
+            enemiesSpawned = false;
+            spawnTime = level.eventList[currentEventIndex].time;
+            nextDialog = 0;
+        }
+    }
+
+        private void spawnEnemi(Enemy e)
     {
         EnnemiScript enemy = spawner.spawn(e.enemy, e.spawnpoint);
         enemy.difficulty = 1;//TODO ajouter la foonction a l'ennemy
@@ -35,23 +53,26 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (next)
+        if (!dialog.isTextBoxActiv() && (nextDialog < currentEvent.dialogs.Count))
         {
-            if (nextDialog < currentEvent.dialogs.Count)
-            {
-                Dialog currentDialog = currentEvent.dialogs[nextDialog];
-
-                if (currentDialog.isFunction)
-                    dialog.SendFctBox(currentDialog.content, currentDialog.functionName);
-                else
-                    dialog.SendOkBox(currentDialog.content);
-            }
-            next = false;
-
-
-
-
+            Dialog currentDialog = currentEvent.dialogs[nextDialog];
+            if (currentDialog.isFunction)
+                dialog.SendFctBox(currentDialog.content, currentDialog.functionName);
+            else
+                dialog.SendOkBox(currentDialog.content);
+            nextDialog++;
+            spawnTimer = 0;
         }
-	}
+        else if (!dialog.isTextBoxActiv() && enemiesSpawned == false)
+        {
+            spawnTimer = 0;
+            foreach (Enemy e in currentEvent.enemies)
+                spawnEnemi(e);
+            enemiesSpawned = true;
+        }
+        spawnTimer += Time.deltaTime;
+        if ((enemiesSpawned && GameObject.FindGameObjectsWithTag("Enemy").Length == 0) || spawnTimer > spawnTime )
+            nextEvent();
+    }
     
 }
