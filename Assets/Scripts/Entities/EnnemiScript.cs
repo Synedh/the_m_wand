@@ -52,7 +52,10 @@ public class EnnemiScript : MonoBehaviour {
     {
 	if (collision.gameObject.tag == "Player") {
 		doAttack = true;
-		Handheld.Vibrate ();
+		//Handheld.Vibrate ();
+		Vibration.Vibrate(250);		
+		
+
 	}
 
     }
