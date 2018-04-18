@@ -111,7 +111,7 @@ public class spellManager : MonoBehaviour
     {
         if (TextBoxes.instance.isWaitingForFunction != null)
         {
-            if (TextBoxes.instance.isWaitingForFunction == spellName)
+            if (TextBoxes.instance.isWaitingForFunction.Equals(spellName))
                 TextBoxes.instance.Resume();
             else
             {

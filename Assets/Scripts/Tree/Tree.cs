@@ -28,11 +28,6 @@ namespace Assets.Scripts.Fonctions
         void Start()
         {
             listNodeForRandom = new List<Node>();
-            //pour le moment si level 1 on prend la premiere fonction du dictionnaire seulement, si level deux les deux premieres, etc...
-            int level = ApplicationModel.level;
-            if (level > 0)
-                dict = dict.Skip(0).Take(level).ToDictionary(x => x.Key, x => x.Value);
-            createTree();
         }
         void createTree()
         {

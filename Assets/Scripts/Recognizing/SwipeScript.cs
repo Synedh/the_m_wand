@@ -186,8 +186,8 @@ public class SwipeScript : MonoBehaviour
                     String name = result.Name;
                     if (result.Name.Equals("inverseSecondPart") && waitForInverseSecondPart)
                     {
-                            name = "inverse";
-                            waitForInverseSecondPart = false;
+                        name = "inverse";
+                        waitForInverseSecondPart = false;
                     }
                     /* 
                     String res = String.Format("{0}: {1} ({2}px, {3}{4})\n[{5} out of {6} comparisons made]",
