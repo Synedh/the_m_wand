@@ -28,6 +28,7 @@ namespace Assets.Scripts.Fonctions
         void Start()
         {
             listNodeForRandom = new List<Node>();
+            createTree();
         }
         void createTree()
         {
