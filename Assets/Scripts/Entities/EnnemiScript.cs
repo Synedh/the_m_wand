@@ -90,7 +90,6 @@ public class EnnemiScript : MonoBehaviour {
 
     public void DestroyMe()
     {
-		Sound.loadSound("Sounds/swipe_out");
         Destroy(this.gameObject);
     }
 
@@ -114,7 +113,7 @@ public class EnnemiScript : MonoBehaviour {
                 player_animator.SetBool("spell_cast", true);
                 ThrowLightningBoltChara();
                 enemy_animator.SetBool("getHit", true);
-                Sound.loadSound("Sounds/foudre");
+                Sound.loadSound("Sounds/spell");
 
                 GetComponent<Rigidbody2D>().AddForce(Vector2.right * pushBack, ForceMode2D.Impulse);
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -133,6 +132,7 @@ public class EnnemiScript : MonoBehaviour {
                 if (newNode.value.Equals("x")) // Ennemi mort
                 {
                     score += 5;
+                    Sound.loadSound("Sounds/death_enemy");
                     enemy_animator.SetBool("die", true);
                     speed = 0;
                     GetComponent<BoxCollider2D>().isTrigger = true;

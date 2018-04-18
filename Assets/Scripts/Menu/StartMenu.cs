@@ -42,5 +42,6 @@ public class StartMenu : MonoBehaviour {
     public void LoadByIndex(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
+        Sound.loadSound("Sounds/click_button");
     }
 }

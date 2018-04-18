@@ -23,6 +23,7 @@ public class TextBoxes : MonoBehaviour {
 
     public void Resume()
     {
+        Sound.loadSound("Sounds/click_button");
         OkTextBoxUI.SetActive(false);
         FctTextBoxUI.SetActive(false);
         swipe.SetActive(true);
