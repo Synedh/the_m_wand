@@ -13,31 +13,91 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numLevel: 2
   eventList:
-  - time: 0
-    show: 1
+  - time: 100
+    show: 0
     dialogs:
     - isFunction: 0
       functionName: 
-      content: Contenu du pop-up
+      content: Et maintenant ajoutons une nouvelle fonction !
+    - isFunction: 1
+      functionName: racine
+      content: Trace le symbole "racine de"
+    - isFunction: 0
+      functionName: 
+      content: "Tu peut changer \xE0 tout moment le sort actif en bas de l'ecran."
     enemies:
     - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 1
-      function: 
-  - time: 0
-    show: 0
-    dialogs: []
-    enemies: []
-  - time: 0
-    show: 0
-    dialogs: []
-    enemies:
-    - enemy: {fileID: 0}
-      spawnpoint: 0
-      function: 
-  - time: 0
+      function: square
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 2
+      function: racine
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 3
+      function: racine
+  - time: 2
     show: 0
     dialogs: []
     enemies:
-    - enemy: {fileID: 0}
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
       spawnpoint: 0
-      function: 
+      function: racine
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 2
+      function: square
+  - time: 2
+    show: 0
+    dialogs: []
+    enemies:
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 0
+      function: racine
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 0
+      function: square
+  - time: 100
+    show: 0
+    dialogs: []
+    enemies:
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 0
+      function: racine
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 0
+      function: square
+  - time: 2
+    show: 0
+    dialogs: []
+    enemies:
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 1
+      function: racine,racine
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 2
+      function: racine,racine
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 3
+      function: racine,racine
+  - time: 4
+    show: 0
+    dialogs: []
+    enemies:
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 1
+      function: square,square
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 2
+      function: square,square
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 3
+      function: square,square
+  - time: 100
+    show: 0
+    dialogs: []
+    enemies:
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 1
+      function: racine
+    - enemy: {fileID: 1642623411119910, guid: 253ae68ff136e58418d5a41dd5521930, type: 2}
+      spawnpoint: 3
+      function: square
