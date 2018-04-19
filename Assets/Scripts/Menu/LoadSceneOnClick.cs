@@ -19,7 +19,7 @@ public class LoadSceneOnClick : MonoBehaviour
         sceneIndex = 0;
         startDuration = 0;
         totalDuration = 2;
-        ApplicationModel.level = 0;
+        ApplicationModel.clear();
         BlackPannel.SetActive(false);
         if (SceneManager.GetActiveScene().buildIndex == 2) {
             GameObject.FindGameObjectWithTag("ScoreText").GetComponentInChildren<Text>().text = "Score : " + ApplicationModel.score.ToString();
