@@ -24,7 +24,8 @@ public class EnnemiScript : MonoBehaviour {
 
     void Start () {
         chara = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
-        currentNode = Assets.Scripts.Fonctions.Tree.getNodeFromString(function.Split(','));
+        if (function != "")
+            currentNode = Assets.Scripts.Fonctions.Tree.getNodeFromString(function.Split(','));
         enemy_animator = GetComponent<Animator>();
         player_animator = chara.GetComponent<Animator>();
 		doAttack = false;
@@ -41,6 +42,14 @@ public class EnnemiScript : MonoBehaviour {
         return ennemi;
     }
 
+    public void getNodeByDiff(int diff)
+    {
+        Node newNOde = Assets.Scripts.Fonctions.Tree.getRandomNodeOfDepth(diff);
+        currentNode = newNOde;
+        TEXDrawComponent = this.GetComponentInChildren<TEXDraw>();
+        updateText(currentNode.value);
+    }
+
     void updateText(string str)
     {
 		TEXDrawComponent.text = str;
@@ -48,13 +57,10 @@ public class EnnemiScript : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-	if (collision.gameObject.tag == "Player") {
-		doAttack = true;
-		Vibration.Vibrate(250);		
-		
-
-	}
-
+	    if (collision.gameObject.tag == "Player") {
+		    doAttack = true;
+		    Vibration.Vibrate(250);		
+	    }
     }
 
     void ThrowLightningBolt(GameObject endObject)

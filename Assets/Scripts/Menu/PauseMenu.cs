@@ -30,6 +30,7 @@ public class PauseMenu : MonoBehaviour {
     public void BackToMenu()
     {
         Resume();
+        ApplicationModel.clear();
         SceneManager.LoadScene(1);
     }
 
