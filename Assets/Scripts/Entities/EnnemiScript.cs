@@ -141,8 +141,10 @@ public class EnnemiScript : MonoBehaviour {
             }
             else // Mauvaise fonction appliquée
             {
-                Sound.loadSound("Sounds/wrong_spell");
+				Vibration.Vibrate(250);	
+				Sound.loadSound("Sounds/wrong_spell");
                 Shake.sendShake(0.5f, 0.07f);
+
                 // Retour utilisateur de mauvais spell appliqué
             }
             spellManager.Instance.removeSpell();
