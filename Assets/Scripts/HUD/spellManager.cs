@@ -116,6 +116,7 @@ public class spellManager : MonoBehaviour
             else
             {
                 Shake.sendShake(0.3f, 0.08f);
+				Vibration.Vibrate(250);	
                 return;
             }
         }
