@@ -154,7 +154,7 @@ namespace Assets.Scripts.Fonctions
             return dict;
         }
 
-        //permet de savoir si la fonction utilisé simplifie le noeud, si oui retourne le coeud parent, sinon return null
+        //permet de savoir si la fonction utilisé simplifie le noeud, si oui retourne le noeud parent, sinon return null
         public static Node tryExecuteFunction (String value, String function)
         {
             // on parcourt tous les noeuds de l'arbre à la recherche d'un noeud qui matche la valeur et la fonction de simplification
