@@ -29,9 +29,12 @@ public class LoadSceneOnClick : MonoBehaviour
 
     public void LoadByIndex(int SceneIndex)
     {
+        Debug.Log(ApplicationModel.level);
         Sound.loadSound("Sounds/click_button");
         if (SceneIndex == 0)
             SceneManager.LoadScene(0);
+        else if (SceneIndex == 3 && ApplicationModel.level > 2)
+            MenuTextBoxes.instance.SendOkBox("Coming Soon.");
         else
         {
             BlackPannel.SetActive(true);
