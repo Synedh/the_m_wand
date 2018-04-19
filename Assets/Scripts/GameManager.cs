@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,17 +7,13 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
-
-
-
-    //TODO spawn typical ennemi
-    //TODO appear Boxes
-    //TODO calcul score
+    
 
     public SpawnEnnemiesScript spawner;
     public TextBoxes dialog;
     public Level level;
-    public float spawnTime;
+    public int diff;
+    public float spawnTime = 3f;
 
 
     private float spawnTimer = 0;
@@ -26,12 +23,18 @@ public class GameManager : MonoBehaviour {
     private int currentEventIndex = 0 ;
 
 
-
-    // Use this for initialization
     void Start () {
         level = ApplicationModel.currentLevel;
-        currentEvent = level.eventList[currentEventIndex];
-        spawnTime = level.eventList[currentEventIndex].time;
+
+        if (level != null)
+        {
+            currentEvent = level.eventList[currentEventIndex];
+            spawnTime = level.eventList[currentEventIndex].time;
+        }
+        else
+        {
+            diff = ApplicationModel.level;
+        }
     }
 
     void nextEvent()
@@ -57,28 +60,52 @@ public class GameManager : MonoBehaviour {
         enemy.function = e.function;
     }
 
+
+
     // Update is called once per frame
     void Update () {
-        if (!dialog.isTextBoxActiv() && (nextDialog < currentEvent.dialogs.Count))
+        if (level == null)
         {
-            Dialog currentDialog = currentEvent.dialogs[nextDialog];
-            if (currentDialog.isFunction)
-                dialog.SendFctBox(currentDialog.content, currentDialog.functionName);
-            else
-                dialog.SendOkBox(currentDialog.content);
-            nextDialog++;
-            spawnTimer = 0;
+            spawnTime = 1.5f;
+            if (ApplicationModel.level == 0 || Int32.Parse(ScoreManager.instance.scoreString) < 50)
+            {
+                spawnTimer += Time.deltaTime;
+                if (spawnTimer >= spawnTime && GameObject.FindGameObjectsWithTag("Enemy").Length < 4)
+                {
+                    EnnemiScript enemy = spawner.spawn();
+                    spawnTimer = 0f;
+                }
+            }
+            else if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
+            {
+                SceneManager.LoadScene(2);
+
+            }
         }
-        else if (!dialog.isTextBoxActiv() && enemiesSpawned == false)
+        else
         {
-            spawnTimer = 0;
-            foreach (Enemy e in currentEvent.enemies)
-                spawnEnemi(e);
-            enemiesSpawned = true;
+            if (!dialog.isTextBoxActiv() && (nextDialog < currentEvent.dialogs.Count))
+            {
+                Dialog currentDialog = currentEvent.dialogs[nextDialog];
+                if (currentDialog.isFunction)
+                    dialog.SendFctBox(currentDialog.content, currentDialog.functionName);
+                else
+                    dialog.SendOkBox(currentDialog.content);
+                nextDialog++;
+                spawnTimer = 0;
+            }
+            else if (!dialog.isTextBoxActiv() && enemiesSpawned == false)
+            {
+                spawnTimer = 0;
+                foreach (Enemy e in currentEvent.enemies)
+                    spawnEnemi(e);
+                enemiesSpawned = true;
+            }
+            spawnTimer += Time.deltaTime;
+            if ((enemiesSpawned && GameObject.FindGameObjectsWithTag("Enemy").Length == 0) || spawnTimer > spawnTime)
+                nextEvent();
         }
-        spawnTimer += Time.deltaTime;
-        if ((enemiesSpawned && GameObject.FindGameObjectsWithTag("Enemy").Length == 0) || spawnTimer > spawnTime )
-            nextEvent();
     }
+
     
 }

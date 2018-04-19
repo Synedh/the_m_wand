@@ -39,24 +39,26 @@ public class SpawnEnnemiesScript : MonoBehaviour {
 
     int generateDifficulty(int score)
     {
-        if (score < 10)
+        if (score < 20)
             return 1;
-        else if (score < 40)
-            return new System.Random().Next(2) + 1;
-        else if (score < 60)
-            return 2;
         else if (score < 80)
+            return new System.Random().Next(2) + 1;
+        else if (score < 120)
+            return 2;
+        else if (score < 160)
             return new System.Random().Next(2) + 2;
         else
             return 3;
     }
 
-	/* deprecated, see GameManager for spawning ennemies
-	// Update is called once per frame
-	void Spawn () {
+	public EnnemiScript spawn() {
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
-        EnnemiScript.Create(generateDifficulty(Int32.Parse(ScoreManager.instance.scoreString)), spawnPoint);
-    }*/
+        GameObject newObject = Instantiate(Resources.Load("Prefabs/Entities/Enemy"), spawnPoint.position, spawnPoint.rotation) as GameObject;
+        EnnemiScript ennemi = newObject.GetComponent<EnnemiScript>();
+        ennemi.getNodeByDiff(generateDifficulty(ApplicationModel.score));
+        return ennemi;
+
+    }
 
 
     public EnnemiScript spawn(GameObject enemyType, int spawn)
